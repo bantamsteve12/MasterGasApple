@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ApplianceInspection" representedClassName="ApplianceInspection" syncable="YES">
+        <attribute name="applianceInspected" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceMake" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceModel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceSafeToUse" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceServiced" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="certificateReference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion1stCO2Reading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion1stCOReading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion1stRatioReading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion2ndCO2Reading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion2ndCOReading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion2ndRatioReading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion3rdCO2Reading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion3rdCOReading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="combustion3rdRatioReading" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="faultDetails" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fluePerformanceTests" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flueType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="heatInput" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="landlordsAppliance" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="operatingPressure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remedialActionTaken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="safetyDeviceInCorrectOperation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ventilationProvision" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="visualConditionOfFlueSatisfactory" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="warningNoticeLabelIssued" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="warningNoticeNumber" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ApplianceMake" representedClassName="ApplianceMake" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="ApplianceModel" representedClassName="ApplianceModel" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="make" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="ApplianceType" representedClassName="ApplianceType" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Appointment" representedClassName="Appointment" syncable="YES">
+        <attribute name="addressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="addressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="addressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="callType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="postcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="tel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="CallType" representedClassName="CallType" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Certificate" representedClassName="Certificate" syncable="YES">
+        <attribute name="certificateNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="certificateType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerEmail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPosition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerSignatureFilename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerSignoffDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerSignoffName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cylinderFinalConnection" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignatureFilename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffCompanyGasSafeRegNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerSignoffEngineerIDCardRegNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffEngineerName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffTradingTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finalCheckECV" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finalCheckEquipotentialBonding" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finalCheckGasInstallationPipework" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finalCheckGasTightness" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finalCheckGasTightnessFinalValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finalCheckGasTightnessInitialValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lpgRegulatorLockupPressure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lpgRegulatorOperatingPressure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="referenceNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Company" representedClassName="Company" syncable="YES">
+        <attribute name="companyAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyEmailAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyGSRNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyVATNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Customer" representedClassName="Customer" syncable="YES">
+        <attribute name="addressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="addressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="addressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerNo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="postcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="tel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="CustomerPosition" representedClassName="CustomerPosition" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Email" representedClassName="Email" syncable="YES">
+        <attribute name="bccEMailAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ccEmailAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="certificateBodyText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="invoiceBodyText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Engineer" representedClassName="Engineer" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerGSRIDNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignatureFilename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Expense" representedClassName="Expense" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uniqueClaimNo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="ExpenseItem" representedClassName="ExpenseItem" syncable="YES">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="expenseUniqueReference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="supplier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalAmount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="vatAmount" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ExpenseItemCategory" representedClassName="ExpenseItemCategory" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="ExpenseItemSupplier" representedClassName="ExpenseItemSupplier" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="ExpenseItemType" representedClassName="ExpenseItemType" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Image" representedClassName="Image" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="filename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageFile" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Invoice" representedClassName="Invoice" syncable="YES">
+        <attribute name="balanceDue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerEmail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerMobile" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerTelephone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="due" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="paid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subtotal" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="terms" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="total" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uniqueInvoiceNo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="vat" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="InvoiceItem" representedClassName="InvoiceItem" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="invoiceUniqueNo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="quantity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="total" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unitPrice" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="vat" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="InvoiceTerm" representedClassName="InvoiceTerm" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="Location" representedClassName="Location" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="MaintenanceServiceRecord" representedClassName="MaintenanceServiceRecord" syncable="YES">
+        <attribute name="actionRemedialWork" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="additionalNotes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceBurnerMake" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceBurnerModel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceLocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceMake" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceModel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceSerialNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applianceType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerEmail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPosition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerSignatureFilename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerSignoffDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerSignoffName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignatureFilename" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffCompanyGasSafeRegNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerSignoffEngineerIDCardRegNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffEngineerName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="engineerSignoffTradingTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="faults" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="jobType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimBoilerRoomClear" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimElectricallyFused" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimFlue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimIsolationAvailable" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimValvingArrangements" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimVentilationSize" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prelimWaterFuelSound" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="recordType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceBurnerFanAirwaysCleaned" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceBurnerPilot" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceBurnerWashedCleaned" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceControlBox" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceFan" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceFuelElectricalSupplySound" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceFuelPressureType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceGasValve" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceHeatExchanger" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceHeatExchangerFluewaysClean" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceIgnition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceIgnitionSystemCleaned" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceInterlocksInPlace" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="servicePilotAssembley" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceSafetyDevice" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sparesRequired" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uniqueSerialNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="warningAdviceNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="warningLabelIssued" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Mileage" representedClassName="Mileage" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uniqueClaimNo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="MileageItem" representedClassName="MileageItem" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="finishMileage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="journeyDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="journeyNotes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startMileage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="totalMileage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="vehicleRegistration" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Preferences" representedClassName="Preferences" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nextCertificateNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nextCustomerNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nextInvoiceNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="StockCategory" representedClassName="StockCategory" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="StockItem" representedClassName="StockItem" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stockCategory" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="unitPrice" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="vatRate" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="VehicleRegistration" representedClassName="VehicleRegistration" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="WarningNotice" representedClassName="WarningNotice" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customerAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerAddressName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerMobileNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPosition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerPostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customerTelNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="referenceNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="warningNoticeNumber" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ApplianceInspection" positionX="160" positionY="192" width="128" height="570"/>
+        <element name="ApplianceMake" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="ApplianceModel" positionX="160" positionY="192" width="128" height="165"/>
+        <element name="ApplianceType" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Appointment" positionX="160" positionY="192" width="128" height="300"/>
+        <element name="CallType" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Certificate" positionX="160" positionY="192" width="128" height="795"/>
+        <element name="Company" positionX="160" positionY="192" width="128" height="315"/>
+        <element name="Customer" positionX="160" positionY="192" width="128" height="285"/>
+        <element name="CustomerPosition" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="Email" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="Engineer" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="Expense" positionX="160" positionY="192" width="128" height="180"/>
+        <element name="ExpenseItem" positionX="160" positionY="192" width="128" height="270"/>
+        <element name="ExpenseItemCategory" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="ExpenseItemSupplier" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="ExpenseItemType" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Image" positionX="160" positionY="192" width="128" height="165"/>
+        <element name="Invoice" positionX="160" positionY="192" width="128" height="405"/>
+        <element name="InvoiceItem" positionX="160" positionY="192" width="128" height="225"/>
+        <element name="InvoiceTerm" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Location" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="MaintenanceServiceRecord" positionX="160" positionY="192" width="128" height="1200"/>
+        <element name="Mileage" positionX="160" positionY="192" width="128" height="180"/>
+        <element name="MileageItem" positionX="160" positionY="192" width="128" height="240"/>
+        <element name="Preferences" positionX="160" positionY="192" width="128" height="180"/>
+        <element name="StockCategory" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="StockItem" positionX="160" positionY="192" width="128" height="210"/>
+        <element name="VehicleRegistration" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="WarningNotice" positionX="160" positionY="192" width="128" height="300"/>
+    </elements>
+</model>

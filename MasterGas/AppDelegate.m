@@ -1,149 +1,138 @@
-//
-//  AppDelegate.m
-//  MasterGas
-//
-//  Created by Stephen Lalor on 01/12/2012.
-//  Copyright (c) 2012 Stephen Lalor. All rights reserved.
-//
-
+#import <Parse/Parse.h>
+#import <Dropbox/Dropbox.h>
 #import "AppDelegate.h"
+#import "SDSyncEngine.h"
+#import "LACHelperMethods.h"
+
+#import "Appointment.h"
+#import "Customer.h"
+#import "Certificate.h"
+#import "CallType.h"
+#import "Location.h"
+#import "ApplianceType.h"
+#import "ApplianceMake.h"
+#import "ApplianceModel.h"
+#import "ApplianceInspection.h"
+#import "Company.h"
+#import "Engineer.h"
+#import "CustomerPosition.h"
+#import "Expense.h"
+#import "ExpenseItem.h"
+#import "ExpenseItemType.h"
+#import "ExpenseItemSupplier.h"
+#import "ExpenseItemCategory.h"
+#import "VehicleRegistration.h"
+#import "Mileage.h"
+#import "MileageItem.h"
+#import "Invoice.h"
+#import "InvoiceItem.h"
+#import "StockCategory.h"
+#import "StockItem.h"
+#import "Image.h"
+#import "InvoiceTerm.h"
+#import "MaintenanceServiceRecord.h"
+#import "WarningNotice.h"
+#import "PaymentType.h"
+#import "NSUserDefaults+MPSecureUserDefaults.h"
+#import "LACHelperMethods.h"
+#import "JobStatus.h"
+
+
 
 @implementation AppDelegate
 
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
-    return YES;
+        
+    
+    // The account manager stores all the account info. Create this when your app launches
+    DBAccountManager* accountMgr =
+    [[DBAccountManager alloc] initWithAppKey:@"arygwh7m2j01dk0" secret:@"qkjad5s094w994z"];
+    [DBAccountManager setSharedManager:accountMgr];
+  
+    DBAccount *account = accountMgr.linkedAccount;
+  
+    if (account) {
+        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+        [DBFilesystem setSharedFilesystem:filesystem];
+    }
+
+    
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[CallType class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[Location class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[ApplianceType class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[ApplianceMake class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[CustomerPosition class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[ExpenseItemType class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[ExpenseItemSupplier class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[ExpenseItemCategory class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[StockCategory class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[InvoiceTerm class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[PaymentType class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[JobStatus class]];
+    
+    [Parse setApplicationId:@"SXkkKl2uJPIvy7yAo86fJjkVsXaOf8ClEykLR1FY"
+                  clientKey:@"tm4MNkHROLpfTfVTTeqikecooYvlruCLJ3i14oIT"];
+    
+      return YES; 
+    
+}
+
+
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
+  sourceApplication:(NSString *)source annotation:(id)annotation {
+    
+    DBAccount *account = [[DBAccountManager sharedManager] handleOpenURL:url];
+    if (account) {
+        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+        [DBFilesystem setSharedFilesystem:filesystem];
+        NSLog(@"App linked successfully!");
+        return YES;
+    }
+    
+}
+
+
+-(void)checkDefaults
+{
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+  //  [[SDSyncEngine sharedEngine] startSync];
+  
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
-}
-
-- (void)saveContext
-{
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        } 
-    }
-}
-
-#pragma mark - Core Data stack
-
-// Returns the managed object context for the application.
-// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
-    }
     
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    return _managedObjectContext;
 }
 
-// Returns the managed object model for the application.
-// If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel
+/*
+-(BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"MasterGas" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
+    [[PaylevenAppApi sharedInstance] handleOpenUrl:url bundleId:sourceApplication];
+    return YES;
 }
-
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
-    
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"MasterGas.sqlite"];
-    
-    NSError *error = nil;
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
-         @{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES}
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }    
-    
-    return _persistentStoreCoordinator;
-}
-
-#pragma mark - Application's Documents directory
-
-// Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
+*/
 @end

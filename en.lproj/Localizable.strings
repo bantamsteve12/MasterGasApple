@@ -1,0 +1,13 @@
+/* 
+   Localizable.strings
+  MasterGas
+
+  Created by Stephen Lalor on 02/10/2013.
+  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+*/
+
+"GKIchoosePhoto" = "Choose Photo";
+"GKIuse" = "Use";
+"GKImoveAndScale" = "Move and Scale";
+"GKIcancel" = "Cancel";
+"GKIuse" = "Choose";

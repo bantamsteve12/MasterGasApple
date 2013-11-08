@@ -1,0 +1,13 @@
+//
+//  MileageItem+Additions.h
+//  MasterGas
+//
+//  Created by Stephen Lalor on 05/02/2013.
+//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//
+
+#import "MileageItem.h"
+
+@interface MileageItem (Additions)
+
+@end

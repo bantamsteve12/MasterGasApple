@@ -1,22 +1,17 @@
 //
-//  AppDelegate.h
-//  MasterGas
+//  SDAppDelegate.h
+//  SignificantDates
 //
-//  Created by Stephen Lalor on 01/12/2012.
-//  Copyright (c) 2012 Stephen Lalor. All rights reserved.
+//  Created by Chris Wagner on 5/14/12.
 //
 
 #import <UIKit/UIKit.h>
 
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
+
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
-- (void)saveContext;
-- (NSURL *)applicationDocumentsDirectory;
 
 @end

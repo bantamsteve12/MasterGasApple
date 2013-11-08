@@ -1,0 +1,36 @@
+//
+//  PDFGasMaintenanceChecklistViewController.h
+//  MasterGas
+//
+//  Created by Stephen Lalor on 26/06/2013.
+//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <MessageUI/MFMailComposeViewController.h>
+#import "MaintenanceServiceCheck.h"
+#import "SDSyncEngine.h"
+#import "MBProgressHUD.h"
+#import "LACUsersHandler.h"
+
+
+@interface PDFGasMaintenanceChecklistViewController : UIViewController<MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+	MBProgressHUD *HUD;
+}
+
+
+
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) MaintenanceServiceCheck *currentMaintenanceServiceCheck;
+@property (nonatomic, strong) NSArray *warningNoticeItems;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSManagedObject *managedObject;
+
+@property (strong, nonatomic) NSString *mode;
+@property (retain, nonatomic) MaintenanceServiceCheck *aMaintenanceServiceCheck;
+
+-(void)showPDFFile;
+-(NSString*)getPDFFileName;
+@end
+
+

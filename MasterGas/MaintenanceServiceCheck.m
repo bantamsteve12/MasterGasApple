@@ -1,0 +1,123 @@
+//
+//  MaintenanceServiceCheck.m
+//  MasterGas
+//
+//  Created by Stephen Lalor on 02/11/2013.
+//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//
+
+#import "MaintenanceServiceCheck.h"
+
+
+@implementation MaintenanceServiceCheck
+
+@dynamic applianceLocation;
+@dynamic applianceMake;
+@dynamic applianceModel;
+@dynamic applianceSerialNumber;
+@dynamic applianceType;
+@dynamic companyId;
+@dynamic createdAt;
+@dynamic customerAddressLine1;
+@dynamic customerAddressLine2;
+@dynamic customerAddressLine3;
+@dynamic customerAddressName;
+@dynamic customerEmail;
+@dynamic customerId;
+@dynamic customerMobileNumber;
+@dynamic customerPosition;
+@dynamic customerPostcode;
+@dynamic customerSignatureFilename;
+@dynamic customerSignoffDate;
+@dynamic customerSignoffName;
+@dynamic customerTelNumber;
+@dynamic date;
+@dynamic engineerId;
+@dynamic engineerSignatureFilename;
+@dynamic engineerSignoffAddressLine1;
+@dynamic engineerSignoffAddressLine2;
+@dynamic engineerSignoffAddressLine3;
+@dynamic engineerSignoffCompanyGasSafeRegNumber;
+@dynamic engineerSignoffDate;
+@dynamic engineerSignoffEngineerIDCardRegNumber;
+@dynamic engineerSignoffEngineerName;
+@dynamic engineerSignoffMobileNumber;
+@dynamic engineerSignoffPostcode;
+@dynamic engineerSignoffTelNumber;
+@dynamic engineerSignoffTradingTitle;
+@dynamic findingsApplianceSafeToUse;
+@dynamic findingsApplianceSafeWarningNoticeAttached;
+@dynamic findingsConformToMIandIS;
+@dynamic findingsRemedialWorkRequired;
+@dynamic gasTightnessTestCarriedOut;
+@dynamic gasTightnessTestResult;
+@dynamic jobType;
+@dynamic objectId;
+@dynamic reference;
+@dynamic safetyDevice;
+@dynamic safetyDeviceNotes;
+@dynamic safetyFlueFlowTest;
+@dynamic safetyFlueFlowTestNotes;
+@dynamic safetyFlueTermination;
+@dynamic safetyFlueTerminationNotes;
+@dynamic safetyOperatingPressureHeatInput;
+@dynamic safetyOperatingPressureHeatInputNotes;
+@dynamic safetyOther;
+@dynamic safetyOtherNotes;
+@dynamic safetySpilageTest;
+@dynamic safetySpilageTestNotes;
+@dynamic safetyVentilation;
+@dynamic safetyVentilationNotes;
+@dynamic serviceBurnerInjectors;
+@dynamic serviceBurnerInjectorsNotes;
+@dynamic serviceClosurePlate;
+@dynamic serviceClosurePlateNotes;
+@dynamic serviceControls;
+@dynamic serviceControlsNotes;
+@dynamic serviceElectrics;
+@dynamic serviceElectricsNotes;
+@dynamic serviceFans;
+@dynamic serviceFansNotes;
+@dynamic serviceFireplaceOpeningVoid;
+@dynamic serviceFireplaceOpeningVoidNotes;
+@dynamic serviceFlamePicture;
+@dynamic serviceFlamePictureNotes;
+@dynamic serviceGasConnections;
+@dynamic serviceGasConnectionsNotes;
+@dynamic serviceGasPipework;
+@dynamic serviceGasPipeworkNotes;
+@dynamic serviceGasWaterLeaks;
+@dynamic serviceGasWaterLeaksNotes;
+@dynamic serviceHeatExchanger;
+@dynamic serviceHeatExchangerNotes;
+@dynamic serviceIgnition;
+@dynamic serviceIgnitionNotes;
+@dynamic serviceLocation;
+@dynamic serviceLocationNotes;
+@dynamic serviceReturnAirPlenum;
+@dynamic serviceReturnAirPlenumNotes;
+@dynamic serviceSeals;
+@dynamic serviceSealsNotes;
+@dynamic serviceStability;
+@dynamic serviceStabilityNotes;
+@dynamic siteAddressLine1;
+@dynamic siteAddressLine2;
+@dynamic siteAddressLine3;
+@dynamic siteAddressName;
+@dynamic siteAddressPostcode;
+@dynamic siteMobileNumber;
+@dynamic siteTelNumber;
+@dynamic syncStatus;
+@dynamic uniqueSerialNumber;
+@dynamic updatedAt;
+@dynamic combustion1stCO2Reading;
+@dynamic combustion2ndCO2Reading;
+@dynamic combustion3rdCO2Reading;
+@dynamic combustion1stCOReading;
+@dynamic combustion2ndCOReading;
+@dynamic combustion3rdCOReading;
+@dynamic combustion1stRatioReading;
+@dynamic combustion2ndRatioReading;
+@dynamic combustion3rdRatioReading;
+
+@end
