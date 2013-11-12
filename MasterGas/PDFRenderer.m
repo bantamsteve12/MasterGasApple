@@ -1141,11 +1141,31 @@ NSArray *applianceInspectionsArray;
                     
                 case 87:
                 {
-                    // to sort out operating pressure
                     if (applianceInspectionsArray.count > 1) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:1];
                         
-                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
-                        NSString *str = applianceInspection.operatingPressure;
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
                         
                         
                         if (str.length > 0) {
@@ -1156,6 +1176,8 @@ NSArray *applianceInspectionsArray;
                         }}
                     break;}
                     
+                    
+
                 case 88:
                 {
                     if (applianceInspectionsArray.count > 1) {
@@ -1596,9 +1618,30 @@ NSArray *applianceInspectionsArray;
                 case 117:
                 {
                     if (applianceInspectionsArray.count > 2) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:2];
                         
-                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
-                        NSString *str = applianceInspection.operatingPressure;
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
                         
                         
                         if (str.length > 0) {
@@ -2053,10 +2096,30 @@ NSArray *applianceInspectionsArray;
                 case 147:
                 {
                     if (applianceInspectionsArray.count > 3) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:3];
                         
-                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        NSString *str = @"";
                         
-                        NSString *str = applianceInspection.operatingPressure;
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
                         
                         
                         if (str.length > 0) {
@@ -2535,10 +2598,30 @@ NSArray *applianceInspectionsArray;
                 {
                     
                     if (applianceInspectionsArray.count > 4) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:4];
                         
-                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        NSString *str = @"";
                         
-                        NSString *str = applianceInspection.operatingPressure;
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
                         
                         
                         if (str.length > 0) {
@@ -3030,10 +3113,30 @@ NSArray *applianceInspectionsArray;
                 {
                     
                     if (applianceInspectionsArray.count > 5) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:5];
                         
-                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        NSString *str = @"";
                         
-                        NSString *str = applianceInspection.operatingPressure;
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
                         
                         
                         if (str.length > 0) {
