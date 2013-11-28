@@ -8,7 +8,6 @@
 
 #import "CustomerDetailTVC.h"
 #import "SDCoreDataController.h"
-//#import "SDSyncEngine.h"
 #import "Customer.h"
 #import "NSString+Additions.h"
 #import "PaymentsTVC.h"

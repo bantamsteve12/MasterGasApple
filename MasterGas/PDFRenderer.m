@@ -27,7 +27,6 @@ NSArray *applianceInspectionsArray;
 +(void)drawPDF:(NSString*)fileName withCertificate:(Certificate *)certificate withInspection:(NSArray *)applianceInspections withCertificateReportLayoutName:(NSString *)reportLayoutName
 {
     
-   
     applianceInspectionsArray = applianceInspections;
      cert = certificate;
     
@@ -41,8 +40,6 @@ NSArray *applianceInspectionsArray;
         
     [self drawLabels:reportLayoutName];
     [self drawLogo:reportLayoutName];
-
- 
     
     // Close the PDF context and write the contents out.
     UIGraphicsEndPDFContext();
@@ -3618,7 +3615,7 @@ NSArray *applianceInspectionsArray;
                     
                 case 304:
                 {
-                    NSString *str = @""; //  cert.finalCheckEquipotentialBonding;
+                    NSString *str = cert.finalCheckCOAlarmFitted;
                     
                     
                     if (str.length > 0) {
@@ -3633,7 +3630,7 @@ NSArray *applianceInspectionsArray;
                     
                 case 305:
                 {
-                    NSString *str = @""; //  cert.finalCheckEquipotentialBonding;
+                    NSString *str = cert.finalCheckCOAlarmWorking;
                     
                     
                     if (str.length > 0) {

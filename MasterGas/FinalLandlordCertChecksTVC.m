@@ -27,8 +27,11 @@
 @synthesize gasTightnessSegementControl;
 @synthesize gasInstallationPipeworkControl;
 @synthesize equipotentialBondingControl;
+@synthesize coAlarmFittedSegmentControl;
+@synthesize coAlarmWorkingSegementControl;
 @synthesize gasTightnessInitialValueTextField;
 @synthesize gasTightnessFinalValueTextField;
+
 
 //LPG
 @synthesize cylinderFinalConnectionControl;
@@ -98,6 +101,28 @@
     } else {
           equipotentialBondingControl.selectedSegmentIndex = 0;
     }
+    
+    if ([[self.managedObject valueForKey:@"finalCheckCOAlarmFitted"] isEqualToString:@"Yes"]) {
+        coAlarmFittedSegmentControl.selectedSegmentIndex = 1;
+    } else if ([[self.managedObject valueForKey:@"finalCheckCOAlarmFitted"] isEqualToString:@"No"]) {
+        coAlarmFittedSegmentControl.selectedSegmentIndex = 2;
+    } else if ([[self.managedObject valueForKey:@"finalCheckCOAlarmFitted"] isEqualToString:@"n/a"]) {
+        coAlarmFittedSegmentControl.selectedSegmentIndex = 3;
+    }
+    else {
+        coAlarmFittedSegmentControl.selectedSegmentIndex = 0;
+    }
+    
+    if ([[self.managedObject valueForKey:@"finalCheckCOAlarmWorking"] isEqualToString:@"Yes"]) {
+        coAlarmWorkingSegementControl.selectedSegmentIndex = 1;
+    } else if ([[self.managedObject valueForKey:@"finalCheckCOAlarmWorking"] isEqualToString:@"No"]) {
+        coAlarmWorkingSegementControl.selectedSegmentIndex = 2;
+    } else if ([[self.managedObject valueForKey:@"finalCheckCOAlarmWorking"] isEqualToString:@"n/a"]) {
+        coAlarmWorkingSegementControl.selectedSegmentIndex = 3;
+    } else {
+        coAlarmWorkingSegementControl.selectedSegmentIndex = 0;
+    }
+    
     
     self.gasTightnessInitialValueTextField.text = [self.managedObject valueForKey:@"finalCheckGasTightnessInitialValue"];
     self.gasTightnessFinalValueTextField.text = [self.managedObject valueForKey:@"finalCheckGasTightnessFinalValue"];
@@ -190,6 +215,42 @@
          [self.managedObject setValue:@"" forKey:@"finalCheckEquipotentialBonding"];
     }
         
+ 
+    if (self.coAlarmFittedSegmentControl.selectedSegmentIndex == 1) {
+        [self.managedObject setValue:@"Yes" forKey:@"finalCheckCOAlarmFitted"];
+    }
+    else if (self.coAlarmFittedSegmentControl.selectedSegmentIndex == 2)
+    {
+        [self.managedObject setValue:@"No" forKey:@"finalCheckCOAlarmFitted"];
+    }
+    else if (self.coAlarmFittedSegmentControl.selectedSegmentIndex == 3)
+    {
+        [self.managedObject setValue:@"n/a" forKey:@"finalCheckCOAlarmFitted"];
+    }
+    else
+    {
+        [self.managedObject setValue:@"" forKey:@"finalCheckCOAlarmFitted"];
+    }
+    
+    
+    if (self.coAlarmWorkingSegementControl.selectedSegmentIndex == 1) {
+        [self.managedObject setValue:@"Yes" forKey:@"finalCheckCOAlarmWorking"];
+    }
+    else if (self.coAlarmWorkingSegementControl.selectedSegmentIndex == 2)
+    {
+        [self.managedObject setValue:@"No" forKey:@"finalCheckCOAlarmWorking"];
+    }
+    else if (self.coAlarmWorkingSegementControl.selectedSegmentIndex == 3)
+    {
+        [self.managedObject setValue:@"n/a" forKey:@"finalCheckCOAlarmWorking"];
+    }
+    else
+    {
+        [self.managedObject setValue:@"" forKey:@"finalCheckCOAlarmWorking"];
+    }
+    
+    
+    
     
     [self.managedObject setValue:[NSString checkForNilString:self.gasTightnessInitialValueTextField.text] forKey:@"finalCheckGasTightnessInitialValue"];
     [self.managedObject setValue:[NSString checkForNilString:self.gasTightnessFinalValueTextField.text] forKey:@"finalCheckGasTightnessFinalValue"];

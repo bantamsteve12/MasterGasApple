@@ -36,7 +36,7 @@
 #import "NSUserDefaults+MPSecureUserDefaults.h"
 #import "LACHelperMethods.h"
 #import "JobStatus.h"
-
+#import "EstimateTerm.h"
 
 
 @implementation AppDelegate
@@ -45,6 +45,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    [Crashlytics startWithAPIKey:@"62e83c64d7d72a7cc73f1e42bd95f3c8ebf11606"];
         
     
     // The account manager stores all the account info. Create this when your app launches
@@ -72,14 +74,14 @@
     [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[InvoiceTerm class]];
     [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[PaymentType class]];
     [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[JobStatus class]];
+    [[SDSyncEngine sharedEngine] registerNSManagedObjectClassToSync:[EstimateTerm class]];
+    
     
     [Parse setApplicationId:@"SXkkKl2uJPIvy7yAo86fJjkVsXaOf8ClEykLR1FY"
                   clientKey:@"tm4MNkHROLpfTfVTTeqikecooYvlruCLJ3i14oIT"];
     
-      return YES; 
-    
+      return YES;
 }
-
 
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
@@ -92,7 +94,6 @@
         NSLog(@"App linked successfully!");
         return YES;
     }
-    
 }
 
 

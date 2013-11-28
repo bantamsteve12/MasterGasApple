@@ -89,6 +89,9 @@
             if ([loginResult isEqualToString:@"ValidUser"]) {
                 NSLog(@"Login result is a valid user");
            
+                //800d7bcf587a08a048a7e83d30edef62
+                
+                
                 // save username and password
                 [prefs setObject:usernameTextField.text forKey:@"Username"];
                 [prefs setObject:passwordTextField.text forKey:@"Password"];
@@ -199,7 +202,7 @@
 -(NSString *)stringWithUrl:(NSURL *)url
 {
 	NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
-                                                cachePolicy:NSURLRequestReturnCacheDataElseLoad
+                                                cachePolicy:NSURLRequestReloadIgnoringCacheData
                                             timeoutInterval:30];
     // Fetch the JSON response
 	NSData *urlData;

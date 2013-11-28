@@ -8,7 +8,6 @@
 
 #import "EngineerSignoffTVC.h"
 #import "SDCoreDataController.h"
-//#import "SDSyncEngine.h"
 #import "Certificate.h"
 #import "ApplianceInspection.h"
 #import "Company.h"
@@ -21,7 +20,6 @@
 
 @implementation EngineerSignoffTVC
 
-
 @synthesize entityName;
 
 @synthesize engineerSignoffTradingTitleTextField;
@@ -32,8 +30,8 @@
 @synthesize engineerSignoffMobileNumberTextField;
 @synthesize engineerSignoffTelNumberTextField;
 @synthesize engineerSignoffCompanyGasSafeRegNumberTextField;
-@synthesize engineerSignoffEngineerNameTextField;
-@synthesize engineerSignoffEngineerIDCardRegNumberTextField;
+@synthesize engineerSignoffEngineerNameLabel;
+@synthesize engineerSignoffEngineerIDCardRegNumberLabel;
 @synthesize engineerSignoffDateLabel;
 
 @synthesize managedObjectContext;
@@ -63,7 +61,6 @@
   //  [self.dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
     [self.dateFormatter setDateFormat:@"d MMMM yyyy"];
 
-    
     self.managedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
     
     // load values if present
@@ -75,12 +72,18 @@
     self.engineerSignoffTelNumberTextField.text = [self.managedObject valueForKey:@"engineerSignoffTelNumber"];
     self.engineerSignoffMobileNumberTextField.text = [self.managedObject valueForKey:@"engineerSignoffMobileNumber"];
     self.engineerSignoffCompanyGasSafeRegNumberTextField.text = [self.managedObject valueForKey:@"engineerSignoffCompanyGasSafeRegNumber"];
-  
-    self.engineerSignoffEngineerNameTextField.text = [self.managedObject valueForKey:@"engineerSignoffEngineerName"];
-    self.engineerSignoffEngineerIDCardRegNumberTextField.text = [self.managedObject valueForKey:@"engineerSignoffEngineerIDCardRegNumber"];
+   
+    
+    if ([[self.managedObject valueForKey:@"engineerSignoffEngineerName"] length] < 1) {
+        self.engineerSignoffEngineerNameLabel.text = @"Select Engineer";
+    }
+    else
+    {
+    self.engineerSignoffEngineerNameLabel.text = [self.managedObject valueForKey:@"engineerSignoffEngineerName"];
+    }
+    
+    self.engineerSignoffEngineerIDCardRegNumberLabel.text = [self.managedObject valueForKey:@"engineerSignoffEngineerIDCardRegNumber"];
 
-    
-    
     // set default value date if required.
    
     NSDate *engineerSignOffDate = [self.managedObject valueForKey:@"engineerSignoffDate"];
@@ -98,8 +101,6 @@
         
         NSString *dateLabelString = [[NSString alloc] initWithFormat:@"%@", [formatter stringFromDate:engineerSignOffDate]];
         self.engineerSignoffDateLabel.text = dateLabelString;
-
-    
     }
     
     NSString *tradingTitle = [self.managedObject valueForKey:@"engineerSignoffTradingTitle"];
@@ -136,7 +137,6 @@
         
         [request setSortDescriptors:[NSArray arrayWithObject:
                                      [NSSortDescriptor sortDescriptorWithKey:@"companyName" ascending:YES]]];
-     //   [request setPredicate:[NSPredicate predicateWithFormat:@"syncStatus != %d", SDObjectDeleted]];
         self.companyRecords = [self.managedObjectContext executeFetchRequest:request error:&error];
     }];
 }
@@ -193,8 +193,8 @@
 
 - (void) theEngineerWasSelectedFromTheList:(EngineerLookupTVC *)controller
 {
-    self.engineerSignoffEngineerNameTextField.text = controller.selectedEngineer.engineerName;
-    self.engineerSignoffEngineerIDCardRegNumberTextField.text = controller.selectedEngineer.engineerGSRIDNumber;
+    self.engineerSignoffEngineerNameLabel.text = controller.selectedEngineer.engineerName;
+    self.engineerSignoffEngineerIDCardRegNumberLabel.text = controller.selectedEngineer.engineerGSRIDNumber;
     
     [self.managedObject setValue:[NSString stringWithFormat:@"eng-%@.png", controller.selectedEngineer.engineerId] forKey:@"engineerSignatureFilename"];
     
@@ -211,8 +211,8 @@
     [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffTelNumberTextField.text] forKey:@"engineerSignoffTelNumber"];
     [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffMobileNumberTextField.text] forKey:@"engineerSignoffMobileNumber"];
     [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffCompanyGasSafeRegNumberTextField.text] forKey:@"engineerSignoffCompanyGasSafeRegNumber"];
-    [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffEngineerNameTextField.text] forKey:@"engineerSignoffEngineerName"];
-    [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffEngineerIDCardRegNumberTextField.text ]forKey:@"engineerSignoffEngineerIDCardRegNumber"];
+    [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffEngineerNameLabel.text] forKey:@"engineerSignoffEngineerName"];
+    [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffEngineerIDCardRegNumberLabel.text ]forKey:@"engineerSignoffEngineerIDCardRegNumber"];
     
     [self.managedObject setValue:[NSString checkForNilString:[self.managedObject valueForKey:@"engineerSignatureFilename"]] forKey:@"engineerSignatureFilename"];
     

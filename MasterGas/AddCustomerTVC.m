@@ -78,38 +78,47 @@
    
     if (![self.nameTextField.text isEqualToString:@""]) {
         
-        [self.customer setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
-        [self.customer setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
-        
-        
-        [self.customer setValue:[NSString stringWithFormat:@"CUST-%@", [NSString generateUniqueNumberIdentifier]]forKey:@"customerNo"];
-        [self.customer setValue:[NSString checkForNilString:self.nameTextField.text] forKey:@"name"];
-        [self.customer setValue:[NSString checkForNilString:self.addressLine1TextField.text] forKey:@"addressLine1"];
-        [self.customer setValue:[NSString checkForNilString:self.addressLine2TextField.text] forKey:@"addressLine2"];
-        [self.customer setValue:[NSString checkForNilString:self.addressLine3TextField.text] forKey:@"addressLine3"];
-        [self.customer setValue:[NSString checkForNilString:self.postcodeTextField.text] forKey:@"postcode"];
-        [self.customer setValue:[NSString checkForNilString:self.telTextField.text] forKey:@"tel"];
-        [self.customer setValue:[NSString checkForNilString:self.mobileNumberTextField.text] forKey:@"mobileNumber"];
-        [self.customer setValue:[NSString checkForNilString:self.emailTextField.text] forKey:@"email"];
-        [self.customer setValue:[NSString checkForNilString:self.notesTextView.text] forKey:@"notes"];
-        
-        [self.managedObjectContext performBlockAndWait:^{
-            NSError *error = nil;
-            BOOL saved = [self.managedObjectContext save:&error];
-            if (!saved) {
-                // do some real error handling
-                NSLog(@"Could not save Date due to %@", error);
-            }
-            [[SDCoreDataController sharedInstance] saveMasterContext];
-        }];
-        
+        [self SaveAll];
         [self.navigationController popViewControllerAnimated:YES];
-    addDateCompletionBlock();
+        addDateCompletionBlock();
 
     } else {
         UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Name Required" message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [cannotSaveAlert show];
     } 
+}
+
+
+-(void)SaveAll
+{
+    if ([[self.customer valueForKey:@"customerNo"] length] < 1) {
+          [self.customer setValue:[NSString stringWithFormat:@"CUST-%@", [NSString generateUniqueNumberIdentifier]]forKey:@"customerNo"];
+    }
+    
+    [self.customer setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
+    [self.customer setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
+    
+    
+    [self.customer setValue:[NSString checkForNilString:self.nameTextField.text] forKey:@"name"];
+    [self.customer setValue:[NSString checkForNilString:self.addressLine1TextField.text] forKey:@"addressLine1"];
+    [self.customer setValue:[NSString checkForNilString:self.addressLine2TextField.text] forKey:@"addressLine2"];
+    [self.customer setValue:[NSString checkForNilString:self.addressLine3TextField.text] forKey:@"addressLine3"];
+    [self.customer setValue:[NSString checkForNilString:self.postcodeTextField.text] forKey:@"postcode"];
+    [self.customer setValue:[NSString checkForNilString:self.telTextField.text] forKey:@"tel"];
+    [self.customer setValue:[NSString checkForNilString:self.mobileNumberTextField.text] forKey:@"mobileNumber"];
+    [self.customer setValue:[NSString checkForNilString:self.emailTextField.text] forKey:@"email"];
+    [self.customer setValue:[NSString checkForNilString:self.notesTextView.text] forKey:@"notes"];
+    
+    [self.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        BOOL saved = [self.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
+    
 }
 
 
@@ -175,7 +184,8 @@
         fullName = lastname;
     }
 
-    self.nameTextField.text = firstName;
+    self.nameTextField.text = fullName;
+    
     
     // reset fields first
     self.mobileNumberTextField.text = @"";
@@ -305,6 +315,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"ViewLinkedSitesSegue"]) {
+        [self SaveAll];
         SitesTVC *sitesTVC = segue.destinationViewController;
         sitesTVC.customerNo = [self.customer valueForKey:@"customerNo"];
     }

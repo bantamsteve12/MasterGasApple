@@ -52,11 +52,20 @@ NSMutableArray *invoiceItemsArray;
     int columnWidth = 120;
     
     int numberOfRows = 4;
-    int numberOfColumns = 6;
-    
    
-    [self drawTableDataAt:CGPointMake(xOrigin, yOrigin) withRowHeight:rowHeight andColumnWidth:columnWidth andRowCount:numberOfRows andColumnCount:numberOfColumns];
+    int numberOfColumns = 5;
     
+    if (companyRecord.companyVATNumber.length > 0) {
+         numberOfColumns = 6;
+        [self drawTableDataAt:CGPointMake(xOrigin, yOrigin) withRowHeight:rowHeight andColumnWidth:columnWidth andRowCount:numberOfRows andColumnCount:numberOfColumns];
+    }
+    else
+    {
+        numberOfColumns = 5;
+        
+        [self drawNonVATTableDataAt:CGPointMake(xOrigin, yOrigin) withRowHeight:rowHeight andColumnWidth:columnWidth andRowCount:numberOfRows andColumnCount:numberOfColumns];
+    }
+  
       
     // Close the PDF context and write the contents out.
     UIGraphicsEndPDFContext();
@@ -373,7 +382,17 @@ NSMutableArray *invoiceItemsArray;
 {
     [self calculateSummaryTotals];
     
-    NSArray* objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
+    NSArray* objects;
+    
+    if (company.companyVATNumber.length > 0) {
+         objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
+    }
+    else
+    {
+        objects = [[NSBundle mainBundle] loadNibNamed:@"InvoiceNoVat" owner:nil options:nil];
+    }
+    
+   // NSArray* objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
     
     UIView* mainView = [objects objectAtIndex:0];
     
@@ -523,7 +542,11 @@ NSMutableArray *invoiceItemsArray;
                     if (str.length > 0) {
                         label.text = str;
                     }
-                    else {
+                    else if([str isEqualToString:@"Not Set"])
+                    {
+                        label.text = @"";
+                    }
+                    else{
                         label.text = @"";
                     }
                     break;}
@@ -584,6 +607,26 @@ NSMutableArray *invoiceItemsArray;
                     }
                     else {
                         label.text = @"n/a";
+                    }
+                    break;}
+                    
+                case 38:{
+                    NSString *str = inv.reference;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 39:{
+                    NSString *str = inv.workOrderReference;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
                     }
                     break;}
                     
@@ -666,7 +709,18 @@ NSMutableArray *invoiceItemsArray;
                     }
                     break;}
                     
-   
+                case 47:{
+                    
+                    NSString *str = company.companyEmailAddress;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+
+                
                     
                 case 50:{
                     
@@ -735,8 +789,20 @@ NSMutableArray *invoiceItemsArray;
 
 +(void)drawLogo
 {
+    NSArray* objects;
+    
+    if (company.companyVATNumber.length > 0) {
+        objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
+    }
+    else
+    {
+        objects = [[NSBundle mainBundle] loadNibNamed:@"InvoiceNoVat" owner:nil options:nil];
+    }
    
-    NSArray* objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
+    //NSArray* objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
+   
+    
+    
     UIView* mainView = [objects objectAtIndex:0];
     
     for (UIView* view in [mainView subviews]) {
@@ -843,6 +909,89 @@ NSMutableArray *invoiceItemsArray;
         }
     }
 } 
+
+
+
+
++(void)drawNonVATTableDataAt:(CGPoint)origin
+         withRowHeight:(int)rowHeight
+        andColumnWidth:(int)columnWidth
+           andRowCount:(int)numberOfRows
+        andColumnCount:(int)numberOfColumns
+{
+    int padding = 1;
+    
+    for(int i = 0; i < [invoiceItemsArray count]; i++)
+    {
+        
+        InvoiceItem *invItem = [invoiceItemsArray objectAtIndex:i];
+        
+        float quantity = [invItem.quantity floatValue];
+        float unitPrice = [invItem.unitPrice floatValue];
+        float discountRate = [invItem.discountRate floatValue];
+        
+        float discountAmount = 0.0;
+        
+        float discountMultiplier = 1;
+        
+        float total = quantity * unitPrice;
+        
+        if (discountRate > 0) {
+            discountMultiplier = discountRate / 100; //(100 - discountRate) / 100;
+            discountAmount = (total * discountMultiplier);
+        }
+        
+        NSArray* infoToDraw = [NSArray arrayWithObjects:[NSString checkForNilString:invItem.itemDescription], [NSString checkForNilString:invItem.quantity], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@",[LACHelperMethods getDefaultCurrency],invItem.unitPrice]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], discountAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency], invItem.total]], nil];
+        
+        NSLog(@"item description %@", invItem.itemDescription);
+        
+        NSLog(@"item total %@", invItem.total);
+        
+        
+        
+        int calcColumnWidth = 0;
+        int newOriginX = origin.x;
+        
+        
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            switch (j) {
+                case 0:
+                    calcColumnWidth = 356;
+                    break;
+                case 1:
+                    calcColumnWidth = 60;
+                    break;
+                case 2:
+                    calcColumnWidth = 60;
+                    break;
+                case 3:
+                    calcColumnWidth = 60;
+                    break;
+                case 4:
+                    calcColumnWidth = 59;
+                    break;
+                default:
+                    calcColumnWidth = 10;
+                    break;
+            }
+            
+            
+            int newOriginY = origin.y + ((i+1)*rowHeight);
+            
+            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, rowHeight);
+            
+            
+            [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
+            
+            newOriginX = newOriginX + calcColumnWidth;
+        }
+    }
+} 
+
+
+
+
 
 
 +(void)calculateSummaryTotals

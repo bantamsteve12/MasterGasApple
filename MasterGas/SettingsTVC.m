@@ -77,6 +77,12 @@
        lookupSettingsTVC.footerDescription = @"Expense suppliers used to associate an expense item with a supplier of the item.";
        lookupSettingsTVC.itemIdRequired = YES;
    }
+   else if ([segue.identifier isEqualToString:@"EstimateQuoteTermsSegue"]) {
+       LookupSettingsTVC *lookupSettingsTVC = segue.destinationViewController;
+       lookupSettingsTVC.entityName = @"EstimateTerm";
+       lookupSettingsTVC.titleName = @"Estimate / Quote Terms";
+       lookupSettingsTVC.footerDescription = @"Terms for use with estimates and quotes.";
+   }
    else if ([segue.identifier isEqualToString:@"JobStatusSegue"]) {
        LookupSettingsTVC *lookupSettingsTVC = segue.destinationViewController;
        lookupSettingsTVC.entityName = @"JobStatus";

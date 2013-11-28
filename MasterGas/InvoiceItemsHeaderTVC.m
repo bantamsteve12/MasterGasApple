@@ -69,8 +69,6 @@
     
     NSLog(@"invoiceUniqueNumber: %@", self.invoiceUniqueNo);
     
-    
-   
 }
 
 
@@ -93,20 +91,12 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-   // [self checkSyncStatus];
-    
-   // [[NSNotificationCenter defaultCenter] addObserverForName:@"SDSyncEngineSyncCompleted" object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self loadRecordsFromCoreData];
-        [self.tableView reloadData];
-   // }];
-  //  [[SDSyncEngine sharedEngine] addObserver:self forKeyPath:@"syncInProgress" options:NSKeyValueObservingOptionNew context:nil];
-}
+    [self loadRecordsFromCoreData];
+    [self.tableView reloadData];
+  }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
- //   [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SDSyncEngineSyncCompleted" object:nil];
-  //  [[SDSyncEngine sharedEngine] removeObserver:self forKeyPath:@"syncInProgress"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

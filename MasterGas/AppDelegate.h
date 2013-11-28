@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

@@ -60,6 +60,8 @@
 {
     [super viewDidLoad];
     
+    NSLog(@"customerNo: %@", self.customerNo);
+    
     self.managedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
     self.dateFormatter = [[NSDateFormatter alloc] init];
     // [self.dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
@@ -163,15 +165,14 @@
         //NSManagedObject *obj = [self.customers objectAtIndex:indexPath.row];
         
         
-        Customer *cust = [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
+        Sites *site = [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
         
         
         [self.managedObjectContext performBlockAndWait:^{
-            if ([[cust valueForKey:@"objectId"] isEqualToString:@""] || [cust valueForKey:@"objectId"] == nil) {
-                [self.managedObjectContext deleteObject:cust];
-            } else {
-                //   [cust setValue:[NSNumber numberWithInt:SDObjectDeleted] forKey:@"syncStatus"];
-            }
+           
+                [self.managedObjectContext deleteObject:site];
+           
+            
             NSError *error = nil;
             BOOL saved = [self.managedObjectContext save:&error];
             if (!saved) {
@@ -244,11 +245,17 @@
         siteDetailTVC.customerNo = self.customerNo;
         siteDetailTVC.currentSite = site;
         
+    
+        siteDetailTVC.managedObjectId = site.objectID;
+        
+        
+        
         [siteDetailTVC setAddDateCompletionBlock:^{
             [self loadRecordsFromCoreData];
             [self.tableView reloadData];
         }];
         
+   
         
         
     } else if ([segue.identifier isEqualToString:@"AddSiteSegue"]) {

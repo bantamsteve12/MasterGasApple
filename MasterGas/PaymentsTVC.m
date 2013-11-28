@@ -105,6 +105,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
   
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+      
         NSManagedObject *date = [self.payments objectAtIndex:indexPath.row];
         [self.managedObjectContext performBlockAndWait:^{
             if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {

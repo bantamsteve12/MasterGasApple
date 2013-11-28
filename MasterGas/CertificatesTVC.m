@@ -220,7 +220,11 @@
     if ([LACHelperMethods fullUser]) {
    
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-            NSManagedObject *date = [self.certificates objectAtIndex:indexPath.row];
+            
+            NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+            NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+            NSManagedObject *date = [eventsOnThisDay objectAtIndex:indexPath.row];
+        
             [self.managedObjectContext performBlockAndWait:^{
                 if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
                 [self.managedObjectContext deleteObject:date];

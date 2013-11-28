@@ -2,7 +2,7 @@
 //  Certificate.h
 //  MasterGas
 //
-//  Created by Stephen Lalor on 30/09/2013.
+//  Created by Stephen Lalor on 20/11/2013.
 //  Copyright (c) 2013 Stephen Lalor. All rights reserved.
 //
 
@@ -63,5 +63,7 @@
 @property (nonatomic, retain) NSString * siteTelNumber;
 @property (nonatomic, retain) NSNumber * syncStatus;
 @property (nonatomic, retain) NSDate * updatedAt;
+@property (nonatomic, retain) NSString * finalCheckCOAlarmFitted;
+@property (nonatomic, retain) NSString * finalCheckCOAlarmWorking;
 
 @end

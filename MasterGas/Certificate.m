@@ -2,7 +2,7 @@
 //  Certificate.m
 //  MasterGas
 //
-//  Created by Stephen Lalor on 30/09/2013.
+//  Created by Stephen Lalor on 20/11/2013.
 //  Copyright (c) 2013 Stephen Lalor. All rights reserved.
 //
 
@@ -62,5 +62,7 @@
 @dynamic siteTelNumber;
 @dynamic syncStatus;
 @dynamic updatedAt;
+@dynamic finalCheckCOAlarmFitted;
+@dynamic finalCheckCOAlarmWorking;
 
 @end

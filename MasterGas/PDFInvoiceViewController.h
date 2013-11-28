@@ -19,7 +19,6 @@
 	MBProgressHUD *HUD;
 }
 
-
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) Invoice *currentInvoice;
 @property (nonatomic, strong) NSArray *invoiceItems;

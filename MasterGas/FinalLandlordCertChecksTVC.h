@@ -22,6 +22,11 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *gasTightnessSegementControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *gasInstallationPipeworkControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *equipotentialBondingControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *coAlarmFittedSegmentControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *coAlarmWorkingSegementControl;
+
+
+
 @property (strong, nonatomic) IBOutlet UITextField *gasTightnessInitialValueTextField;
 @property (strong, nonatomic) IBOutlet UITextField *gasTightnessFinalValueTextField;
 

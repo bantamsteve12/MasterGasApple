@@ -30,6 +30,8 @@
 
 @synthesize entityName;
 @synthesize uniqueInvoiceNoLabel;
+@synthesize referenceTextField;
+@synthesize workOrderReferenceTextField;
 @synthesize customerNameLabel;
 @synthesize customerAddressPreviewLabel;
 @synthesize subtotalLabel;
@@ -92,8 +94,6 @@
         self.totalLabel.text = defaultAmount;
         self.paidLabel.text = defaultAmount;
         self.balanceDueLabel.text = defaultAmount;
-      
-        // TODO: read the default vat rate and apply it to the field.
         
         
     }
@@ -101,6 +101,9 @@
     {
         self.managedObject = [managedObjectContext objectWithID:self.managedObjectId];
         self.uniqueInvoiceNoLabel.text = [self.managedObject valueForKey:@"uniqueInvoiceNo"];
+        self.referenceTextField.text = [self.managedObject valueForKey:@"reference"];
+        
+        self.workOrderReferenceTextField.text = [self.managedObject valueForKey:@"workOrderReference"];
         
         NSDate *invoiceDate = [self.managedObject valueForKey:@"date"];
         
@@ -115,9 +118,6 @@
         NSLog(@"invoice Vat: = %@", [self.managedObject valueForKey:@"vat"]);
         
     self.commentsTextField.text = [self.managedObject valueForKey:@"comment"];
-   // self.subtotalLabel.text = [self.managedObject valueForKey:@"subtotal"];
-   // self.vatLabel.text = [self.managedObject valueForKey:@"vat"];
-   // self.totalLabel.text = [self.managedObject valueForKey:@"total"];
     self.paidLabel.text = [self.managedObject valueForKey:@"paid"];
     self.balanceDueLabel.text = [self.managedObject valueForKey:@"balanceDue"];
     self.termsLabel.text = [self.managedObject valueForKey:@"terms"];
@@ -126,18 +126,14 @@
     
     if (dueDate != nil) {
         self.dateFormatter = [[NSDateFormatter alloc] init];
-      //  [self.dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
         [self.dateFormatter setDateFormat:@"d MMMM yyyy"];
         self.dueDateLabel.text = [self.dateFormatter stringFromDate:[self.managedObject valueForKey:@"due"]];
     }
 
-    
     self.customerNameLabel.text = [self.managedObject valueForKey:@"customerName"];
     self.customerAddressPreviewLabel.text = [NSString stringWithFormat:@"%@, %@", [NSString checkForNilString:[self.managedObject valueForKey:@"customerAddressLine1"]], [NSString checkForNilString:[self.managedObject valueForKey:@"customerPostcode"]]];
-
     }
 }
-
 
 
 - (void)dismissKeyboard {
@@ -348,15 +344,11 @@
        
          [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",paid]] forKey:@"paid"];
         
-        //[self.managedObject setValue:self.paidLabel.text forKey:@"paid"];
-        
-        
         double balanceDue = totalSum - paid;
         self.balanceDueLabel.text = [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], balanceDue]];
        
         
         [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",balanceDue]] forKey:@"balanceDue"];
-        //[self.managedObject setValue:self.balanceDueLabel.text forKey:@"balanceDue"];
        
         self.numberOfInvoiceItemsLabel.text = [NSString stringWithFormat:@"%i items", [items count]];
         
@@ -399,6 +391,10 @@
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
     
     [self.managedObject setValue:[NSString checkForNilString:self.uniqueInvoiceNoLabel.text] forKey:@"uniqueInvoiceNo"];
+    [self.managedObject setValue:[NSString checkForNilString:self.referenceTextField.text] forKey:@"reference"];
+    [self.managedObject setValue:[NSString checkForNilString:self.workOrderReferenceTextField.text] forKey:@"workOrderReference"];
+    
+    
     [self.managedObject setValue:[NSString checkForNilString:self.commentsTextField.text] forKey:@"comment"];
     [self.managedObject setValue:[NSString checkForNilString:self.termsLabel.text] forKey:@"terms"];
     
@@ -422,9 +418,12 @@
 {
     
     
-    
     [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
+    
+    [self.managedObject setValue:[NSString checkForNilString:self.referenceTextField.text] forKey:@"reference"];
+    [self.managedObject setValue:[NSString checkForNilString:self.workOrderReferenceTextField.text] forKey:@"workOrderReference"];
+    
     
     [self.managedObject setValue:[NSString checkForNilString:self.uniqueInvoiceNoLabel.text] forKey:@"uniqueInvoiceNo"];
     [self.managedObject setValue:[NSString checkForNilString:self.commentsTextField.text] forKey:@"comment"];

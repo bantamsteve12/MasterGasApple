@@ -15,10 +15,13 @@
 @interface SiteDetailTVC ()
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSManagedObject *managedObject;
+
 @property CGPoint originalCenter;
 @end
 
 @implementation SiteDetailTVC
+
+@synthesize managedObjectId;
 
 @synthesize nameTextField;
 @synthesize addressLine1TextField;
@@ -69,7 +72,8 @@
     }
     else
     {
-        self.managedObject = self.currentSite;
+      //  self.managedObject = self.currentSite;
+        self.managedObject = [self.managedObjectContext objectWithID:self.managedObjectId];
         
         self.nameTextField.text = [self.managedObject valueForKey:@"name"];
         self.addressLine1TextField.text = [self.managedObject valueForKey:@"addressLine1"];

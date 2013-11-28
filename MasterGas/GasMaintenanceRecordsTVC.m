@@ -236,13 +236,17 @@
     if ([LACHelperMethods fullUser]) {
             
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-            NSManagedObject *date = [self.records objectAtIndex:indexPath.row];
+          
+            NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+            NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+            NSManagedObject *date = [eventsOnThisDay objectAtIndex:indexPath.row];
+            
             [self.managedObjectContext performBlockAndWait:^{
-            if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
-                [self.managedObjectContext deleteObject:date];
-            } else {
-            //    [date setValue:[NSNumber numberWithInt:SDObjectDeleted] forKey:@"syncStatus"];
-            }
+                if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
+                    [self.managedObjectContext deleteObject:date];
+                }
+            
+    
             NSError *error = nil;
             BOOL saved = [self.managedObjectContext save:&error];
             if (!saved) {
@@ -280,7 +284,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //UITableViewCell *cell = nil;
     MainWithThreeSubtitlesCell *cell = nil;
     
     NSLog(@"entity name = %@", self.entityName);
@@ -305,9 +308,7 @@
         cell.subtitleTwoLabel.text = detailLabel;
         cell.subtitleThreeLabel.text = maintenanceCheckRecord.uniqueSerialNumber;
         
-        
         NSLog(@"cell: %@", maintenanceCheckRecord.uniqueSerialNumber);
-        
     }
     
     return cell;
@@ -316,19 +317,22 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"ShowRecordSegue"]) {
+        
         GasMaintenanceChecklistHeaderTVC *gasMaintenanceChecklistHeaderTVC = segue.destinationViewController;
         gasMaintenanceChecklistHeaderTVC.recordType = self.recordType;
         
         UITableViewCell *cell = (UITableViewCell *)sender;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         
-        MaintenanceServiceCheck *maintenanceCheckRecord = [self.records objectAtIndex:indexPath.row];
+        NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+        NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+        
+        MaintenanceServiceCheck *maintenanceCheckRecord = [eventsOnThisDay objectAtIndex:indexPath.row];
         gasMaintenanceChecklistHeaderTVC.managedObjectId = maintenanceCheckRecord.objectID;
         
         [gasMaintenanceChecklistHeaderTVC setUpdateCompletionBlock:^{
             [self loadRecordsFromCoreData];
             [self.tableView reloadData];
-           // [[SDSyncEngine sharedEngine] startSync];
         }];
         
     } else if ([segue.identifier isEqualToString:@"AddRecordSegue"]) {
@@ -339,7 +343,6 @@
         [gasMaintenanceChecklistHeaderTVC setUpdateCompletionBlock:^{
             [self loadRecordsFromCoreData];
             [self.tableView reloadData];
-           // [[SDSyncEngine sharedEngine] startSync];
         }];
         
     }

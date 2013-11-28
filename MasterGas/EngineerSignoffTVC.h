@@ -27,8 +27,13 @@
 @property (strong, nonatomic) IBOutlet UITextField *engineerSignoffMobileNumberTextField;
 @property (strong, nonatomic) IBOutlet UITextField *engineerSignoffCompanyGasSafeRegNumberTextField;
 
-@property (strong, nonatomic) IBOutlet UITextField *engineerSignoffEngineerNameTextField;
-@property (strong, nonatomic) IBOutlet UITextField *engineerSignoffEngineerIDCardRegNumberTextField;
+//@property (strong, nonatomic) IBOutlet UITextField *engineerSignoffEngineerNameTextField;
+//@property (strong, nonatomic) IBOutlet UITextField *engineerSignoffEngineerIDCardRegNumberTextField;
+
+@property (strong, nonatomic) IBOutlet UILabel *engineerSignoffEngineerNameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *engineerSignoffEngineerIDCardRegNumberLabel;
+
+
 @property (strong, nonatomic) IBOutlet UILabel *engineerSignoffDateLabel;
 
 @property (nonatomic, strong) NSArray *companyRecords;

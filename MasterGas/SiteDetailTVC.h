@@ -16,6 +16,7 @@
 
 @interface SiteDetailTVC : UITableViewController<UITextFieldDelegate,ABPeoplePickerNavigationControllerDelegate, UIAlertViewDelegate, MFMessageComposeViewControllerDelegate, UIActionSheetDelegate>
 
+@property (strong, nonatomic) NSManagedObjectID *managedObjectId;
 
 
 @property (strong, nonatomic) IBOutlet UITextField *nameTextField;

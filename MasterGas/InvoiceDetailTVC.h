@@ -21,6 +21,8 @@
 @property (strong, nonatomic) NSManagedObjectID *managedObjectId;
 
 @property (strong, nonatomic) IBOutlet UILabel *uniqueInvoiceNoLabel;
+@property (strong, nonatomic) IBOutlet UITextField *referenceTextField;
+@property (strong, nonatomic) IBOutlet UITextField *workOrderReferenceTextField;
 @property (strong, nonatomic) IBOutlet UILabel *customerNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *customerAddressPreviewLabel;
 @property (strong, nonatomic) IBOutlet UILabel *subtotalLabel;

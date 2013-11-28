@@ -10,7 +10,6 @@
 #import "SDCoreDataController.h"
 #import "SDTableViewCell.h"
 #import "MaintenanceServiceRecord.h"
-//#import "SDSyncEngine.h"
 #import "CustomerDetailTVC.h"
 #import "BreakdownServiceRecordHeaderTVC.h"
 #import "MainWithThreeSubtitlesCell.h"
@@ -31,7 +30,7 @@
 @synthesize records;
 @synthesize recordType;
 
-// tabe grouping required onjects
+// tabe grouping required objects
 @synthesize sections;
 @synthesize sortedDays;
 @synthesize sectionDateFormatter;
@@ -244,13 +243,16 @@
     if ([LACHelperMethods fullUser]) {
     
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObject *date = [self.records objectAtIndex:indexPath.row];
-        [self.managedObjectContext performBlockAndWait:^{
-            if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
-                [self.managedObjectContext deleteObject:date];
-            } else {
-        //        [date setValue:[NSNumber numberWithInt:SDObjectDeleted] forKey:@"syncStatus"];
-            }
+      
+            NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+            NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+            NSManagedObject *date = [eventsOnThisDay objectAtIndex:indexPath.row];
+            
+            [self.managedObjectContext performBlockAndWait:^{
+                if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
+                    [self.managedObjectContext deleteObject:date];
+                }
+            
             NSError *error = nil;
             BOOL saved = [self.managedObjectContext save:&error];
             if (!saved) {
@@ -342,21 +344,26 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
       if ([segue.identifier isEqualToString:@"ShowMaintenanceServiceRecordSegue"]) {
-        BreakdownServiceRecordHeaderTVC *breakdownServiceHeaderTVC = segue.destinationViewController;
-        breakdownServiceHeaderTVC.recordType = self.recordType;
-        
-        UITableViewCell *cell = (UITableViewCell *)sender;
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        
-        MaintenanceServiceRecord *maintenanceServiceRecord = [self.records objectAtIndex:indexPath.row];
-        breakdownServiceHeaderTVC.managedObjectId = maintenanceServiceRecord.objectID;
-        
-        [breakdownServiceHeaderTVC setUpdateCompletionBlock:^{
-            [self loadRecordsFromCoreData];
-            [self.tableView reloadData];
-          //  [[SDSyncEngine sharedEngine] startSync];
-        }];
-        
+       
+          BreakdownServiceRecordHeaderTVC *breakdownServiceHeaderTVC = segue.destinationViewController;
+          breakdownServiceHeaderTVC.recordType = self.recordType;
+          
+          UITableViewCell *cell = (UITableViewCell *)sender;
+          NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+          
+          NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+          NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+          
+          
+          MaintenanceServiceRecord *maintenanceServiceRecord = [eventsOnThisDay objectAtIndex:indexPath.row];
+          breakdownServiceHeaderTVC.managedObjectId = maintenanceServiceRecord.objectID;
+          
+          [breakdownServiceHeaderTVC setUpdateCompletionBlock:^{
+              [self loadRecordsFromCoreData];
+              [self.tableView reloadData];
+          }];
+          
+          
     } else if ([segue.identifier isEqualToString:@"AddMaintenanceServiceRecordSegue"]) {
         BreakdownServiceRecordHeaderTVC *breakdownServiceRecordTVC = segue.destinationViewController;
         breakdownServiceRecordTVC.recordPrefix = @"SEBR";
