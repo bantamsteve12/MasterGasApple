@@ -2,7 +2,7 @@
 //  Invoice.h
 //  MasterGas
 //
-//  Created by Stephen Lalor on 21/11/2013.
+//  Created by Stephen Lalor on 04/12/2013.
 //  Copyright (c) 2013 Stephen Lalor. All rights reserved.
 //
 
@@ -39,5 +39,14 @@
 @property (nonatomic, retain) NSDate * updatedAt;
 @property (nonatomic, retain) NSString * vat;
 @property (nonatomic, retain) NSString * workOrderReference;
+@property (nonatomic, retain) NSString * siteAddressLine1;
+@property (nonatomic, retain) NSString * siteAddressLine2;
+@property (nonatomic, retain) NSString * siteAddressLine3;
+@property (nonatomic, retain) NSString * siteEmail;
+@property (nonatomic, retain) NSString * siteId;
+@property (nonatomic, retain) NSString * siteMobile;
+@property (nonatomic, retain) NSString * siteName;
+@property (nonatomic, retain) NSString * sitePostcode;
+@property (nonatomic, retain) NSString * siteTelephone;
 
 @end

@@ -55,7 +55,7 @@
     
     if (account.info.displayName.length > 0) {
         self.displayNameLabel.text = account.info.displayName;
-        self.emailLabel.text = account.info.email;
+        self.emailLabel.text = account.info.userName;
     }
 }
 

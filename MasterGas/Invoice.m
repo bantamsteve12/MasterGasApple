@@ -2,7 +2,7 @@
 //  Invoice.m
 //  MasterGas
 //
-//  Created by Stephen Lalor on 21/11/2013.
+//  Created by Stephen Lalor on 04/12/2013.
 //  Copyright (c) 2013 Stephen Lalor. All rights reserved.
 //
 
@@ -38,5 +38,14 @@
 @dynamic updatedAt;
 @dynamic vat;
 @dynamic workOrderReference;
+@dynamic siteAddressLine1;
+@dynamic siteAddressLine2;
+@dynamic siteAddressLine3;
+@dynamic siteEmail;
+@dynamic siteId;
+@dynamic siteMobile;
+@dynamic siteName;
+@dynamic sitePostcode;
+@dynamic siteTelephone;
 
 @end

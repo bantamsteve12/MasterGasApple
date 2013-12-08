@@ -22,8 +22,8 @@
 @property (strong, nonatomic) NSString *invoiceUniqueNo;
 
 @property (strong, nonatomic) NSString *entityName;
+@property (strong, nonatomic) IBOutlet UITextView *itemDescriptionTextViewField;
 
-@property (strong, nonatomic) IBOutlet UITextField *itemDescriptionTextField;
 @property (strong, nonatomic) IBOutlet UITextField *quantityTextField;
 @property (strong, nonatomic) IBOutlet UITextField *unitPriceTextField;
 @property (strong, nonatomic) IBOutlet UITextField *discountRateTextField;

@@ -18,9 +18,12 @@
 #import "PaymentsTVC.h"
 #import "LACHelperMethods.h"
 
+
 @interface InvoiceDetailTVC ()
 @property CGPoint originalCenter;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSManagedObjectContext *invoiceItemsManagedObjectContext;
+
 @property (strong, nonatomic) NSManagedObject *managedObject;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @end
@@ -34,6 +37,8 @@
 @synthesize workOrderReferenceTextField;
 @synthesize customerNameLabel;
 @synthesize customerAddressPreviewLabel;
+@synthesize siteNameLabel;
+@synthesize siteAddressPreviewLabel;
 @synthesize subtotalLabel;
 @synthesize vatLabel;
 @synthesize totalLabel;
@@ -48,6 +53,8 @@
 @synthesize managedObject;
 @synthesize managedObjectId;
 
+@synthesize existingEstimate;
+@synthesize estimateItems;
 
 @synthesize invoiceItems;
 
@@ -132,6 +139,12 @@
 
     self.customerNameLabel.text = [self.managedObject valueForKey:@"customerName"];
     self.customerAddressPreviewLabel.text = [NSString stringWithFormat:@"%@, %@", [NSString checkForNilString:[self.managedObject valueForKey:@"customerAddressLine1"]], [NSString checkForNilString:[self.managedObject valueForKey:@"customerPostcode"]]];
+    
+    self.siteNameLabel.text = [self.managedObject valueForKey:@"siteName"];
+    self.siteAddressPreviewLabel.text = [NSString stringWithFormat:@"%@, %@", [NSString checkForNilString:[self.managedObject valueForKey:@"siteAddressLine1"]], [NSString checkForNilString:[self.managedObject valueForKey:@"sitePostcode"]]];
+        
+        
+        
     }
 }
 
@@ -171,6 +184,12 @@
         invoiceAddressDetailsTVC.managedObjectContext = managedObjectContext;
         invoiceAddressDetailsTVC.delegate = self;
     }
+    else if ([segue.identifier isEqualToString:@"SiteAddressSegue"]) {
+        EstimateSiteAddressTVC *estimateSiteAddressDetailsTVC = segue.destinationViewController;
+        estimateSiteAddressDetailsTVC.managedObject = managedObject;
+        estimateSiteAddressDetailsTVC.managedObjectContext = managedObjectContext;
+        estimateSiteAddressDetailsTVC.delegate = self;
+    }
     else if ([segue.identifier isEqualToString:@"InvoiceItemsSegue"]) {
         InvoiceItemsHeaderTVC *invoiceItemsHeaderTVC = segue.destinationViewController;
         invoiceItemsHeaderTVC.managedObjectContext = managedObjectContext;
@@ -180,6 +199,11 @@
         InvoiceTermsLookupTVC *invoiceTermLookupTVC = segue.destinationViewController;
         invoiceTermLookupTVC.delegate = self;
     }
+    else if([segue.identifier isEqualToString:@"SelectEstimateSegue"]) {
+        SelectEstimateTVC *selectEstimateSegueTVC = segue.destinationViewController;
+        selectEstimateSegueTVC.delegate = self;
+    }
+    
     else if ([segue.identifier isEqualToString:@"SelectInvoiceTaxPointDateSegue"]) {
         DateTimePickerTVC *dateTimePickerTVC = segue.destinationViewController;
         dateTimePickerTVC.delegate = self;
@@ -411,7 +435,7 @@
     }];
         
     [self.navigationController popViewControllerAnimated:YES];
-    updateCompletionBlock();
+   // updateCompletionBlock();
 }
 
 -(void)SaveTest
@@ -476,11 +500,123 @@
     [self.managedObject setValue:controller.customerIdLabel.text forKey:@"customerId"];
 }
 
+-(void)theSaveButtonPressedOnTheEstimateAddressDetails:(EstimateSiteAddressTVC *)controller
+{
+    self.siteNameLabel.text = controller.siteAddressName.text;
+    self.siteAddressPreviewLabel.text = [NSString stringWithFormat:@"%@, %@", controller.siteAddressLine1.text, controller.sitePostcode.text];
+    
+    [self.managedObject setValue:controller.siteIdLabel.text forKey:@"siteId"];
+}
+
 -(void)theInvoiceTermWasSelectedFromTheList:(InvoiceTermsLookupTVC *)controller
 {
     self.termsLabel.text = controller.selectedInvoiceTerm.name;
     [self.managedObject setValue:controller.selectedInvoiceTerm.name forKey:@"terms"];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)theEstimateWasSelectedFromTheList:(SelectEstimateTVC *)controller
+{
+    self.referenceTextField.text = controller.selectedEstimate.reference;
+    self.workOrderReferenceTextField.text = controller.selectedEstimate.workOrderReference;
+    
+    self.customerNameLabel.text = controller.selectedEstimate.customerName;
+    self.customerAddressPreviewLabel.text = [NSString stringWithFormat:@"%@, %@", controller.selectedEstimate.customerAddressLine1, controller.selectedEstimate.customerPostcode];
+
+    if (controller.selectedEstimate.siteName.length > 0) {
+        self.siteNameLabel.text = controller.selectedEstimate.siteName;
+        self.siteAddressPreviewLabel.text = [NSString stringWithFormat:@"%@, %@", controller.selectedEstimate.siteAddressLine1, controller.selectedEstimate.sitePostcode];
+    }
+    
+    
+    [self.managedObject setValue:controller.selectedEstimate.customerName forKey:@"customerName"];
+    [self.managedObject setValue:controller.selectedEstimate.customerAddressLine1 forKey:@"customerAddressLine1"];
+    [self.managedObject setValue:controller.selectedEstimate.customerAddressLine2 forKey:@"customerAddressLine2"];
+    [self.managedObject setValue:controller.selectedEstimate.customerAddressLine3 forKey:@"customerAddressLine3"];
+    [self.managedObject setValue:controller.selectedEstimate.customerPostcode forKey:@"customerPostcode"];
+    [self.managedObject setValue:controller.selectedEstimate.customerTelephone forKey:@"customerTelephone"];
+    [self.managedObject setValue:controller.selectedEstimate.customerMobile forKey:@"customerMobile"];
+    [self.managedObject setValue:controller.selectedEstimate.customerId forKey:@"customerId"];
+    [self.managedObject setValue:controller.selectedEstimate.customerEmail forKey:@"customerEmail"];
+    
+    
+    [self.managedObject setValue:controller.selectedEstimate.siteName forKey:@"siteName"];
+    [self.managedObject setValue:controller.selectedEstimate.siteAddressLine1 forKey:@"siteAddressLine1"];
+    [self.managedObject setValue:controller.selectedEstimate.siteAddressLine2 forKey:@"siteAddressLine2"];
+    [self.managedObject setValue:controller.selectedEstimate.siteAddressLine3 forKey:@"siteAddressLine3"];
+    [self.managedObject setValue:controller.selectedEstimate.sitePostcode forKey:@"sitePostcode"];
+    
+    [self.managedObject setValue:controller.selectedEstimate.siteId forKey:@"siteId"];
+    [self.managedObject setValue:controller.selectedEstimate.siteMobile forKey:@"siteMobile"];
+    [self.managedObject setValue:controller.selectedEstimate.siteTelephone forKey:@"siteTelephone"];
+
+
+    [self loadEstimateItemsDataFromCoreData:controller.selectedEstimate.uniqueEstimateNo];
+
+    [self.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        BOOL saved = [self.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
+
+    
+    [self copyEstimateItemsToInvoiceItems];
+    
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)copyEstimateItemsToInvoiceItems
+{
+    
+    for (EstimateItem *estimate in self.estimateItems) {
+        
+        self.invoiceItemsManagedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
+        NSManagedObject *invoiceManagedObject;
+        
+       invoiceManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"InvoiceItem" inManagedObjectContext:self.invoiceItemsManagedObjectContext];
+        
+        [invoiceManagedObject setValue:self.uniqueInvoiceNoLabel.text forKey:@"invoiceUniqueNo"];
+        [invoiceManagedObject setValue:estimate.itemDescription forKey:@"itemDescription"];
+        [invoiceManagedObject setValue:estimate.total forKey:@"total"];
+        [invoiceManagedObject setValue:estimate.vat forKey:@"vat"];
+        [invoiceManagedObject setValue:estimate.quantity forKey:@"quantity"];
+        [invoiceManagedObject setValue:estimate.unitPrice forKey:@"unitPrice"];
+        [invoiceManagedObject setValue:estimate.discountRate forKey:@"discountRate"];
+        [invoiceManagedObject setValue:estimate.vatAmount forKey:@"vatAmount"];
+        
+        
+        [invoiceManagedObject.managedObjectContext performBlockAndWait:^{
+            NSError *error = nil;
+            BOOL saved = [invoiceManagedObject.managedObjectContext save:&error];
+            if (!saved) {
+                // do some real error handling
+                NSLog(@"Could not save Date due to %@", error);
+            }
+            [[SDCoreDataController sharedInstance] saveMasterContext];
+        }];
+    }
+}
+
+- (void)loadEstimateItemsDataFromCoreData:(NSString *)uniqueEstimateNo {
+    [self.managedObjectContext performBlockAndWait:^{
+        
+        [self.estimateItems removeAllObjects];
+        
+        //  [self.managedObjectContext reset];
+        NSError *error = nil;
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"EstimateItem"];
+        
+        [request setSortDescriptors:[NSArray arrayWithObject:
+                                     [NSSortDescriptor sortDescriptorWithKey:@"itemDescription" ascending:YES]]];
+        [request setPredicate:[NSPredicate predicateWithFormat:@"(estimateNo == %@)",uniqueEstimateNo]];
+        
+        self.estimateItems = [NSMutableArray arrayWithArray:[self.managedObjectContext executeFetchRequest:request error:&error]];
+    }];
 }
 
 - (void)didReceiveMemoryWarning

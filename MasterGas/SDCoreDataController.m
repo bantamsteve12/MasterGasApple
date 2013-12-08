@@ -180,4 +180,74 @@
 }
 
 
+- (NSURL *)applicationStoresDirectory {
+    
+ /*   NSURL *storesDirectory =
+    [[NSURL fileURLWithPath:[self applicationDocumentsDirectory]]
+     URLByAppendingPathComponent:@"Stores"]; */
+    
+    // SJL
+    NSURL *storesDirectory = [self applicationDocumentsDirectory];
+   
+    //storesDirectory = [storesDirectory URLByAppendingPathComponent:@"Stores"];
+    
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:[storesDirectory path]]) {
+        NSError *error = nil;
+        if ([fileManager createDirectoryAtURL:storesDirectory
+                  withIntermediateDirectories:YES
+                                   attributes:nil
+                                        error:&error]) {
+         NSLog(@"FAILED to create Stores directory: %@", error);}
+    }
+    return storesDirectory;
+}
+
+- (BOOL)reloadStore {
+    BOOL success = NO;
+    NSError *error = nil;
+    
+    
+      NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"MasterGas.sqlite"];
+ 
+    NSPersistentStore *store = [_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                               configuration:nil
+                                         URL:storeURL
+                                     options:nil
+                                       error:&error];
+
+    
+    
+   //NSPersistentStore *store =
+  
+    
+    if (![_persistentStoreCoordinator removePersistentStore:store error:&error]) {
+        NSLog(@"Unable to remove persistent store : %@", error);
+    }
+    [self resetContext:_masterManagedObjectContext];
+    [self resetContext:_backgroundManagedObjectContext];
+   
+    //[self resetContext:newManagedObjectContext];
+  
+    //[self resetContext:_parentContext];
+    store = nil;
+   
+   // [self setupCoreData];
+   
+    //[self somethingChanged];
+ 
+    if (store) {success = YES;}
+    return success;
+}
+
+#pragma mark - CORE DATA RESET
+- (void)resetContext:(NSManagedObjectContext*)moc {
+    [moc performBlockAndWait:^{
+        [moc reset];
+    }];
+}
+
+
+
 @end

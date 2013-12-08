@@ -26,8 +26,6 @@ Company *company;
 NSMutableArray *invoiceItemsArray;
 
 
-//+(void)drawPDF:(NSString*)fileName withInvoice:(Invoice *)invoice withInvoiceItems:(NSMutableArray *)invoiceItems;
-
 +(void)drawPDF:(NSString*)fileName withInvoice:(Invoice *)invoice withInvoiceItems:(NSMutableArray *)invoiceItems withCompanyRecord:(Company *)companyRecord;
 {
     
@@ -44,8 +42,8 @@ NSMutableArray *invoiceItemsArray;
     [self drawLogo];
     
     
-    int xOrigin = 7;
-    int yOrigin = 180;
+    int xOrigin = 9;
+    int yOrigin = 195;
     
     int rowHeight = 13;
    
@@ -165,8 +163,57 @@ NSMutableArray *invoiceItemsArray;
     {
         backgroundColor   = [UIColor colorWithR:54 G:100 B:139 A:1];
     }
+    else if(label.tag == 78)
+    {
+        NSString *str = inv.siteAddressLine1;
+        if (str.length < 1) {
+            backgroundColor = [UIColor clearColor];
+        }
+        else
+        {
+            backgroundColor = [UIColor colorWithR:214 G:214 B:214 A:1];
+        }
+    }
+    else if(label.tag == 79)
+    {
+        NSString *str = inv.siteAddressLine1;
+        if (str.length < 1) {
+            backgroundColor = [UIColor clearColor];
+        }
+        else
+        {
+            backgroundColor = [UIColor colorWithR:54 G:100 B:139 A:1];
+        }
+    }
+
+    
     else if (label.tag == 333) {
         backgroundColor   = [UIColor colorWithR:54 G:100 B:139 A:1];
+    }
+    else if(label.tag >= 71 && label.tag <= 77)
+    {
+        NSString *str = inv.siteAddressLine1;
+        if (str.length < 1) {
+             backgroundColor = [UIColor clearColor];
+        }
+        else
+        {
+             backgroundColor = [UIColor colorWithR:235 G:235 B:235 A:1];
+        }
+    }
+    else if(label.tag == 880)
+    {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *str = [prefs valueForKey:@"invoiceFooterNotes"];
+        
+        if (str.length > 0) {
+            backgroundColor = [UIColor colorWithR:235 G:235 B:235 A:1];
+        }
+        else
+        {
+            backgroundColor = [UIColor clearColor];
+        }
+        
     }
     else
     {
@@ -263,12 +310,30 @@ NSMutableArray *invoiceItemsArray;
         font = CTFontCreateWithName((CFStringRef) @"System",12.0, NULL);
         theAlignment = kCTCenterTextAlignment;
     }
-    else if (label.tag == 2) {
+    else if (label.tag == 2 || label.tag == 79) {
         textColor = [UIColor whiteColor];
         color = textColor.CGColor;
         font = CTFontCreateWithName((CFStringRef) @"System",10.0, NULL);
         theAlignment = kCTCenterTextAlignment;
     }
+    else if(label.tag == 78)
+    {
+        NSString *str = inv.siteAddressLine1;
+        if (str.length < 1) {
+            textColor = [UIColor whiteColor];
+            color = textColor.CGColor;
+            theAlignment = kCTLeftTextAlignment;
+            font = CTFontCreateWithName((CFStringRef) @"System", 8.0, NULL);
+        }
+        else
+        {
+            textColor = [UIColor blackColor];
+            color = textColor.CGColor;
+            theAlignment = kCTLeftTextAlignment;
+            font = CTFontCreateWithName((CFStringRef) @"System", 8.0, NULL);
+        }
+    }
+
     else if(label.tag == 4)
     {
         textColor = [UIColor blackColor];
@@ -380,7 +445,6 @@ NSMutableArray *invoiceItemsArray;
 
 +(void)drawLabels
 {
-    [self calculateSummaryTotals];
     
     NSArray* objects;
     
@@ -720,7 +784,6 @@ NSMutableArray *invoiceItemsArray;
                     }
                     break;}
 
-                
                     
                 case 50:{
                     
@@ -778,7 +841,98 @@ NSMutableArray *invoiceItemsArray;
                         label.text = @"";
                     }
                     break;}
-
+                    
+                case 71:{
+                    
+                    NSString *str = inv.siteName;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 72:{
+                    
+                    NSString *str = inv.siteAddressLine1;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 73:{
+                    
+                    NSString *str = inv.siteAddressLine2;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 74:{
+                    
+                    NSString *str = inv.siteAddressLine3;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 75:{
+                    
+                    NSString *str = inv.sitePostcode;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 76:{
+                    
+                    NSString *str = inv.siteTelephone;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 77:{
+                    
+                    NSString *str = inv.siteMobile;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 880:{
+                    
+                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                    NSString *str = [prefs valueForKey:@"invoiceFooterNotes"];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+             
             }
             [self drawText:label.text inFrame:label.frame withUILabel:label];
             }
@@ -839,6 +993,11 @@ NSMutableArray *invoiceItemsArray;
 {
     int padding = 1;
     
+    int lastyOriginPosition = origin.y;
+    int currentRowHeight;
+    
+
+    
     for(int i = 0; i < [invoiceItemsArray count]; i++)
     {
         
@@ -855,16 +1014,14 @@ NSMutableArray *invoiceItemsArray;
         float total = quantity * unitPrice;
         
         if (discountRate > 0) {
-            discountMultiplier = discountRate / 100; //(100 - discountRate) / 100;
+            discountMultiplier = discountRate / 100;
             discountAmount = (total * discountMultiplier);
         }
         
         NSArray* infoToDraw = [NSArray arrayWithObjects:[NSString checkForNilString:invItem.itemDescription], [NSString checkForNilString:invItem.quantity], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@",[LACHelperMethods getDefaultCurrency],invItem.unitPrice]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], discountAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency],invItem.vatAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency], invItem.total]], nil];
         
         NSLog(@"item description %@", invItem.itemDescription);
-        
         NSLog(@"item total %@", invItem.total);
-        
         
         
         int calcColumnWidth = 0;
@@ -875,7 +1032,7 @@ NSMutableArray *invoiceItemsArray;
         {
             switch (j) {
                 case 0:
-                    calcColumnWidth = 297;
+                    calcColumnWidth = 295;
                     break;
                 case 1:
                     calcColumnWidth = 60;
@@ -890,23 +1047,34 @@ NSMutableArray *invoiceItemsArray;
                     calcColumnWidth = 60;
                     break;
                 case 5:
-                    calcColumnWidth = 59;
+                    calcColumnWidth = 60;
                     break;
                 default:
                     calcColumnWidth = 10;
                     break;
             }
             
+           
+            currentRowHeight = rowHeight;
+            int newOriginY = lastyOriginPosition;
             
-            int newOriginY = origin.y + ((i+1)*rowHeight);
-                      
-            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, rowHeight);
+            if ([invItem.itemDescription contains:@"\n"]) {
+                NSString *str = invItem.itemDescription;
+                NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                currentRowHeight = 11 * ([arr count]);
+            }
+
+            
+            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
         
     
             [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
             
             newOriginX = newOriginX + calcColumnWidth;
+            
         }
+        
+        lastyOriginPosition = lastyOriginPosition + currentRowHeight;
     }
 } 
 
@@ -920,6 +1088,10 @@ NSMutableArray *invoiceItemsArray;
         andColumnCount:(int)numberOfColumns
 {
     int padding = 1;
+    
+    
+    int lastyOriginPosition = origin.y;
+    int currentRowHeight;
     
     for(int i = 0; i < [invoiceItemsArray count]; i++)
     {
@@ -957,7 +1129,7 @@ NSMutableArray *invoiceItemsArray;
         {
             switch (j) {
                 case 0:
-                    calcColumnWidth = 356;
+                    calcColumnWidth = 353;
                     break;
                 case 1:
                     calcColumnWidth = 60;
@@ -969,7 +1141,7 @@ NSMutableArray *invoiceItemsArray;
                     calcColumnWidth = 60;
                     break;
                 case 4:
-                    calcColumnWidth = 59;
+                    calcColumnWidth = 60;
                     break;
                 default:
                     calcColumnWidth = 10;
@@ -977,71 +1149,28 @@ NSMutableArray *invoiceItemsArray;
             }
             
             
-            int newOriginY = origin.y + ((i+1)*rowHeight);
+            currentRowHeight = rowHeight;
+          
+            int newOriginY = lastyOriginPosition;
             
-            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, rowHeight);
+            if ([invItem.itemDescription contains:@"\n"]) {
+                NSString *str = invItem.itemDescription;
+                NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                currentRowHeight = 11 * ([arr count]);
+            }
             
+             CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
             
             [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
             
             newOriginX = newOriginX + calcColumnWidth;
         }
+        
+        lastyOriginPosition = lastyOriginPosition + currentRowHeight;
+        
     }
 } 
 
-
-
-
-
-
-+(void)calculateSummaryTotals
-{
-    /* No longer needed as calculated in the App before generating - Left in just in case but can be removed on Version 2.
-     
-     
-    if ([invoiceItemsArray count] > 0) {
-        
-        NSLog(@"invoiceItems count: %i", [invoiceItemsArray count]);
-        
-        NSMutableArray * totalArray = [[NSMutableArray alloc] init];
-        NSMutableArray * vatArray = [[NSMutableArray alloc] init];
-        NSMutableArray * subTotalArray = [[NSMutableArray alloc] init];
-        
-        for (int i = 0; i < [invoiceItemsArray count]; ++i) {
-            InvoiceItem *invItem = [invoiceItemsArray objectAtIndex:i];
-            [totalArray addObject:[NSNumber numberWithInt:[invItem.total intValue]]];
-        }
-        
-        NSLog(@"invoice total array count = %i", [totalArray count]);
-        
-        double totalSum = 0;
-        for (NSNumber * n in totalArray) {
-            totalSum += [n doubleValue];
-        }
-        
-        double totalVatSum = 0;
-        for (NSNumber * n in vatArray) {
-            totalVatSum += [n doubleValue];
-        }
-        
-        double subTotalSum = 0;
-        for (NSNumber * n in subTotalArray) {
-            subTotalSum += [n doubleValue];
-        }
-        
-        inv.total =  [NSString stringWithFormat:@"%.2f", totalSum];
-        //inv.vat =  [NSString stringWithFormat:@"%.2f", totalVatSum];
-        //inv.subtotal =  [NSString stringWithFormat:@"%.2f", subTotalSum];
-        
-     //   NSString *paidString = [self.managedObject valueForKey:@"paid"];
-     //   double paid = [paidString doubleValue];
-     //   inv.paid = [NSString stringWithFormat:@"%.2f",paid];
-        
-     //   double balanceDue = totalSum - paid;
-     //   inv.balanceDue = [NSString stringWithFormat:@"%.2f", balanceDue];
-        
-    } */
-}
 
 
 @end

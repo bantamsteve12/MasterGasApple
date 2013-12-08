@@ -204,6 +204,7 @@
         <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="estimateBodyText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="invoiceBodyText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -341,6 +342,16 @@
         <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
+    <entity name="Footer" representedClassName="Footer" syncable="YES">
+        <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="engineerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="estimateFooterNotes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="invoiceFooterNotes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
     <entity name="Image" representedClassName="Image" syncable="YES">
         <attribute name="companyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -371,6 +382,15 @@
         <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="paid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteAddressLine3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteEmail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteMobile" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sitePostcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="siteTelephone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subtotal" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="syncStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="terms" optional="YES" attributeType="String" syncable="YES"/>
@@ -867,11 +887,13 @@
         <element name="Engineer" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Estimate" positionX="0" positionY="0" width="0" height="0"/>
         <element name="EstimateItem" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EstimateTerm" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Expense" positionX="0" positionY="0" width="0" height="0"/>
         <element name="ExpenseItem" positionX="0" positionY="0" width="0" height="0"/>
         <element name="ExpenseItemCategory" positionX="0" positionY="0" width="0" height="0"/>
         <element name="ExpenseItemSupplier" positionX="0" positionY="0" width="0" height="0"/>
         <element name="ExpenseItemType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Footer" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Image" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Invoice" positionX="0" positionY="0" width="0" height="0"/>
         <element name="InvoiceItem" positionX="0" positionY="0" width="0" height="0"/>
@@ -892,6 +914,5 @@
         <element name="StockItem" positionX="0" positionY="0" width="0" height="0"/>
         <element name="VehicleRegistration" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WarningNotice" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="EstimateTerm" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

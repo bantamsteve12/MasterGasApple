@@ -28,7 +28,7 @@
 @synthesize managedObject;
 @synthesize managedObjectId;
 
-@synthesize itemDescriptionTextField;
+@synthesize itemDescriptionTextViewField;
 @synthesize unitPriceTextField;
 @synthesize discountRateTextField;
 @synthesize vatAmountTextField;
@@ -74,7 +74,7 @@
     {
         self.managedObject = self.selectedInvoiceStockItem;
         
-        itemDescriptionTextField.text = [self.managedObject valueForKey:@"itemDescription"];
+        itemDescriptionTextViewField.text = [self.managedObject valueForKey:@"itemDescription"];
         unitPriceTextField.text = [self.managedObject valueForKey:@"unitPrice"];
         vatAmountTextField.text = [self.managedObject valueForKey:@"vatRate"];
         discountRateTextField.text = [self.managedObject valueForKey:@"discountRate"];
@@ -164,7 +164,7 @@
     [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
     
-    [self.managedObject setValue:self.itemDescriptionTextField.text forKey:@"itemDescription"];
+    [self.managedObject setValue:self.itemDescriptionTextViewField.text forKey:@"itemDescription"];
     [self.managedObject setValue:self.unitPriceTextField.text forKey:@"unitPrice"];
     [self.managedObject setValue:self.discountRateTextField.text forKey:@"discountRate"];
     [self.managedObject setValue:self.vatAmountTextField.text forKey:@"vatRate"];

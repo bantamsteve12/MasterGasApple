@@ -12,19 +12,29 @@
 #import "InvoiceAddressDetailsTVC.h"
 #import "InvoiceTermsLookupTVC.h"
 #import "LACUsersHandler.h"
+#import "EstimateSiteAddressTVC.h"
+#import "Estimate.h"
+#import "EstimateItem.h"
+#import "SelectEstimateTVC.h"
 
 
-@interface InvoiceDetailTVC : UITableViewController <DatePickerTVCDelegate, MBProgressHUDDelegate, InvoiceAddressDetailsTVCDelegate, InvoiceTermsLookupTVCDelegate> {
+@interface InvoiceDetailTVC : UITableViewController <DatePickerTVCDelegate, MBProgressHUDDelegate, InvoiceAddressDetailsTVCDelegate, InvoiceTermsLookupTVCDelegate, EstimateSiteAddressDetailsTVCDelegate, SelectEstimateTVCDelegate> {
    	MBProgressHUD *HUD;
 }
 
 @property (strong, nonatomic) NSManagedObjectID *managedObjectId;
+
+
+@property (strong, nonatomic) Estimate *existingEstimate;
+@property (strong, nonatomic) NSMutableArray *estimateItems;
 
 @property (strong, nonatomic) IBOutlet UILabel *uniqueInvoiceNoLabel;
 @property (strong, nonatomic) IBOutlet UITextField *referenceTextField;
 @property (strong, nonatomic) IBOutlet UITextField *workOrderReferenceTextField;
 @property (strong, nonatomic) IBOutlet UILabel *customerNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *customerAddressPreviewLabel;
+@property (strong, nonatomic) IBOutlet UILabel *siteNameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *siteAddressPreviewLabel;
 @property (strong, nonatomic) IBOutlet UILabel *subtotalLabel;
 @property (strong, nonatomic) IBOutlet UILabel *vatLabel;
 @property (strong, nonatomic) IBOutlet UILabel *totalLabel;

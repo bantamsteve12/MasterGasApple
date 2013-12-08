@@ -26,6 +26,7 @@
 @synthesize bccEmailAddressTextField;
 @synthesize certificateBodyTextTextViewField;
 @synthesize invoiceBodyTextTextViewField;
+@synthesize estimateBodyTextTextViewField;
 
 @synthesize managedObjectContext;
 @synthesize managedObject;
@@ -60,6 +61,7 @@
     self.bccEmailAddressTextField.text = [self.managedObject valueForKey:@"bccEMailAddress"];
     self.certificateBodyTextTextViewField.text = [self.managedObject valueForKey:@"certificateBodyText"];
     self.invoiceBodyTextTextViewField.text = [self.managedObject valueForKey:@"invoiceBodyText"];
+    self.estimateBodyTextTextViewField.text = [self.managedObject valueForKey:@"estimateBodyText"];
     
 }
 
@@ -73,7 +75,6 @@
         
         [request setSortDescriptors:[NSArray arrayWithObject:
                                      [NSSortDescriptor sortDescriptorWithKey:@"companyId" ascending:YES]]];
-     //   [request setPredicate:[NSPredicate predicateWithFormat:@"syncStatus != %d", SDObjectDeleted]];
         self.emailRecords = [self.managedObjectContext executeFetchRequest:request error:&error];
     }];
 }
@@ -99,8 +100,9 @@
         [self.managedObject setValue:self.bccEmailAddressTextField.text forKey:@"bccEMailAddress"];
         [self.managedObject setValue:self.certificateBodyTextTextViewField.text forKey:@"certificateBodyText"];
         [self.managedObject setValue:self.invoiceBodyTextTextViewField.text forKey:@"invoiceBodyText"];
+        [self.managedObject setValue:self.estimateBodyTextTextViewField.text forKey:@"estimateBodyText"];
+
     
-        
         [self.managedObjectContext performBlockAndWait:^{
             NSError *error = nil;
             BOOL saved = [self.managedObjectContext save:&error];
@@ -112,7 +114,6 @@
         }];
         
         [self.navigationController popViewControllerAnimated:YES];
-       // updateCompletionBlock();
     
     [LACHelperMethods setEmailPreferencesInNSDefaults:self.managedObjectContext];
     

@@ -27,7 +27,10 @@ static float vatAmountFloat = 0;
 @synthesize managedObject;
 @synthesize managedObjectId;
 
-@synthesize itemDescriptionTextField;
+//@synthesize itemDescriptionTextField;
+
+@synthesize itemDescriptionTextViewField;
+
 @synthesize quantityTextField;
 @synthesize unitPriceTextField;
 @synthesize discountRateTextField;
@@ -82,7 +85,10 @@ static float vatAmountFloat = 0;
     {
         self.managedObject = self.selectedEstimateItem;
         
-        itemDescriptionTextField.text = [self.managedObject valueForKey:@"itemDescription"];
+       // itemDescriptionTextField.text = [self.managedObject valueForKey:@"itemDescription"];
+        
+        itemDescriptionTextViewField.text = [self.managedObject valueForKey:@"itemDescription"];
+        
         quantityTextField.text = [self.managedObject valueForKey:@"quantity"];
         
         unitPriceTextField.text = [NSString stringWithFormat:@"%@", [self.managedObject valueForKey:@"unitPrice"]];
@@ -164,7 +170,10 @@ static float vatAmountFloat = 0;
 
 -(void)theStockItemWasSelectedFromTheList:(StockItemLookupTVC *)controller
 {
-    self.itemDescriptionTextField.text = controller.selectedStockItem.itemDescription;
+    //self.itemDescriptionTextField.text = controller.selectedStockItem.itemDescription;
+  
+    self.itemDescriptionTextViewField.text = controller.selectedStockItem.itemDescription;
+    
     self.unitPriceTextField.text = controller.selectedStockItem.unitPrice;
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -201,7 +210,11 @@ static float vatAmountFloat = 0;
     [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
     
-    [self.managedObject setValue:self.itemDescriptionTextField.text forKey:@"itemDescription"];
+  //  [self.managedObject setValue:self.itemDescriptionTextField.text forKey:@"itemDescription"];
+  
+    [self.managedObject setValue:self.itemDescriptionTextViewField.text forKey:@"itemDescription"];
+    
+    
     [self.managedObject setValue:self.quantityTextField.text forKey:@"quantity"];
     [self.managedObject setValue:self.unitPriceTextField.text forKey:@"unitPrice"];
     [self.managedObject setValue:self.discountRateTextField.text forKey:@"discountRate"];

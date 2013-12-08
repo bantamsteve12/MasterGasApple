@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "InvoiceDetailTVC.h"
+#import "EstimateDetailTVC.h"
 #import "InvoicesTVC.h"
 
 @interface AccountsTVC : UITableViewController
 
 @property (nonatomic, strong) NSArray *invoices;
+@property (nonatomic, strong) NSArray *estimates;
+
 
 @end

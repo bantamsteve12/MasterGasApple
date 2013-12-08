@@ -19,6 +19,7 @@
 @implementation AccountsTVC
 
 @synthesize invoices;
+@synthesize estimates;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -44,6 +45,7 @@
 
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    
     if ([identifier isEqualToString:@"CreateNewInvoiceSegue"]) {
         
         // perform your computation to determine whether segue should occur
@@ -73,6 +75,35 @@
             return NO;
         }
     }
+    
+    else  if ([identifier isEqualToString:@"CreateNewEstimateSegue"]) {
+        
+        // perform your computation to determine whether segue should occur
+        BOOL segueShouldOccur = NO; // you determine this
+        
+        [self loadEstimatesDataFromCoreData];
+        
+        
+        if (self.estimates.count < 3 || [LACHelperMethods fullUser]) {
+            
+            segueShouldOccur = YES;
+        }
+        
+        if (!segueShouldOccur) {
+            UIAlertView *notPermitted = [[UIAlertView alloc]
+                                         initWithTitle:@"Upgrade required"
+                                         message:@"To add more estimates you need to upgrade to the pro account."
+                                         delegate:nil
+                                         cancelButtonTitle:@"OK"
+                                         otherButtonTitles:nil];
+            
+            // shows alert to user
+            [notPermitted show];
+            
+            // prevent segue from occurring
+            return NO;
+        }
+    }
     // by default perform the segue transition
     return YES;
 }
@@ -90,24 +121,19 @@
         invoicesTVC.outstanding = YES;
     }
     else if ([segue.identifier isEqualToString:@"CreateNewInvoiceSegue"]) {
-        InvoiceDetailTVC *invoiceDetailTVC = segue.destinationViewController;
-        [invoiceDetailTVC setUpdateCompletionBlock:^{
-            [[SDSyncEngine sharedEngine] startSync];
-        }];
-        
+    }
+    else if ([segue.identifier isEqualToString:@"CreateNewEstimateSegue"]) {
     }
 }
 
 
 - (void)loadInvoicesDataFromCoreData {
     [self.managedObjectContext performBlockAndWait:^{
-        //    [self.applianceManagedObjectContext reset];
         NSError *error = nil;
         NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
         
         [request setSortDescriptors:[NSArray arrayWithObject:
                                      [NSSortDescriptor sortDescriptorWithKey:@"companyId" ascending:YES]]];
-        [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (companyId == %@)", SDObjectDeleted, [LACUsersHandler getCurrentCompanyId]]];
         
         self.invoices = [self.managedObjectContext executeFetchRequest:request error:&error];
         
@@ -116,6 +142,20 @@
     }];
 }
 
+
+- (void)loadEstimatesDataFromCoreData {
+    [self.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Estimate"];
+        
+        [request setSortDescriptors:[NSArray arrayWithObject:
+                                     [NSSortDescriptor sortDescriptorWithKey:@"companyId" ascending:YES]]];
+        
+        self.estimates = [self.managedObjectContext executeFetchRequest:request error:&error];
+       
+        
+    }];
+}
 
 
 @end

@@ -47,7 +47,7 @@
         NSLog(@"entity: %@", self.entityName);
         
         [request setSortDescriptors:[NSArray arrayWithObject:
-                                     [NSSortDescriptor sortDescriptorWithKey:@"itemDescription" ascending:YES]]];
+                                     [NSSortDescriptor sortDescriptorWithKey:@"invoiceUniqueNo" ascending:YES]]];
         [request setPredicate:[NSPredicate predicateWithFormat:@"(invoiceUniqueNo == %@)", self.invoiceUniqueNo]];
         self.invoiceItems = [self.managedObjectContext executeFetchRequest:request error:&error];
     }];

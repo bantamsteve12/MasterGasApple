@@ -130,8 +130,33 @@
 
 
 -(IBAction)setCompanyLogo:(id)sender
-{
-    [self makeUIImagePickerControllerForCamera:NO];
+{ self.imagePicker = [[GKImagePicker alloc] init];
+    self.imagePicker.cropSize = CGSizeMake(300, 100);
+    self.imagePicker.delegate = self;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        
+        
+        self.popoverController = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker.imagePickerController];
+        
+        
+        [self.popoverController presentPopoverFromRect:self.companyLogoImageView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        
+        
+        CGRect r=((UIButton*)sender).frame;
+        CGRect tRect=[((UIButton*)sender) convertRect:((UIButton*)sender).frame toView:self.view];
+        tRect.origin.x=r.origin.x;
+        
+        [self.popoverController presentPopoverFromRect:tRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+        
+        
+    } else {
+        
+        [self presentModalViewController:self.imagePicker.imagePickerController animated:YES];
+        
+    }
+    
+    //[self makeUIImagePickerControllerForCamera:NO];
 }
 
 
@@ -158,42 +183,6 @@
 
     
 }
-
-
-
-/*
-- (void) useCameraRolliPad
-{
-    if ([self.popoverController isPopoverVisible]) {
-        [self.popoverController dismissPopoverAnimated:YES];
-    } else {
-        if ([UIImagePickerController isSourceTypeAvailable:
-             UIImagePickerControllerSourceTypeSavedPhotosAlbum])
-        {
-            UIImagePickerController *imagePicker =
-            [[UIImagePickerController alloc] init];
-            imagePicker.delegate = self;
-            imagePicker.sourceType =
-            UIImagePickerControllerSourceTypePhotoLibrary;
-            imagePicker.mediaTypes = [NSArray arrayWithObjects:
-                                      (NSString *) kUTTypeImage,
-                                      nil];
-            imagePicker.allowsEditing = NO;
-            
-            self.popoverController = [[UIPopoverController alloc]
-                                      initWithContentViewController:imagePicker];
-            
-            popoverController.delegate = self;
-            
-            [self.popoverController
-             presentPopoverFromRect:self.companyLogoImageView.bounds
-             inView:self.view
-             permittedArrowDirections:UIPopoverArrowDirectionUp
-             animated:YES];
-            
-        }
-    }
-} */
 
 
 -(void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info

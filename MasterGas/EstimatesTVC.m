@@ -86,22 +86,19 @@
     return YES;
 }
 
-/* TODO: MUST PUT BACK IN
- 
+
  // also edit with this code to delete correct
  
- NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
- NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
- NSManagedObject *date = [eventsOnThisDay objectAtIndex:indexPath.row];
+// NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+// NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+// NSManagedObject *date = [eventsOnThisDay objectAtIndex:indexPath.row];
  
- [self.managedObjectContext performBlockAndWait:^{
- if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
- [self.managedObjectContext deleteObject:date];
- }
+// [self.managedObjectContext performBlockAndWait:^{
+// if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
+// [self.managedObjectContext deleteObject:date];
+// }
  
- //////
- 
- 
+
  
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -109,7 +106,7 @@
         
         
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-            NSManagedObject *date = [self.invoices objectAtIndex:indexPath.row];
+            NSManagedObject *date = [self.estimates objectAtIndex:indexPath.row];
             [self.managedObjectContext performBlockAndWait:^{
                 if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
                     [self.managedObjectContext deleteObject:date];
@@ -132,7 +129,7 @@
     {
         [LACHelperMethods showBasicOKAlertMessage:@"Upgrade required" withMessage:@"You need to upgrade to a Pro account to delete"];
     }
-} */
+} 
 
 #pragma mark - Table view data source
 

@@ -2,7 +2,7 @@
 //  Email.m
 //  MasterGas
 //
-//  Created by Stephen Lalor on 11/01/2013.
+//  Created by Stephen Lalor on 08/12/2013.
 //  Copyright (c) 2013 Stephen Lalor. All rights reserved.
 //
 
@@ -11,15 +11,16 @@
 
 @implementation Email
 
-@dynamic ccEmailAddress;
 @dynamic bccEMailAddress;
+@dynamic ccEmailAddress;
 @dynamic certificateBodyText;
-@dynamic invoiceBodyText;
 @dynamic companyId;
 @dynamic createdAt;
 @dynamic engineerId;
+@dynamic invoiceBodyText;
 @dynamic objectId;
 @dynamic syncStatus;
 @dynamic updatedAt;
+@dynamic estimateBodyText;
 
 @end

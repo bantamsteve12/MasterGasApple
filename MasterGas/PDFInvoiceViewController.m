@@ -35,12 +35,11 @@
         NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"InvoiceItem"];
         
         [request setSortDescriptors:[NSArray arrayWithObject:
-                                     [NSSortDescriptor sortDescriptorWithKey:@"itemDescription" ascending:YES]]];
+                                     [NSSortDescriptor sortDescriptorWithKey:@"invoiceUniqueNo" ascending:YES]]];
         
-        [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (invoiceUniqueNo == %@) AND (companyId == %@)", SDObjectDeleted, self.currentInvoice.uniqueInvoiceNo, [LACUsersHandler getCurrentCompanyId]]];
+        [request setPredicate:[NSPredicate predicateWithFormat:@"(invoiceUniqueNo == %@)", self.currentInvoice.uniqueInvoiceNo]];
         
 
-        
         self.invoiceItems = [self.managedObjectContext executeFetchRequest:request error:&error];
         
         NSLog(@"1. invoice items = %i", self.invoiceItems.count);

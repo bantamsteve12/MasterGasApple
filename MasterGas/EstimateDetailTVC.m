@@ -13,6 +13,7 @@
 #import "PDFEstimateViewController.h"
 #import "EstimateItemsHeaderTVC.h"
 #import "LACHelperMethods.h"
+#import "EstimateDetailTVC.h"
 
 
 @interface EstimateDetailTVC ()
@@ -369,7 +370,7 @@
     }];
     
     [self.navigationController popViewControllerAnimated:YES];
-    updateCompletionBlock();
+ //   updateCompletionBlock();
 }
 
 -(void)SaveTest

@@ -13,6 +13,7 @@
 #import "SDSyncEngine.h"
 #import "Company.h"
 #import "Email.h"
+#import "Footer.h"
 
 @implementation LACHelperMethods
 
@@ -436,10 +437,39 @@ UIAlertView *alert = [[UIAlertView alloc]
         [prefs setObject:email.ccEmailAddress forKey:@"ccEmailAddress"];
         [prefs setObject:email.bccEMailAddress forKey:@"bccEMailAddress"];
         [prefs setObject:email.certificateBodyText forKey:@"certificateBodyText"];
+        [prefs setObject:email.estimateBodyText forKey:@"estimateBodyText"];
+        
+        
         [prefs synchronize];
         
     }
  
+}
+
++(void)setFooterPreferencesInNSDefaults:(NSManagedObjectContext *)mo
+{
+    NSArray *footerRecords;
+    NSError *error = nil;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Footer"];
+    
+    
+    [request setSortDescriptors:[NSArray arrayWithObject:
+                                 [NSSortDescriptor sortDescriptorWithKey:@"companyId" ascending:YES]]];
+  //  [request setPredicate:[NSPredicate predicateWithFormat:@"syncStatus != %d", SDObjectDeleted]];
+    footerRecords = [mo executeFetchRequest:request error:&error];
+    
+    
+    if (footerRecords.count > 0) {
+        
+        Footer *footer = [footerRecords objectAtIndex:0];
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:footer.invoiceFooterNotes forKey:@"invoiceFooterNotes"];
+        [prefs setObject:footer.estimateFooterNotes forKey:@"estimateFooterNotes"];
+        [prefs synchronize];
+        
+    }
+
 }
 
 +(void)setUserPreferencesInNSDefaults:(NSManagedObjectContext *)mo

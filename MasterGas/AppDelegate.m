@@ -84,6 +84,21 @@
 }
 
 
+
+- (SDCoreDataController*)cdh {
+   
+    if (!_coreDataHelper) {
+        static dispatch_once_t predicate;
+        dispatch_once(&predicate, ^{
+            _coreDataHelper = [SDCoreDataController new];
+        });
+     ///   [_coreDataHelper setupCoreData];
+    }
+    return _coreDataHelper;
+}
+
+
+
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
   sourceApplication:(NSString *)source annotation:(id)annotation {
     

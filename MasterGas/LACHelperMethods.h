@@ -47,6 +47,8 @@
 +(void)setUserPreferencesInNSDefaults:(NSManagedObjectContext *)mo;
 
 +(void)setEmailPreferencesInNSDefaults:(NSManagedObjectContext *)mo;
++(void)setFooterPreferencesInNSDefaults:(NSManagedObjectContext *)mo;
+
 
 +(NSString *)getDefaultCurrency;
 

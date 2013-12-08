@@ -14,7 +14,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *bccEmailAddressTextField;
 @property (strong, nonatomic) IBOutlet UITextView *certificateBodyTextTextViewField;
 @property (strong, nonatomic) IBOutlet UITextView *invoiceBodyTextTextViewField;
-
+@property (strong, nonatomic) IBOutlet UITextView *estimateBodyTextTextViewField;
 
 @property (strong, nonatomic) NSString *entityName;
 @property (nonatomic, strong) NSArray *emailRecords;

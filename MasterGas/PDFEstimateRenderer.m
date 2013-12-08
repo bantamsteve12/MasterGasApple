@@ -45,7 +45,7 @@ NSMutableArray *estimateItemsArray;
     
     
     int xOrigin = 7;
-    int yOrigin = 180;
+    int yOrigin = 192;
     
     int rowHeight = 13;
     
@@ -168,6 +168,21 @@ NSMutableArray *estimateItemsArray;
     else if (label.tag == 333) {
         backgroundColor   = [UIColor colorWithR:54 G:100 B:139 A:1];
     }
+    else if(label.tag == 880)
+    {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *str = [prefs valueForKey:@"estimateFooterNotes"];
+        
+        if (str.length > 0) {
+            backgroundColor = [UIColor colorWithR:235 G:235 B:235 A:1];
+        }
+        else
+        {
+            backgroundColor = [UIColor clearColor];
+        }
+        
+    }
+    
     else
     {
         backgroundColor = [UIColor colorWithR:235 G:235 B:235 A:1];
@@ -380,7 +395,6 @@ NSMutableArray *estimateItemsArray;
 
 +(void)drawLabels
 {
-    [self calculateSummaryTotals];
     
     NSArray* objects;
     
@@ -733,6 +747,21 @@ NSMutableArray *estimateItemsArray;
                         label.text = @"";
                     }
                     break;}
+               
+                    
+                case 880:{
+                    
+                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                    NSString *str = [prefs valueForKey:@"estimateFooterNotes"];
+                 
+                   if (str.length > 0) {
+                       label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
                     
             }
             [self drawText:label.text inFrame:label.frame withUILabel:label];
@@ -792,6 +821,10 @@ NSMutableArray *estimateItemsArray;
 {
     int padding = 1;
     
+    int lastyOriginPosition = origin.y;
+    int currentRowHeight;
+    
+    
     for(int i = 0; i < [estimateItemsArray count]; i++)
     {
         
@@ -845,16 +878,24 @@ NSMutableArray *estimateItemsArray;
                     break;
             }
             
+            currentRowHeight = rowHeight;
             
-            int newOriginY = origin.y + ((i+1)*rowHeight);
+            int newOriginY = lastyOriginPosition;
             
-            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, rowHeight);
+            if ([estItem.itemDescription contains:@"\n"]) {
+                NSString *str = estItem.itemDescription;
+                NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                currentRowHeight = 11 * ([arr count]);
+            }
             
+            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
             
             [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
             
             newOriginX = newOriginX + calcColumnWidth;
         }
+        
+        lastyOriginPosition = lastyOriginPosition + currentRowHeight;
     }
 }
 
@@ -868,6 +909,10 @@ NSMutableArray *estimateItemsArray;
               andColumnCount:(int)numberOfColumns
 {
     int padding = 1;
+    
+    int lastyOriginPosition = origin.y;
+    int currentRowHeight;
+    
     
     for(int i = 0; i < [estimateItemsArray count]; i++)
     {
@@ -901,7 +946,7 @@ NSMutableArray *estimateItemsArray;
         {
             switch (j) {
                 case 0:
-                    calcColumnWidth = 356;
+                    calcColumnWidth = 357;
                     break;
                 case 1:
                     calcColumnWidth = 60;
@@ -913,79 +958,39 @@ NSMutableArray *estimateItemsArray;
                     calcColumnWidth = 60;
                     break;
                 case 4:
-                    calcColumnWidth = 59;
+                    calcColumnWidth = 60;
                     break;
                 default:
                     calcColumnWidth = 10;
                     break;
             }
             
+           
+            currentRowHeight = rowHeight;
             
-            int newOriginY = origin.y + ((i+1)*rowHeight);
+            int newOriginY = lastyOriginPosition;
             
-            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, rowHeight);
+            if ([estItem.itemDescription contains:@"\n"]) {
+                NSString *str = estItem.itemDescription;
+                NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                currentRowHeight = 11 * ([arr count]);
+            }
+
+            
+            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
             
             
             [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
             
+            
             newOriginX = newOriginX + calcColumnWidth;
         }
+        
+        lastyOriginPosition = lastyOriginPosition + currentRowHeight;
     }
 }
 
 
-
-
-
-
-+(void)calculateSummaryTotals
-{
-    /* No longer needed as calculated in the App before generating - Left in just in case but can be removed on Version 2.
-     
-     
-     if ([invoiceItemsArray count] > 0) {
-     
-     NSLog(@"invoiceItems count: %i", [invoiceItemsArray count]);
-     
-     NSMutableArray * totalArray = [[NSMutableArray alloc] init];
-     NSMutableArray * vatArray = [[NSMutableArray alloc] init];
-     NSMutableArray * subTotalArray = [[NSMutableArray alloc] init];
-     
-     for (int i = 0; i < [invoiceItemsArray count]; ++i) {
-     InvoiceItem *invItem = [invoiceItemsArray objectAtIndex:i];
-     [totalArray addObject:[NSNumber numberWithInt:[invItem.total intValue]]];
-     }
-     
-     NSLog(@"invoice total array count = %i", [totalArray count]);
-     
-     double totalSum = 0;
-     for (NSNumber * n in totalArray) {
-     totalSum += [n doubleValue];
-     }
-     
-     double totalVatSum = 0;
-     for (NSNumber * n in vatArray) {
-     totalVatSum += [n doubleValue];
-     }
-     
-     double subTotalSum = 0;
-     for (NSNumber * n in subTotalArray) {
-     subTotalSum += [n doubleValue];
-     }
-     
-     inv.total =  [NSString stringWithFormat:@"%.2f", totalSum];
-     //inv.vat =  [NSString stringWithFormat:@"%.2f", totalVatSum];
-     //inv.subtotal =  [NSString stringWithFormat:@"%.2f", subTotalSum];
-     
-     //   NSString *paidString = [self.managedObject valueForKey:@"paid"];
-     //   double paid = [paidString doubleValue];
-     //   inv.paid = [NSString stringWithFormat:@"%.2f",paid];
-     
-     //   double balanceDue = totalSum - paid;
-     //   inv.balanceDue = [NSString stringWithFormat:@"%.2f", balanceDue];
-     
-     } */
-}
 
 
 @end
