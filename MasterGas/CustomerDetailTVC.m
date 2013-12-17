@@ -123,7 +123,7 @@
         updateCustomerCompletionBlock();
         
     } else {
-        UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Uh oh..." message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"Duh" otherButtonTitles:nil];
+        UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Name required" message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [cannotSaveAlert show];
     }
 }

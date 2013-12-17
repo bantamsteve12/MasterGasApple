@@ -39,6 +39,8 @@
 //+(void)setFullUser:(NSString *)expiry;
 +(bool)fullUser;
 
++(bool)companyRecordPresent:(NSManagedObjectContext *)mo;
+
 +(void)checkUserSubscriptionInCloud;
 +(NSDictionary *) loginServiceCall;
 +(NSString *)stringWithUrl:(NSURL *)url;
@@ -53,6 +55,7 @@
 +(NSString *)getDefaultCurrency;
 
 +(NSString *)getCompanyName;
+
 
 @end
 

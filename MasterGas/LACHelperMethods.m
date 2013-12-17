@@ -282,6 +282,30 @@ UIAlertView *alert = [[UIAlertView alloc]
 }
 
 
++(bool)companyRecordPresent:(NSManagedObjectContext *)mo
+{
+    NSArray *companyRecords;
+    NSError *error = nil;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Company"];
+    
+    [request setSortDescriptors:[NSArray arrayWithObject:
+                                 [NSSortDescriptor sortDescriptorWithKey:@"companyName" ascending:YES]]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"syncStatus != %d", SDObjectDeleted]];
+    companyRecords = [mo executeFetchRequest:request error:&error];
+    
+    NSLog(@"no of company records: %i", [companyRecords count]);
+    
+    if (companyRecords.count > 0) {
+        return YES;
+    }
+    else
+    {
+        return NO;
+    }
+
+}
+
+
 
 +(void)checkUserSubscriptionInCloud{
     

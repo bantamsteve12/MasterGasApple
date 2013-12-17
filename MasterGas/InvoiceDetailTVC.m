@@ -278,6 +278,47 @@
 }
 
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:@"viewInvoiceSegue"] ||
+        [identifier isEqualToString:@"emailInvoiceSegue"] ||
+        [identifier isEqualToString:@"printInvoiceSegue"]
+        ) {
+        
+        // perform your computation to determine whether segue should occur
+        BOOL segueShouldOccur = NO; // you determine this
+        
+        if ( [LACHelperMethods companyRecordPresent:self.managedObjectContext ]) {
+            
+            segueShouldOccur = YES;
+        }
+        else
+        {
+            segueShouldOccur = NO;
+            
+        }
+        
+        if (!segueShouldOccur) {
+            UIAlertView *notPermitted = [[UIAlertView alloc]
+                                         initWithTitle:@"No Company Details set"
+                                         message:@"You need to set your company details, go to Settings -> Company Details and fill them out. Then return back here and select the view option again."
+                                         delegate:nil
+                                         cancelButtonTitle:@"OK"
+                                         otherButtonTitles:nil];
+            
+            // shows alert to user
+            [notPermitted show];
+            
+            // prevent segue from occurring
+            return NO;
+        }
+    }
+    // by default perform the segue transition
+    return YES;
+}
+
+
+
+
 -(void)calculateSummaryTotals
 {
         NSMutableArray * items = [[NSMutableArray alloc] init];

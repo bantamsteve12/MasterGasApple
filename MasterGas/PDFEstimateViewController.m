@@ -89,19 +89,23 @@
 
 -(void)generatingHUD
 {
-    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-	[self.navigationController.view addSubview:HUD];
+    
+        HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
 	
-	HUD.delegate = self;
-	HUD.labelText = @"Generating";
+        HUD.delegate = self;
+        HUD.labelText = @"Generating";
 	
-    [HUD showWhileExecuting:@selector(generateCertificate) onTarget:self withObject:nil animated:YES];
+        [HUD showWhileExecuting:@selector(generateCertificate) onTarget:self withObject:nil animated:YES];
+    
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [self generatingHUD];
+    
+    
     [super viewDidLoad];
 }
 

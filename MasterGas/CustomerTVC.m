@@ -95,31 +95,42 @@
     // Loop through and create our keys
     for (Customer *test in self.customers)
     {
-        NSString *c =  [test.name substringToIndex:1];
-        [c uppercaseString];
-        found = NO;
+        if (test.name.length < 1) {
+            test.name = @"**Missing Name**";
+        }
         
-        for (NSString *str in [self.sections allKeys])
-        {
-            
-            if ([[str uppercaseString] isEqualToString:c])
+    
+            NSString *c =  [test.name substringToIndex:1];
+            [c uppercaseString];
+            found = NO;
+        
+            for (NSString *str in [self.sections allKeys])
             {
-                found = YES;
+            
+                if ([[str uppercaseString] isEqualToString:c])
+                {
+                    found = YES;
+                }
             }
-        }
         
-        if (!found)
-        {
-            [self.sections setValue:[[NSMutableArray alloc] init] forKey:[c uppercaseString]];
-        }
+            if (!found)
+            {
+                [self.sections setValue:[[NSMutableArray alloc] init] forKey:[c uppercaseString]];
+            }
+        
     }
     
     
     for (Customer *cust in self.customers)
     {
-        NSString *c = [[cust.name substringToIndex:1] uppercaseString];
+        if (cust.name.length < 1) {
+            cust.name = @"**Missing Name**";
+        }
         
-        [[self.sections objectForKey:c] addObject:cust];
+            
+            NSString *c = [[cust.name substringToIndex:1] uppercaseString];
+            [[self.sections objectForKey:c] addObject:cust];
+      //  }
     }
     
     // Sort each section array
@@ -131,8 +142,6 @@
     [self.tableView reloadData];
     
 }
-
-
 
 
 - (void)viewDidAppear:(BOOL)animated {

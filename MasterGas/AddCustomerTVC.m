@@ -85,7 +85,7 @@
     } else {
         UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Name Required" message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [cannotSaveAlert show];
-    } 
+    }
 }
 
 
