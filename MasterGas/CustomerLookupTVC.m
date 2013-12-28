@@ -99,6 +99,7 @@
     [self setupTable];
 }
 
+
 -(void)setupTable
 {
     self.sections = [[NSMutableDictionary alloc] init];
@@ -110,6 +111,11 @@
     // Loop through and create our keys
     for (Customer *test in self.customers)
     {
+        if (test.name.length < 1) {
+            test.name = @"**Missing Name**";
+        }
+        
+        
         NSString *c =  [test.name substringToIndex:1];
         [c uppercaseString];
         found = NO;
@@ -127,14 +133,20 @@
         {
             [self.sections setValue:[[NSMutableArray alloc] init] forKey:[c uppercaseString]];
         }
+        
     }
     
     
     for (Customer *cust in self.customers)
     {
-        NSString *c = [[cust.name substringToIndex:1] uppercaseString];
+        if (cust.name.length < 1) {
+            cust.name = @"**Missing Name**";
+        }
         
+        
+        NSString *c = [[cust.name substringToIndex:1] uppercaseString];
         [[self.sections objectForKey:c] addObject:cust];
+        //  }
     }
     
     // Sort each section array
@@ -146,7 +158,6 @@
     [self.tableView reloadData];
     
 }
-
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
