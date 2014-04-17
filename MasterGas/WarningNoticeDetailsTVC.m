@@ -98,27 +98,33 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
-    
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     // TODO: Add in name values
     [self.managedObject setValue:[NSString checkForNilString:self.locationTextField.text] forKey:@"applianceLocation"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceTypeTextField.text] forKey:@"applianceType"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceMakeTextField.text] forKey:@"applianceMake"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceModelTextField.text] forKey:@"applianceModel"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceSerialNumberField.text] forKey:@"applianceSerialNumber"];
-  
     
-
+    
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.gasEscapeSegmentControl.selectedSegmentIndex] forKey:@"gasEscape"];
- 
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.warningLabelAttachedSegmentControl.selectedSegmentIndex] forKey:@"warningLabelAttached"];
- 
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.warningLabelStatementSegmentControl.selectedSegmentIndex] forKey:@"warningLabelStatement"];
     
     [self.managedObject setValue:[NSString checkForNilString:self.immediatelyDangeoursReasonTextView.text] forKey:@"immediatelyDangerousStatement"];
     [self.managedObject setValue:[NSString checkForNilString:self.atRiskReasonTextView.text] forKey:@"atRiskStatement"];
     [self.managedObject setValue:[NSString checkForNilString:self.notToCurrentStandardsReasonTextView.text] forKey:@"notToCurrentStandardsStatement"];
     
-        [self.managedObject setValue:[LACHelperMethods TrueFalseNASegementControlValue:self.gasUserNotPresentSegementControl.selectedSegmentIndex] forKey:@"customerNotPresent"];
+    [self.managedObject setValue:[LACHelperMethods TrueFalseNASegementControlValue:self.gasUserNotPresentSegementControl.selectedSegmentIndex] forKey:@"customerNotPresent"];
     
     
     [self.managedObjectContext performBlockAndWait:^{
@@ -130,12 +136,9 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
-    
+
 }
+
 
 #pragma Delegate methods
 
@@ -186,6 +189,12 @@
         modelLookupTVC.delegate = self;
     }
     
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
 }
 
 

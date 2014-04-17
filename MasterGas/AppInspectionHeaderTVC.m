@@ -32,6 +32,7 @@
 
 @synthesize entityName;
 @synthesize refreshButton;
+@synthesize maxAppliances;
 @synthesize applianceInspections;
 @synthesize selectedApplianceInspection;
 @synthesize managedObjectContext;
@@ -246,14 +247,16 @@ NSIndexPath *_tmpIndexPath;
         
         BOOL segueShouldOccur = NO; // you determine this
         
-        if (applianceInspections.count < 6) {
+        int max = [self.maxAppliances intValue];
+        
+        if (applianceInspections.count < max) {
             segueShouldOccur = YES;
         }
         
         if (!segueShouldOccur) {
             UIAlertView *notPermitted = [[UIAlertView alloc]
-                                         initWithTitle:@"6 Max Appliances Reached"
-                                         message:@"A maximum of 6 appliance inspections can be entered on to a Gas Safety Record."
+                                         initWithTitle:[NSString stringWithFormat:@"%i Max Appliances Reached", max]
+                                         message:[NSString stringWithFormat:@"A maximum of %i appliance inspections can be entered on to a Gas Safety Record.", max]
                                          delegate:nil
                                          cancelButtonTitle:@"OK"
                                          otherButtonTitles:nil];
@@ -278,35 +281,8 @@ NSIndexPath *_tmpIndexPath;
 }
 
 - (IBAction)refreshButtonTouched:(id)sender {
- //[[SDSyncEngine sharedEngine] startSync];
 }
 
-/*
-- (void)checkSyncStatus {
-    if ([[SDSyncEngine sharedEngine] syncInProgress]) {
-        [self replaceRefreshButtonWithActivityIndicator];
-    } else {
-        [self removeActivityIndicatorFromRefreshButon];
-    }
-}
 
-- (void)replaceRefreshButtonWithActivityIndicator {
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-    [activityIndicator setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
-    [activityIndicator startAnimating];
-    UIBarButtonItem *activityItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-    self.navigationItem.leftBarButtonItem = activityItem;
-}
-
-- (void)removeActivityIndicatorFromRefreshButon {
-    self.navigationItem.leftBarButtonItem = self.refreshButton;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"syncInProgress"]) {
-        [self checkSyncStatus];
-    }
-} */
 
 @end

@@ -95,7 +95,22 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
-  
+    if (![self.nameTextField.text isEqualToString:@""]) {
+    
+        [self SaveAll];
+        [self.navigationController popViewControllerAnimated:YES];
+        updateCustomerCompletionBlock();
+        
+    } else {
+        UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Name required" message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [cannotSaveAlert show];
+    }
+}
+
+
+-(void)SaveAll
+{
+    
     if (![self.nameTextField.text isEqualToString:@""]) {
         
         [self.managedObject setValue:[NSString checkForNilString:self.nameTextField.text] forKey:@"name"];
@@ -107,7 +122,7 @@
         [self.managedObject setValue:[NSString checkForNilString:self.mobileNumberTextField.text] forKey:@"mobileNumber"];
         [self.managedObject setValue:[NSString checkForNilString:self.emailTextField.text] forKey:@"email"];
         [self.managedObject setValue:[NSString checkForNilString:self.notesTextView.text] forKey:@"notes"];
-
+        
         
         [self.context performBlockAndWait:^{
             NSError *error = nil;
@@ -119,13 +134,12 @@
             [[SDCoreDataController sharedInstance] saveMasterContext];
         }];
         
-        [self.navigationController popViewControllerAnimated:YES];
-        updateCustomerCompletionBlock();
-        
     } else {
         UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Name required" message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [cannotSaveAlert show];
     }
+    
+    
 }
 
 
@@ -361,6 +375,12 @@
     
     
  }
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

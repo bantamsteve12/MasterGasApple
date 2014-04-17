@@ -2,8 +2,8 @@
 //  ApplianceInspection.m
 //  MasterGas
 //
-//  Created by Stephen Lalor on 15/02/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Stephen Lalor on 07/04/2014.
+//  Copyright (c) 2014 Stephen Lalor. All rights reserved.
 //
 
 #import "ApplianceInspection.h"
@@ -46,5 +46,6 @@
 @dynamic visualConditionOfFlueSatisfactory;
 @dynamic warningNoticeLabelIssued;
 @dynamic warningNoticeNumber;
+@dynamic fluePerformanceSpillageTest;
 
 @end

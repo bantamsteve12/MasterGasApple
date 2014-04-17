@@ -10,6 +10,7 @@
 #import "CoreText/CoreText.h"
 #import "PDFEstimateRenderer.h"
 #import "Company.h"
+#import "SDCoreDataController.h"
 
 @interface PDFEstimateViewController ()
 
@@ -24,11 +25,15 @@
 @synthesize companyRecords;
 @synthesize managedObjectContext;
 @synthesize managedObject;
-
 @synthesize mode;
 @synthesize aEstimate;
 
+
+
 - (void)loadRecordsFromCoreData {
+    
+    self.managedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
+    
     [self.managedObjectContext performBlockAndWait:^{
         //   [self.managedObjectContext reset];
         NSError *error = nil;
@@ -39,9 +44,21 @@
         
         [request setPredicate:[NSPredicate predicateWithFormat:@"(estimateNo == %@)", self.currentEstimate.uniqueEstimateNo]];
         
+        self.estimateItems = nil;
+        
+        for (int i = 0; i < self.estimateItems.count; i++) {
+            EstimateItem *estItem = [estimateItems objectAtIndex:i];
+            NSLog(@"estimate item: %@", estItem.itemDescription);
+        }
+        
         self.estimateItems = [self.managedObjectContext executeFetchRequest:request error:&error];
      
     }];
+    
+    for (int i = 0; i < self.estimateItems.count; i++) {
+        EstimateItem *estItem = [estimateItems objectAtIndex:i];
+        NSLog(@"estimate item: %@", estItem.itemDescription);
+    }
 }
 
 
@@ -115,6 +132,8 @@
     aEstimate = currentEstimate;
     estimateItems = [[NSMutableArray alloc] init];
     
+    self.estimateItems = nil;
+    
     [self loadRecordsFromCoreData];
     [self loadCompanyRecordFromCoreData];
     
@@ -161,7 +180,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox"
+                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox", @"Open in..."
                                   ,nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showFromToolbar:self.tabBarController.tabBar];
@@ -201,6 +220,22 @@
             [self uploadToDropbox];
         }
     }
+    if (buttonIndex == 3) {
+        
+        NSURL *URL = [NSURL fileURLWithPath:[self getPDFFileName]];
+        
+        if (URL) {
+            // Initialize Document Interaction Controller
+            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+            
+            // Configure Document Interaction Controller
+            [self.documentInteractionController setDelegate:self];
+            
+            // Present Open In Menu
+            [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        }
+    }
+
     
 }
 
@@ -260,6 +295,8 @@
 
 -(void)emailToCustomer
 {
+    if ([MFMailComposeViewController canSendMail]) {
+        
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
@@ -300,6 +337,20 @@
     }
     
     [self presentModalViewController:picker animated:YES];
+    }
+    else
+    {
+        
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Email not setup"
+                              message:@"You haven't setup emails on your device. Please setup you emails in the mail app for your device and try again."
+                              delegate: nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        
+        [alert show];
+
+    }
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error

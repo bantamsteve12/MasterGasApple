@@ -32,8 +32,11 @@
 
 +(void)drawLabels:(NSString*)reportLayoutName;
 
++(void)drawLabelsOnContinuationSheet:(NSString*)reportLayoutName;
+
 +(void)drawLogo:(NSString*)reportLayoutName;
 
++(BOOL)shouldUseContinuation;
 
 +(void)drawTableAt:(CGPoint)origin
      withRowHeight:(int)rowHeight

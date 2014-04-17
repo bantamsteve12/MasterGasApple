@@ -211,7 +211,6 @@
         
         Customer *cust = [[self.sections valueForKey:[[[self.sections allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
         
-
         cell.textLabel.text = cust.name;
         NSString *addressLine = [NSString stringWithFormat:@"%1$@, %2$@", cust.addressLine1, cust.postcode];
         cell.detailTextLabel.text =  addressLine;
@@ -266,36 +265,5 @@
     }
 }
 
-/*
-- (IBAction)refreshButtonTouched:(id)sender {
-    [[SDSyncEngine sharedEngine] startSync];
-}
-
-- (void)checkSyncStatus {
-    if ([[SDSyncEngine sharedEngine] syncInProgress]) {
-        [self replaceRefreshButtonWithActivityIndicator];
-    } else {
-        [self removeActivityIndicatorFromRefreshButon];
-    }
-}
-
-- (void)replaceRefreshButtonWithActivityIndicator {
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-    [activityIndicator setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
-    [activityIndicator startAnimating];
-    UIBarButtonItem *activityItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-    self.navigationItem.leftBarButtonItem = activityItem;
-}
-
-- (void)removeActivityIndicatorFromRefreshButon {
-    self.navigationItem.leftBarButtonItem = self.refreshButton;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"syncInProgress"]) {
-        [self checkSyncStatus];
-    }
-} */
 
 @end

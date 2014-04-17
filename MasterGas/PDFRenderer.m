@@ -11,18 +11,40 @@
 #import "UIColor+Additions.h"
 #import "Certificate.h"
 #import "ApplianceInspection.h"
+#import "NSString+Additions.h"
 
 @implementation PDFRenderer
 
 
 Certificate *cert;
 
-//NSMutableArray *applianceInspectionsArray;
 NSArray *applianceInspectionsArray;
 
-
-//ApplianceInspection *_applianceInspection;
-//+(void)drawPDF:(NSString*)fileName withCertificate:(Certificate *)certificate withInspection:(NSMutableArray *)applianceInspections withCertificateReportLayoutName:(NSString *)reportLayoutName
++(BOOL)shouldUseContinuation
+{
+    BOOL shouldUseContinuation = NO;
+    
+    for (int i = 0; i < [applianceInspectionsArray count]; i++)
+    {
+        ApplianceInspection *inspection = applianceInspectionsArray[i];
+        
+        if ([inspection.faultDetails contains:@"\n"]) {
+            shouldUseContinuation = YES;
+        }
+        if ([inspection.faultDetails length] > 50) {
+            shouldUseContinuation = YES;
+        }
+        
+        if ([inspection.remedialActionTaken contains:@"\n"]) {
+            shouldUseContinuation = YES;
+        }
+        if ([inspection.remedialActionTaken length] > 50) {
+            shouldUseContinuation = YES;
+        }
+    }
+    
+    return shouldUseContinuation;
+}
 
 +(void)drawPDF:(NSString*)fileName withCertificate:(Certificate *)certificate withInspection:(NSArray *)applianceInspections withCertificateReportLayoutName:(NSString *)reportLayoutName
 {
@@ -40,7 +62,15 @@ NSArray *applianceInspectionsArray;
         
     [self drawLabels:reportLayoutName];
     [self drawLogo:reportLayoutName];
+   // [self drawLogo:reportLayoutName];
     
+    // if a second sheet is required generate another page.
+    if ([self shouldUseContinuation]) {
+        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 792, 612), nil);
+        [self drawLabelsOnContinuationSheet:@"LandlordCertCont"];
+        [self drawLogo:@"LandlordCertCont"];
+    }
+
     // Close the PDF context and write the contents out.
     UIGraphicsEndPDFContext();
 }
@@ -120,7 +150,16 @@ NSArray *applianceInspectionsArray;
     else if (label.tag == 333) {
         backgroundColor   = [UIColor colorWithR:54 G:100 B:139 A:1];
     }
-   
+    else if(label.tag == 1101)
+    {
+        if ([self shouldUseContinuation]) {
+          backgroundColor   = [UIColor colorWithR:235 G:235 B:235 A:1];
+        }
+       else
+       {
+           backgroundColor   = [UIColor  clearColor];
+       }
+    }
     else
     {
          backgroundColor = [UIColor colorWithR:235 G:235 B:235 A:1];
@@ -178,7 +217,13 @@ NSArray *applianceInspectionsArray;
         color = textColor.CGColor;
         font = CTFontCreateWithName((CFStringRef) @"System",14.0, NULL);
         theAlignment = kCTCenterTextAlignment;
- 
+    }
+    else if(label.tag == 1101)
+    {
+        textColor = [UIColor blackColor];
+        color = textColor.CGColor;
+        font = CTFontCreateWithName((CFStringRef) @"System",33.0, NULL);
+        theAlignment = kCTCenterTextAlignment;
     }
     else
     {
@@ -206,15 +251,8 @@ NSArray *applianceInspectionsArray;
     
     NSAttributedString *stringToDraw = [[NSAttributedString alloc] initWithString:textToDraw attributes:attributesDict];
     
-    //CFAttributedStringRef currentText = CFAttributedStringCreate(NULL, stringRef, NULL);
-    
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)stringToDraw);
     
-
-   // CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(currentText);
-    
-    
-  
     
     CGMutablePathRef framePath = CGPathCreateMutable();
     CGPathAddRect(framePath, NULL, frameRect);
@@ -270,7 +308,7 @@ NSArray *applianceInspectionsArray;
             UILabel* label = (UILabel*)view;
         
             
-            NSLog(@"cert.customerAddressName = %@", cert.customerAddressName);
+          //  NSLog(@"cert.customerAddressName = %@", cert.customerAddressName);
             
             switch(label.tag)
             {
@@ -849,7 +887,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                             label.text = @"N/A";
                     }}
                     break;}
 
@@ -868,7 +906,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                             label.text = @"N/A";
                     }}
                     break;}
 
@@ -888,7 +926,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                         label.text = @"N/A";
                     }}
                     break;}
 
@@ -908,7 +946,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                         label.text = @"N/A";
                     }}
                     break;}
 
@@ -927,7 +965,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                            label.text = @"N/A";
                     }}
                     break;}
 
@@ -946,7 +984,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                           label.text = @"N/A";
                     }}
                     break;}
 
@@ -966,7 +1004,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                           label.text = @"N/A";
                     }}
                     break;}
 
@@ -986,7 +1024,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                            label.text = @"N/A";
                     }}
                     break;}
 
@@ -1005,7 +1043,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                             label.text = @"N/A";
                     }}
                     break;}
 
@@ -1338,7 +1376,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                          label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1356,7 +1394,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                           label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1375,7 +1413,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                           label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1394,7 +1432,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                          label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1412,7 +1450,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                       label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1429,7 +1467,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                           label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1448,7 +1486,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                          label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1467,7 +1505,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                           label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1485,7 +1523,7 @@ NSArray *applianceInspectionsArray;
                         label.text = str;
                     }
                     else {
-                        label.text = @"";
+                        label.text = @"N/A";
                     }}
                     break;}
                     
@@ -1811,7 +1849,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                             label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1829,7 +1867,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1848,7 +1886,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1867,7 +1905,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1885,7 +1923,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1903,7 +1941,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1922,7 +1960,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1941,7 +1979,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -1959,7 +1997,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2298,7 +2336,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2317,7 +2355,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2337,7 +2375,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2357,7 +2395,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2376,7 +2414,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2395,7 +2433,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2415,7 +2453,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2435,7 +2473,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                             label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2454,7 +2492,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2809,7 +2847,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2829,7 +2867,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2850,7 +2888,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
               
@@ -2869,7 +2907,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                            label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2889,7 +2927,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                             label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2909,7 +2947,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2929,7 +2967,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                            label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2950,7 +2988,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -2970,7 +3008,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                             label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3322,7 +3360,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3341,7 +3379,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                                label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3362,7 +3400,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                             label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3381,7 +3419,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3401,7 +3439,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3420,7 +3458,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3440,7 +3478,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3461,7 +3499,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                              label.text = @"N/A";
                         }}
                     break;}
                     
@@ -3481,7 +3519,7 @@ NSArray *applianceInspectionsArray;
                             label.text = str;
                         }
                         else {
-                            label.text = @"";
+                               label.text = @"N/A";
                         }}
                     break;}
 
@@ -3729,14 +3767,3646 @@ NSArray *applianceInspectionsArray;
                 {
                     NSString *str;
                     
-                    if (applianceInspectionsArray.count <= 6) {
+                    if ([self shouldUseContinuation]) {
+                        str = @"1 of 2";
+                    }
+                    else
+                    {
                         str = @"1 of 1";
                     }
-                    else if (applianceInspectionsArray.count > 6 && applianceInspectionsArray.count <= 18)
-                    {
-                         str = @"1 of 2";
-                    }
                     
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 312:
+                {
+                    NSString *str =  cert.cylinderFinalConnection;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                    
+                case 313:
+                {
+                    NSString *str =  cert.lpgRegulatorOperatingPressure;
+                    
+                    if (str.length > 0) {
+                        label.text = [NSString stringWithFormat:@"%@ mbar", str];
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                case 314:
+                {
+                    NSString *str =  cert.lpgRegulatorLockupPressure;
+                    
+                    if (str.length > 0) {
+                        label.text = [NSString stringWithFormat:@"%@ mbar", str];
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+
+                case 315:
+                {
+                    NSString *str =  cert.customerSignoffName;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+ 
+                 
+                case 316:
+                {
+                    
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    // [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.engineerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                    
+
+                case 317:
+                {
+                    
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    // [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.customerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                    
+
+                    
+                    
+                    
+                case 333:
+                {
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                 //   [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    
+                    NSDateComponents *components = [[NSDateComponents alloc] init];
+                    components.month = 12;
+                    NSDate *oneMonthFromNow = [[NSCalendar currentCalendar] dateByAddingComponents:components toDate:cert.date options:0];
+                
+                    str = [dateFormatter stringFromDate:oneMonthFromNow];
+                    
+                    if (str.length > 0) {
+                        label.text = [NSString stringWithFormat:@"NEXT SAFETY CHECK DUE BEFORE %@", str];
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 1101:
+                {
+                    if (![self shouldUseContinuation]) {
+                         label.text = @"";
+                    }
+                }
+                    
+                default:
+                    
+                break;
+            }
+                        
+            [self drawText:label.text inFrame:label.frame withUILabel:label];
+        }
+    }
+    
+}
+
+
+
+
++(void)drawLabelsOnContinuationSheet:(NSString*)reportLayoutName
+{
+    
+    NSLog(@"report name: %@", reportLayoutName);
+    
+    NSArray* objects = [[NSBundle mainBundle] loadNibNamed:reportLayoutName owner:nil options:nil];
+    
+    UIView* mainView = [objects objectAtIndex:0];
+    
+    for (UIView* view in [mainView subviews]) {
+        if([view isKindOfClass:[UILabel class]])
+        {
+            UILabel* label = (UILabel*)view;
+            
+            switch(label.tag)
+            {
+                case 10:{
+                    NSString *str = cert.customerAddressName;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 11:{
+                    NSString *str = cert.customerAddressLine1;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 12:{
+                    NSString *str = cert.customerAddressLine2;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 13:{
+                    NSString *str = cert.customerAddressLine3;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 14:{
+                    NSString *str = cert.customerPostcode;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 15:{
+                    NSString *str = cert.customerTelNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 16:{
+                    NSString *str = cert.siteAddressName;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 17:{
+                    NSString *str = cert.siteAddressLine1;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 18:{
+                    NSString *str = cert.siteAddressLine2;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 19:{
+                    NSString *str = cert.siteAddressLine3;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 20:{
+                    NSString *str = cert.siteAddressPostcode;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 21:{
+                    NSString *str = cert.siteTelNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 22:{
+                    NSString *str = cert.engineerSignoffEngineerName;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 23:{
+                    NSString *str = cert.engineerSignoffEngineerIDCardRegNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 24:{
+                    NSString *str = cert.engineerSignoffTradingTitle;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 25:{
+                    NSString *str = cert.engineerSignoffAddressLine1;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 26:{
+                    NSString *str = cert.engineerSignoffAddressLine2;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 27:{
+                    NSString *str = cert.engineerSignoffAddressLine3;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 28:{
+                    NSString *str = cert.engineerSignoffPostcode;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 29:{
+                    NSString *str = cert.engineerSignoffTelNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 30:{
+                    NSString *str = cert.certificateNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 31:{
+                    NSString *str = cert.referenceNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 32:{
+                    NSString *str = cert.engineerSignoffCompanyGasSafeRegNumber;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 33:{
+                    NSString *str = cert.finalCheckGasInstallationPipework;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 34:{
+                    NSString *str = cert.finalCheckECV;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 35:{
+                    NSString *str = cert.finalCheckGasTightness;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                case 36:{
+                    NSString *str = cert.finalCheckEquipotentialBonding;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 40:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.location;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 41:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 42:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceMake;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                case 43:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceModel;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 44:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.flueType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 45:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.landlordsAppliance;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 46:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceInspected;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 50:
+                {
+                    
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 51:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.safetyDeviceInCorrectOperation;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 52:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        
+                        NSString *str = applianceInspection.ventilationProvision;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 53:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.visualConditionOfFlueSatisfactory;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 54:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.fluePerformanceTests;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 55:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceServiced;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 56:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceSafeToUse;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                case 57:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.faultDetails;
+                        
+                        NSLog(@"fault = %@", applianceInspection.faultDetails);
+                        
+                        
+                        if ([applianceInspection.faultDetails contains:@"\n"]) {
+                            NSString *str = applianceInspection.faultDetails;
+                            NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                            
+                            NSLog(@"number of lines = %i", [arr count]);
+                            
+                        }
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 58:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.remedialActionTaken;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 59:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.warningNoticeNumber;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 60:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion1stCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 61:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion1stCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                             label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 62:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion1stRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 63:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion2ndCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 64:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion2ndCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 65:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion2ndRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 66:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion3rdCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 67:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion3rdCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 68:
+                {
+                    if (applianceInspectionsArray.count > 0) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:0];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.combustion3rdRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    // Start inspection 2
+                    
+                    
+                case 80:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        
+                        NSString *str = applianceInspection.location;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;
+                }
+                    
+                case 81:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.applianceType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 82:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceMake;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 83:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:1];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceModel;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                    
+                case 84:
+                {   if (applianceInspectionsArray.count > 1) {
+                    
+                    ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                    NSString *str = applianceInspection.flueType;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                }
+                    break;}
+                    
+                case 85:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.landlordsAppliance;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 86:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.applianceInspected;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 87:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:1];
+                        
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 88:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:1];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.safetyDeviceInCorrectOperation;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 89:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:1];
+                        
+                        
+                        NSString *str = applianceInspection.ventilationProvision;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 90:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];                    NSString *str = applianceInspection.visualConditionOfFlueSatisfactory;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 91:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.fluePerformanceTests;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 92:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:1];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceServiced;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 93:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.applianceSafeToUse;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                case 94:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.faultDetails;
+                        
+                        NSLog(@"fault = %@", applianceInspection.faultDetails);
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 95:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.remedialActionTaken;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 96:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.warningNoticeNumber;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 97:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];                    NSString *str = applianceInspection.combustion1stCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                           label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 98:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion1stCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                         label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 99:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion1stRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 100:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion2ndCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                              label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 101:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion2ndCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                              label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 102:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];                    NSString *str = applianceInspection.combustion2ndRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                             label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 103:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion3rdCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 104:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion3rdCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                              label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 105:
+                {
+                    if (applianceInspectionsArray.count > 1) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:1];
+                        NSString *str = applianceInspection.combustion3rdRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    // End inspection 2
+                    
+                    
+                    // Start inspection 3
+                    
+                case 110:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        
+                        NSString *str = applianceInspection.location;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;
+                }
+                    
+                case 111:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.applianceType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 112:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.applianceMake;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 113:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        
+                        NSString *str = applianceInspection.applianceModel;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 114:
+                {    if (applianceInspectionsArray.count > 2) {
+                    
+                    ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                    NSString *str = applianceInspection.flueType;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                }
+                    break;}
+                    
+                case 115:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.landlordsAppliance;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 116:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.applianceInspected;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 117:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:2];
+                        
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 118:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.safetyDeviceInCorrectOperation;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 119:
+                {
+                    
+                    if (applianceInspectionsArray.count > 2) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:2];
+                        
+                        
+                        NSString *str = applianceInspection.ventilationProvision;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 120:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.visualConditionOfFlueSatisfactory;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 121:
+                { if (applianceInspectionsArray.count > 2) {
+                    
+                    ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                    
+                    NSString *str = applianceInspection.fluePerformanceTests;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }}
+                    break;}
+                    
+                case 122:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        
+                        NSString *str = applianceInspection.applianceServiced;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 123:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.applianceSafeToUse;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                case 124:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.faultDetails;
+                        
+                        NSLog(@"fault = %@", applianceInspection.faultDetails);
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 125:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.remedialActionTaken;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 126:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.warningNoticeNumber;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 127:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion1stCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                 label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 128:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion1stCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 129:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion1stRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                             label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 130:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion2ndCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                             label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 131:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion2ndCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 132:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion2ndRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 133:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion3rdCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 134:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion3rdCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 135:
+                {
+                    if (applianceInspectionsArray.count > 2) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:2];
+                        NSString *str = applianceInspection.combustion3rdRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    // end appliance inspection 3
+                    
+                    // start appliance inspection 4
+                case 140:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.location;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;
+                }
+                    
+                case 141:
+                {   if (applianceInspectionsArray.count > 3) {
+                    
+                    ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                    
+                    NSString *str = applianceInspection.applianceType;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                }
+                    break;}
+                    
+                case 142:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceMake;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 143:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        
+                        NSString *str = applianceInspection.applianceModel;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 144:
+                {    if (applianceInspectionsArray.count > 3) {
+                    
+                    ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                    
+                    NSString *str = applianceInspection.flueType;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                }
+                    break;}
+                    
+                case 145:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.landlordsAppliance;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 146:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.applianceInspected;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 147:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:3];
+                        
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 148:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.safetyDeviceInCorrectOperation;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 149:
+                {
+                    
+                    if (applianceInspectionsArray.count > 3) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:3];
+                        
+                        
+                        NSString *str = applianceInspection.ventilationProvision;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 150:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.visualConditionOfFlueSatisfactory;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 151:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.fluePerformanceTests;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 152:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        
+                        NSString *str = applianceInspection.applianceServiced;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 153:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.applianceSafeToUse;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                case 154:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.faultDetails;
+                        
+                        NSLog(@"fault = %@", applianceInspection.faultDetails);
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 155:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.remedialActionTaken;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 156:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.warningNoticeNumber;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 157:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion1stCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                 label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 158:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion1stCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 159:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion1stRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 160:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion2ndCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 161:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion2ndCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 162:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion2ndRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 163:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion3rdCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 164:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion3rdCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 165:
+                {
+                    if (applianceInspectionsArray.count > 3) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:3];
+                        
+                        NSString *str = applianceInspection.combustion3rdRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                              label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    // end of appliance inspection 4
+                    
+                    // start appliance inspection 5
+                    
+                case 170:
+                {
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.location;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;
+                }
+                    
+                case 171:
+                {
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.applianceType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 172:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        //NSString *str = [applianceInspectionsArray objectAtIndex:0];
+                        NSString *str = applianceInspection.applianceMake;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 173:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.applianceModel;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 174:
+                {
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.flueType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 175:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.landlordsAppliance;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 176:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.applianceInspected;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 177:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:4];
+                        
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 178:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.safetyDeviceInCorrectOperation;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 179:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:4];
+                        
+                        
+                        NSString *str = applianceInspection.ventilationProvision;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 180:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.visualConditionOfFlueSatisfactory;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 181:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.fluePerformanceTests;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 182:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.applianceServiced;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 183:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.applianceSafeToUse;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 184:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.faultDetails;
+                        
+                        NSLog(@"fault = %@", applianceInspection.faultDetails);
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 185:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.remedialActionTaken;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 186:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.warningNoticeNumber;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 187:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion1stCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 188:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion1stCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 189:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion1stRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                 label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                case 190:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion2ndCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 191:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion2ndCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                              label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 192:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion2ndRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 193:
+                {
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion3rdCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                             label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 194:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion3rdCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                 label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 195:
+                {
+                    
+                    if (applianceInspectionsArray.count > 4) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:4];
+                        
+                        NSString *str = applianceInspection.combustion3rdRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    // end appliance inspection 5
+                    
+                    // start appliance inspecton 6
+                    
+                case 200:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.location;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;
+                }
+                    
+                case 201:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.applianceType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 202:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.applianceMake;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 203:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.applianceModel;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 204:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.flueType;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }
+                    }
+                    break;}
+                    
+                case 205:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.landlordsAppliance;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 206:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.applianceInspected;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 207:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:5];
+                        
+                        NSString *str = @"";
+                        
+                        NSString *operatingPressure = [NSString stringWithFormat:@"%@ mbar", applianceInspection.operatingPressure];
+                        NSString *heatInput = [NSString stringWithFormat:@"%@ kW/h", applianceInspection.heatInput];
+                        
+                        
+                        if ((applianceInspection.operatingPressure.length > 0) && (applianceInspection.heatInput.length > 0)) {
+                            str = [NSString stringWithFormat:@"%@/%@", operatingPressure, heatInput];
+                        }
+                        else if (applianceInspection.operatingPressure.length > 0)
+                        {
+                            str = operatingPressure;
+                        }
+                        else if (applianceInspection.heatInput.length > 0)
+                        {
+                            str = heatInput;
+                        }
+                        else
+                        {
+                            str = @"";
+                        }
+                        
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 208:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.safetyDeviceInCorrectOperation;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 209:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray objectAtIndex:5];
+                        
+                        
+                        NSString *str = applianceInspection.ventilationProvision;
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 210:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.visualConditionOfFlueSatisfactory;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 211:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.fluePerformanceTests;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 212:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.applianceServiced;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 213:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.applianceSafeToUse;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 214:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.faultDetails;
+                        
+                        NSLog(@"fault = %@", applianceInspection.faultDetails);
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 215:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.remedialActionTaken;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                case 216:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.warningNoticeNumber;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                            label.text = @"";
+                        }}
+                    break;}
+                    
+                    
+                case 217:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion1stCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 218:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion1stCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 219:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion1stRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                case 220:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion2ndCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                             label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 221:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion2ndCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                               label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 222:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion2ndRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 223:
+                {
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion3rdCOReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    
+                case 224:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion3rdCO2Reading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                case 225:
+                {
+                    
+                    if (applianceInspectionsArray.count > 5) {
+                        
+                        ApplianceInspection *applianceInspection = [applianceInspectionsArray   objectAtIndex:5];
+                        
+                        NSString *str = applianceInspection.combustion3rdRatioReading;
+                        
+                        
+                        if (str.length > 0) {
+                            label.text = str;
+                        }
+                        else {
+                                label.text = @"N/A";
+                        }}
+                    break;}
+                    
+                    
+                    
+                    // end appliance inspection 6
+                    
+                    
+                    
+                case 295:
+                {
+                    NSString *str = cert.customerMobileNumber;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 296:
+                {
+                    NSString *str = cert.siteMobileNumber;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 297:
+                {
+                    NSString *str = cert.engineerSignoffMobileNumber;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 298:
+                {
+                    NSString *str = cert.finalCheckGasTightnessInitialValue;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = [NSString stringWithFormat:@"%@ mbar",str];
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                case 299:
+                {
+                    NSString *str = cert.finalCheckGasTightnessFinalValue;
+                    
+                    if (str.length > 0) {
+                        label.text = [NSString stringWithFormat:@"%@ mbar",str];
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 300:
+                {
+                    NSString *str = cert.finalCheckGasInstallationPipework;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 301:
+                {
+                    NSString *str = cert.finalCheckECV;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 302:
+                {
+                    
+                    NSString *str = cert.finalCheckGasTightness;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 303:
+                {
+                    NSString *str = cert.finalCheckEquipotentialBonding;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                case 304:
+                {
+                    NSString *str = cert.finalCheckCOAlarmFitted;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                case 305:
+                {
+                    NSString *str = cert.finalCheckCOAlarmWorking;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                case 306:
+                {
+                    NSString *str =  cert.engineerSignoffEngineerName;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                    
+                case 307:
+                {
+                    NSString *str =  cert.engineerSignoffEngineerIDCardRegNumber;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                    
+                    
+                case 308:
+                {
+                    
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    // [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.date];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                    
+                    
+                case 309:
+                {
+                    NSString *str = cert.customerPosition;
+                    
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                    
+                case 310:
+                {
+                    NSString *str = [NSString stringWithFormat:@"%i", applianceInspectionsArray.count];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 311:
+                {
+                    NSString *str = @"2 of 2";
                     
                     if (str.length > 0) {
                         label.text = str;
@@ -3789,14 +7459,14 @@ NSArray *applianceInspectionsArray;
                     NSString *str;
                     
                     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                 //   [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    //   [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
                     [dateFormatter setDateFormat:@"d MMMM yyyy"];
                     
                     
                     NSDateComponents *components = [[NSDateComponents alloc] init];
                     components.month = 12;
                     NSDate *oneMonthFromNow = [[NSCalendar currentCalendar] dateByAddingComponents:components toDate:cert.date options:0];
-                
+                    
                     str = [dateFormatter stringFromDate:oneMonthFromNow];
                     
                     if (str.length > 0) {
@@ -3806,12 +7476,12 @@ NSArray *applianceInspectionsArray;
                         label.text = @"";
                     }
                     break;}
-                                
+                    
                 default:
                     
-                break;
+                    break;
             }
-                        
+            
             [self drawText:label.text inFrame:label.frame withUILabel:label];
         }
     }
@@ -3834,7 +7504,15 @@ NSArray *applianceInspectionsArray;
                     [self drawImage:image inRect:view.frame];
                     break;}
                 case 1002:{
-                     UIImage *image = [LACFileHandler getImageFromDocumentsDirectory:@"logo.png" subFolderName:@"system"];
+       
+                    UIImage *image;
+                   
+                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                    NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+                    NSString *dataPath = [documentsPath stringByAppendingPathComponent:@"system"];
+                    NSString *filePath = [dataPath stringByAppendingPathComponent:@"logo.png"]; //Add the file name
+                    image = [[UIImage alloc] initWithContentsOfFile:filePath];
+                  
                     [self drawImage:image inRect:view.frame];
                     break;
                 }
@@ -3846,22 +7524,19 @@ NSArray *applianceInspectionsArray;
                     [self drawImage:image inRect:view.frame];
                     break;
                 }
-
+                    
                 case 1004:{
-                    
-                    
-                 
                     UIImage *image = [UIImage imageNamed:@"gas-safe-logo-white-bg.gif"];
                     
                     [self drawImage:image inRect:view.frame];
                     break;
                 }
-
                     
             }
         }
     }
 }
+
 
 
 +(void)drawTableAt:(CGPoint)origin

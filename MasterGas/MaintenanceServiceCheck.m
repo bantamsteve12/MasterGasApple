@@ -2,8 +2,8 @@
 //  MaintenanceServiceCheck.m
 //  MasterGas
 //
-//  Created by Stephen Lalor on 02/11/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Stephen Lalor on 04/02/2014.
+//  Copyright (c) 2014 Stephen Lalor. All rights reserved.
 //
 
 #import "MaintenanceServiceCheck.h"
@@ -16,6 +16,15 @@
 @dynamic applianceModel;
 @dynamic applianceSerialNumber;
 @dynamic applianceType;
+@dynamic combustion1stCO2Reading;
+@dynamic combustion1stCOReading;
+@dynamic combustion1stRatioReading;
+@dynamic combustion2ndCO2Reading;
+@dynamic combustion2ndCOReading;
+@dynamic combustion2ndRatioReading;
+@dynamic combustion3rdCO2Reading;
+@dynamic combustion3rdCOReading;
+@dynamic combustion3rdRatioReading;
 @dynamic companyId;
 @dynamic createdAt;
 @dynamic customerAddressLine1;
@@ -110,14 +119,7 @@
 @dynamic syncStatus;
 @dynamic uniqueSerialNumber;
 @dynamic updatedAt;
-@dynamic combustion1stCO2Reading;
-@dynamic combustion2ndCO2Reading;
-@dynamic combustion3rdCO2Reading;
-@dynamic combustion1stCOReading;
-@dynamic combustion2ndCOReading;
-@dynamic combustion3rdCOReading;
-@dynamic combustion1stRatioReading;
-@dynamic combustion2ndRatioReading;
-@dynamic combustion3rdRatioReading;
+@dynamic operatingPressure;
+@dynamic heatInput;
 
 @end

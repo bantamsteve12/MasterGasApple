@@ -11,7 +11,7 @@
 #import "Certificate.h"
 #import "MBProgressHUD.h"
 
-@interface ReminderGSRLetterPDFViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface ReminderGSRLetterPDFViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -24,7 +24,7 @@
 @property (strong, nonatomic) NSManagedObject *managedObject;
 @property (strong, nonatomic) NSString *mode;
 @property (retain, nonatomic) Certificate *aCertificate;
-
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

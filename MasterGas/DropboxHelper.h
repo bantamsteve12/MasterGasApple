@@ -1,14 +1,16 @@
 //
 //  DropboxHelper.h
+//  Grocery Dude
+//
+//  Created by Tim Roadley on 23/09/13.
+//  Copyright (c) 2013 Tim Roadley. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <Dropbox/Dropbox.h>
 #import "SDCoreDataController.h"
 
-//#import "CoreDataHelper.h"
-
-@interface DropboxHelper : NSObject
+@interface DropboxHelper : NSObject <UIAlertViewDelegate, UIActionSheetDelegate>
 
 #pragma mark - DROPBOX ACCOUNT
 + (void)linkToDropboxWithUI:(UIViewController*)controller;

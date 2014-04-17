@@ -34,11 +34,9 @@
         NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"MileageItem"];
         
         [request setSortDescriptors:[NSArray arrayWithObject:
-                                     [NSSortDescriptor sortDescriptorWithKey:@"finishMileage" ascending:YES]]];
+                                     [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES]]];
         
-        [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (mileageClaimUniqueNo == %@) AND (companyId == %@)", SDObjectDeleted, self.currentMileage.uniqueClaimNo, [LACUsersHandler getCurrentCompanyId]]];
-        
-        
+        [request setPredicate:[NSPredicate predicateWithFormat:@"mileageClaimUniqueNo == %@",  self.currentMileage.uniqueClaimNo]];
         
         self.mileageItems = [self.managedObjectContext executeFetchRequest:request error:&error];
     }];
@@ -170,7 +168,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox"
+                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox", @"Open in..."
                                   ,nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showFromToolbar:self.tabBarController.tabBar];
@@ -208,6 +206,21 @@
         else
         {
             [self uploadToDropbox];
+        }
+    }
+    if (buttonIndex == 3) {
+        
+        NSURL *URL = [NSURL fileURLWithPath:[self getPDFFileName]];
+        
+        if (URL) {
+            // Initialize Document Interaction Controller
+            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+            
+            // Configure Document Interaction Controller
+            [self.documentInteractionController setDelegate:self];
+            
+            // Present Open In Menu
+            [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
         }
     }
     
@@ -270,6 +283,8 @@
 
 -(void)emailToCustomer
 {
+    if ([MFMailComposeViewController canSendMail]) {
+        
      NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
@@ -304,6 +319,23 @@
     NSString *emailBody = @"Please find attached the mileage claim document.";
     [picker setMessageBody:emailBody isHTML:NO];
     [self presentModalViewController:picker animated:YES];
+    }
+    else
+    {
+        
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Email not setup"
+                              message:@"You haven't setup emails on your device. Please setup you emails in the mail app for your device and try again."
+                              delegate: nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        
+        [alert show];
+        
+    }
+
+    
+    
 }
 
 

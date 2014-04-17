@@ -303,6 +303,10 @@
 }
 
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

@@ -491,6 +491,17 @@ NSArray *applianceInspectionsArray;
                     }
                     break;}
                     
+                case 50:{
+                    NSString *str = company.companyEmailAddress;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+
                     
                 case 51:
                 {

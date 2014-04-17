@@ -402,19 +402,7 @@
 - (IBAction)saveButtonTouched:(id)sender {
     
     [self SaveTest];
-    
-    [self.managedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
-        BOOL saved = [self.managedObjectContext save:&error];
-        if (!saved) {
-            // do some real error handling
-            NSLog(@"Could not save Date due to %@", error);
-        }
-        [[SDCoreDataController sharedInstance] saveMasterContext];
-    }];
-    
     [self.navigationController popViewControllerAnimated:YES];
- //   updateCompletionBlock();
 }
 
 -(void)SaveTest
@@ -443,7 +431,17 @@
         [self.managedObject setValue:@"Estimate" forKey:@"type"];
     }
     
-
+    [self.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        BOOL saved = [self.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
+    
+    
 }
 
 
@@ -481,6 +479,11 @@
     self.termsLabel.text = controller.selectedEstimateTerm.name;
     [self.managedObject setValue:controller.selectedEstimateTerm.name forKey:@"terms"];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveTest];
 }
 
 - (void)didReceiveMemoryWarning

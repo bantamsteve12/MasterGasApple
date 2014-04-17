@@ -71,10 +71,18 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
+
+-(void)SaveAll
+{
     // TODO: Add in name values
     [self.managedObject setValue:[NSString checkForNilString:self.additionalNotesTextView.text] forKey:@"additionalNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.sparesRequiredTextView.text] forKey:@"sparesRequired"];
- 
+    
     
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
@@ -85,13 +93,13 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
+
 }
 
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

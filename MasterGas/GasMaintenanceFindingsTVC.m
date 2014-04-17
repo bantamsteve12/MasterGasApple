@@ -81,16 +81,21 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[NSString checkForNilString:self.remedialWorkRequiredTextView.text] forKey:@"findingsRemedialWorkRequired"];
-      
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.applianceInstallationSafeToUseSegmentControl.selectedSegmentIndex] forKey:@"findingsApplianceSafeToUse"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.warningLabelAttachedSegmentControl.selectedSegmentIndex] forKey:@"findingsApplianceSafeWarningNoticeAttached"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.installationConformToMIandISSegementControl.selectedSegmentIndex] forKey:@"findingsConformToMIandIS"];
     
-    
-   
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObjectContext save:&error];
@@ -100,13 +105,13 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
-    
+
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

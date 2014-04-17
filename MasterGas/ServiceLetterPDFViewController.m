@@ -191,7 +191,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox"
+                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox", @"Open in..."
                                   ,nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showFromToolbar:self.tabBarController.tabBar];
@@ -230,6 +230,22 @@
             [self uploadToDropbox];
         }
     }
+    if (buttonIndex == 3) {
+        
+        NSURL *URL = [NSURL fileURLWithPath:[self getPDFFileName]];
+        
+        if (URL) {
+            // Initialize Document Interaction Controller
+            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+            
+            // Configure Document Interaction Controller
+            [self.documentInteractionController setDelegate:self];
+            
+            // Present Open In Menu
+            [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        }
+    }
+
     
 }
 
@@ -289,6 +305,9 @@
 
 -(void)emailToCustomer
 {
+    if ([MFMailComposeViewController canSendMail]) {
+        
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
@@ -330,6 +349,23 @@
     [picker setMessageBody:@"Please find attached your annual gas service and maintenance reminder." isHTML:NO];
     
     [self presentModalViewController:picker animated:YES];
+    
+}
+else
+{
+    
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle: @"Email not setup"
+                          message:@"You haven't setup emails on your device. Please setup you emails in the mail app for your device and try again."
+                          delegate: nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil];
+    
+    [alert show];
+    
+}
+
+
 }
 
 

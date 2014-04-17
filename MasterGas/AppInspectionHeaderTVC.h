@@ -16,6 +16,9 @@
 
 @property (nonatomic, strong) NSArray *applianceInspections;
 @property (nonatomic, strong) NSString *entityName;
+@property (strong, nonatomic) NSNumber *maxAppliances;
+
+
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 
 @property (strong, nonatomic) NSManagedObjectID *managedObjectId;

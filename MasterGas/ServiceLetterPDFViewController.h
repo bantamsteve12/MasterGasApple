@@ -13,7 +13,7 @@
 #import "MBProgressHUD.h"
 
 
-@interface ServiceLetterPDFViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface ServiceLetterPDFViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -30,7 +30,7 @@
 
 @property (retain, nonatomic) MaintenanceServiceRecord *aMaintenanceServiceRecord;
 @property (retain, nonatomic) MaintenanceServiceCheck *aMaintenanceServiceCheck;
-
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

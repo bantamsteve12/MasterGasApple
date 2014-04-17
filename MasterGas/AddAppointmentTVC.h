@@ -10,11 +10,16 @@
 #import "DateTimePickerTVC.h"
 #import "CustomerLookupTVC.h"
 #import "CallTypeTVC.h"
+#import "OnMYWayLookupTVC.h"
 #import "Appointment.h"
 #import "NSString+Additions.h"
 #import "SiteLookupTVC.h"
 
-@interface AddAppointmentTVC : UITableViewController <DatePickerTVCDelegate, CustomerLookupTVCDelegate, CallTypeTVCDelegate, SiteLookupTVCDelegate>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+#import <MessageUI/MFMessageComposeViewController.h>
+
+@interface AddAppointmentTVC : UITableViewController <DatePickerTVCDelegate, CustomerLookupTVCDelegate, CallTypeTVCDelegate, SiteLookupTVCDelegate, OnMYWayLookupTVCDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UITextView *commentsTextView;
@@ -29,8 +34,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *dateLabel;
 @property (strong, nonatomic) IBOutlet UILabel *callTypeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *customerIdLabel;
-
-
 @property (strong, nonatomic) Appointment *existingAppointment;
 
 @property (strong, nonatomic) NSDate *date;
@@ -38,5 +41,7 @@
 @property (copy, nonatomic) void (^addAppointmentCompletionBlock)(void);
 
 - (IBAction)saveButtonTouched:(id)sender;
+- (IBAction)onMyWayButtonTouched:(id)sender;
+
 
 @end

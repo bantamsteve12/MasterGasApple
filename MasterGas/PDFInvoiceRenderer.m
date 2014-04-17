@@ -261,7 +261,7 @@ NSMutableArray *invoiceItemsArray;
     
     CGMutablePathRef framePath = CGPathCreateMutable();
     CGPathAddRect(framePath, NULL, frameRect);
-    
+  
     // Get the frame that will do the rendering.
     CFRange currentRange = CFRangeMake(0, 0);
     CTFrameRef frameRef = CTFramesetterCreateFrame(framesetter, currentRange, framePath, NULL);
@@ -953,10 +953,6 @@ NSMutableArray *invoiceItemsArray;
         objects = [[NSBundle mainBundle] loadNibNamed:@"InvoiceNoVat" owner:nil options:nil];
     }
    
-    //NSArray* objects = [[NSBundle mainBundle] loadNibNamed:@"Invoice" owner:nil options:nil];
-   
-    
-    
     UIView* mainView = [objects objectAtIndex:0];
     
     for (UIView* view in [mainView subviews]) {
@@ -984,7 +980,7 @@ NSMutableArray *invoiceItemsArray;
     } 
 }
 
-
+/*
 +(void)drawTableDataAt:(CGPoint)origin
          withRowHeight:(int)rowHeight
         andColumnWidth:(int)columnWidth
@@ -1077,10 +1073,115 @@ NSMutableArray *invoiceItemsArray;
         lastyOriginPosition = lastyOriginPosition + currentRowHeight;
     }
 } 
+ */
+
++(void)drawTableDataAt:(CGPoint)origin
+         withRowHeight:(int)rowHeight
+        andColumnWidth:(int)columnWidth
+           andRowCount:(int)numberOfRows
+        andColumnCount:(int)numberOfColumns
+{
+    int padding = 1;
+    
+    int lastyOriginPosition = origin.y;
+    int currentRowHeight;
+    
+    
+    for(int i = 0; i < [invoiceItemsArray count]; i++)
+    {
+        
+        int additionalRows = 1;
+        
+        InvoiceItem *invItem = [invoiceItemsArray objectAtIndex:i];
+        
+        float quantity = [invItem.quantity floatValue];
+        float unitPrice = [invItem.unitPrice floatValue];
+        float discountRate = [invItem.discountRate floatValue];
+        float discountAmount = 0.0;
+        float discountMultiplier = 1;
+        float total = quantity * unitPrice;
+        
+        if (discountRate > 0) {
+            discountMultiplier = discountRate / 100; //(100 - discountRate) / 100;
+            discountAmount = (total * discountMultiplier);
+        }
+        
+        NSArray* infoToDraw = [NSArray arrayWithObjects:[NSString checkForNilString:invItem.itemDescription], [NSString checkForNilString:invItem.quantity], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@",[LACHelperMethods getDefaultCurrency],invItem.unitPrice]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], discountAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency],invItem.vatAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency], invItem.total]], nil];
+        
+        int calcColumnWidth = 0;
+        int newOriginX = origin.x;
+        int newOriginY = lastyOriginPosition;
+        
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            switch (j) {
+                case 0:
+                    calcColumnWidth = 295;
+                    
+                    if ([invItem.itemDescription contains:@"\n"]) {
+                        NSString *str = invItem.itemDescription;
+                        NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                        
+                        for (int k =0; k < [arr count]; k++) {
+                            
+                            NSString *currentString = [arr objectAtIndex:k];
+                            int stringLength = [currentString length];
+                            int rowsRequired =  stringLength / 70;
+                            additionalRows = additionalRows + rowsRequired;
+                        }
+                        
+                        int spaces = [arr count]-1;
+                        currentRowHeight = 11 * (additionalRows + spaces);
+                    }
+                    else
+                    {
+                        NSString *currentString = invItem.itemDescription;
+                        int stringLength = [currentString length];
+                        int rowsRequired = 1;
+                        
+                        if (stringLength > 70) {
+                            rowsRequired =  stringLength / 70;
+                            rowsRequired = 1 + rowsRequired;
+                        }
+                        
+                        currentRowHeight = 11 * rowsRequired;
+                        
+                    }
+                    
+                    break;
+                case 1:
+                    calcColumnWidth = 60;
+                    break;
+                case 2:
+                    calcColumnWidth = 60;
+                    break;
+                case 3:
+                    calcColumnWidth = 60;
+                    break;
+                case 4:
+                    calcColumnWidth = 60;
+                    break;
+                case 5:
+                    calcColumnWidth = 59;
+                    break;
+                default:
+                    calcColumnWidth = 10;
+                    break;
+            }
+            
+            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
+            [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
+            newOriginX = newOriginX + calcColumnWidth;
+        }
+        
+        lastyOriginPosition = lastyOriginPosition + currentRowHeight;
+        NSLog(@"lastyOriginPosition: %i", lastyOriginPosition);
+    }
+}
 
 
 
-
+/*
 +(void)drawNonVATTableDataAt:(CGPoint)origin
          withRowHeight:(int)rowHeight
         andColumnWidth:(int)columnWidth
@@ -1169,7 +1270,134 @@ NSMutableArray *invoiceItemsArray;
         lastyOriginPosition = lastyOriginPosition + currentRowHeight;
         
     }
-} 
+}
+*/
+
++(void)drawNonVATTableDataAt:(CGPoint)origin
+               withRowHeight:(int)rowHeight
+              andColumnWidth:(int)columnWidth
+                 andRowCount:(int)numberOfRows
+              andColumnCount:(int)numberOfColumns
+{
+    int padding = 1;
+    
+    int lastyOriginPosition = origin.y;
+    int currentRowHeight;
+    
+    NSLog(@"invoice Items Array Count: %i", [invoiceItemsArray count]);
+    
+    for(int i = 0; i < [invoiceItemsArray count]; i++)
+    {
+        
+        InvoiceItem *invItem = [invoiceItemsArray objectAtIndex:i];
+        NSLog(@"item: %@", invItem.itemDescription);
+    }
+    
+    
+    for(int i = 0; i < [invoiceItemsArray count]; i++)
+    {
+        int additionalRows = 0;
+        
+                NSLog(@"item i = %i", i);
+        
+        InvoiceItem *invItem = [invoiceItemsArray objectAtIndex:i];
+        
+        NSLog(@"invoice item: %@", invItem.itemDescription);
+        
+        float quantity = [invItem.quantity floatValue];
+        float unitPrice = [invItem.unitPrice floatValue];
+        float discountRate = [invItem.discountRate floatValue];
+        
+        float discountAmount = 0.0;
+        
+        float discountMultiplier = 1;
+        
+        float total = quantity * unitPrice;
+        
+        if (discountRate > 0) {
+            discountMultiplier = discountRate / 100; //(100 - discountRate) / 100;
+            discountAmount = (total * discountMultiplier);
+        }
+        
+         NSArray* infoToDraw = [NSArray arrayWithObjects:[NSString checkForNilString:invItem.itemDescription], [NSString checkForNilString:invItem.quantity], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@",[LACHelperMethods getDefaultCurrency],invItem.unitPrice]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], discountAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency], invItem.total]], nil];
+        
+        
+        int calcColumnWidth = 0;
+        int newOriginX = origin.x;
+        currentRowHeight = rowHeight;
+        int newOriginY = lastyOriginPosition;
+        
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            switch (j) {
+                case 0:
+                    calcColumnWidth = 353;
+                    
+                    if ([invItem.itemDescription contains:@"\n"]) {
+                        NSString *str = invItem.itemDescription;
+                        NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                        
+                        for (int k =0; k < [arr count]; k++) {
+                            
+                            NSString *currentString = [arr objectAtIndex:k];
+                            int stringLength = [currentString length];
+                            int rowsRequired =  stringLength / 70;
+                            additionalRows = additionalRows + rowsRequired;
+                            
+                        }
+                        
+                        int spaces = [arr count]-1;
+                        currentRowHeight = 11 * (additionalRows + spaces);
+                    }
+                    else
+                    {
+                        NSString *currentString = invItem.itemDescription;
+                        int stringLength = [currentString length];
+                        int rowsRequired = 1;
+                        
+                        if (stringLength > 70) {
+                            rowsRequired =  stringLength / 70;
+                            rowsRequired = (1 + rowsRequired);
+                        }
+                        
+                        currentRowHeight = 11 * (rowsRequired);
+                        
+                    }
+                    
+                    break;
+                case 1:
+                    calcColumnWidth = 60;
+                    break;
+                case 2:
+                    calcColumnWidth = 60;
+                    break;
+                case 3:
+                    calcColumnWidth = 60;
+                    break;
+                case 4:
+                    calcColumnWidth = 60;
+                    break;
+                default:
+                    calcColumnWidth = 10;
+                    break;
+            }
+            
+            
+            
+            CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
+            
+            [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
+            
+            newOriginX = newOriginX + calcColumnWidth;
+        }
+        
+        lastyOriginPosition = lastyOriginPosition + currentRowHeight;
+        
+        NSLog(@"lastyOriginPosition: %i", lastyOriginPosition);
+        
+    }
+}
+
 
 
 

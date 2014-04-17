@@ -28,6 +28,8 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *gasTightnessTestCarriedOut;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *gasTightnessTestResult;
 
+@property (strong, nonatomic) IBOutlet UITextField *operatingPressureTextField;
+@property (strong, nonatomic) IBOutlet UITextField *heatInputTextField;
 
 @property (strong, nonatomic) IBOutlet UITextField *combustion1stCOReadingTextField;
 @property (strong, nonatomic) IBOutlet UITextField *combustion1stCO2ReadingTextField;

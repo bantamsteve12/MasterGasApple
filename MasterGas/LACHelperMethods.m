@@ -555,6 +555,49 @@ UIAlertView *alert = [[UIAlertView alloc]
 }
 
 
++(int)SegementIndexValue:(NSArray *)items withValue:(NSString *)value
+{
+    for (int i=0; i<[items count]; i++) {
+        
+        if ([items[i] isEqualToString:value]) {
+            return i;
+        }
+    }
+    return 0;
+}
+
++(NSString *)ValueForIndex:(NSArray *)items withIndex:(int *)indexValue
+{
+    NSLog(@"indexValue: %i", indexValue);
+    
+    return [items objectAtIndex:indexValue];
+}
+
+/*
+
++(void)setDocumentHeaderBackgroundColour:(UIColor *)colour
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *value = [prefs objectForKey:@"companyName"];
+    return value;
+
+}
+
++(void)setDocumentHeaderTextColour:(UIColor *)colour
+{
+    
+}
+
++(UIColor *)getDocumentHeaderBackgroundColour
+{
+    
+}
+
++(UIColor *)getDocumentHeaderTextColour
+{
+    
+}
+*/
 
 
 @end

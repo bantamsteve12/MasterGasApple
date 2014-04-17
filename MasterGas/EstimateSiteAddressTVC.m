@@ -123,6 +123,14 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.delegate theSaveButtonPressedOnTheEstimateAddressDetails:self];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[NSString checkForNilString:self.siteIdLabel.text] forKey:@"siteId"];
     [self.managedObject setValue:[NSString checkForNilString:self.siteAddressName.text] forKey:@"siteName"];
     [self.managedObject setValue:[NSString checkForNilString:self.siteAddressLine1.text] forKey:@"siteAddressLine1"];
@@ -133,9 +141,6 @@
     [self.managedObject setValue:[NSString checkForNilString:self.siteMobileNumber.text] forKey:@"siteMobile"];
     [self.managedObject setValue:[NSString checkForNilString:self.siteEmailAddress.text] forKey:@"siteEmail"];
     
-    
-    //   [self.managedObject setValue:[NSNumber numberWithInt:SDObjectEdited] forKey:@"syncStatus"];
-    
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObjectContext save:&error];
@@ -145,12 +150,12 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.delegate theSaveButtonPressedOnTheEstimateAddressDetails:self];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

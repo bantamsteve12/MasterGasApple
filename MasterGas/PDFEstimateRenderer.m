@@ -14,6 +14,7 @@
 #import "LACHelperMethods.h"
 
 
+
 @implementation PDFEstimateRenderer
 
 @synthesize managedObjectContext;
@@ -749,6 +750,85 @@ NSMutableArray *estimateItemsArray;
                     break;}
                
                     
+                    
+                case 61:{
+                    
+                    NSString *str = est.siteName;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 62:{
+                    
+                    NSString *str = est.siteAddressLine1;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 63:{
+                    
+                    NSString *str = est.siteAddressLine2;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 64:{
+                    
+                    NSString *str = est.siteAddressLine3;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 65:{
+                    
+                    NSString *str = est.sitePostcode;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 66:{
+                    
+                    NSString *str = est.siteTelephone;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 67:{
+                    
+                    NSString *str = est.siteMobile;
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+
+                    
                 case 880:{
                     
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -792,7 +872,6 @@ NSMutableArray *estimateItemsArray;
         {
             switch(view.tag)
             {
-                    
                 case 1001:{
                     UIImage *image = [LACFileHandler getImageFromDocumentsDirectory:@"logo.png" subFolderName:@"system"];
                     [self drawImage:image inRect:view.frame];
@@ -828,16 +907,15 @@ NSMutableArray *estimateItemsArray;
     for(int i = 0; i < [estimateItemsArray count]; i++)
     {
         
+        int additionalRows = 1;
+        
         EstimateItem *estItem = [estimateItemsArray objectAtIndex:i];
         
         float quantity = [estItem.quantity floatValue];
         float unitPrice = [estItem.unitPrice floatValue];
         float discountRate = [estItem.discountRate floatValue];
-        
         float discountAmount = 0.0;
-        
         float discountMultiplier = 1;
-        
         float total = quantity * unitPrice;
         
         if (discountRate > 0) {
@@ -847,16 +925,44 @@ NSMutableArray *estimateItemsArray;
         
         NSArray* infoToDraw = [NSArray arrayWithObjects:[NSString checkForNilString:estItem.itemDescription], [NSString checkForNilString:estItem.quantity], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@",[LACHelperMethods getDefaultCurrency],estItem.unitPrice]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], discountAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency],estItem.vatAmount]], [NSString checkForNilString:[NSString stringWithFormat:@"%@%@", [LACHelperMethods getDefaultCurrency], estItem.total]], nil];
         
-        
         int calcColumnWidth = 0;
         int newOriginX = origin.x;
-        
-        
+        int newOriginY = lastyOriginPosition;
+   
         for (int j = 0; j < numberOfColumns; j++)
         {
             switch (j) {
                 case 0:
                     calcColumnWidth = 297;
+                    
+                    if ([estItem.itemDescription contains:@"\n"]) {
+                        NSString *str = estItem.itemDescription;
+                        NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                        
+                        for (int k =0; k < [arr count]; k++) {
+                            
+                            NSString *currentString = [arr objectAtIndex:k];
+                            int stringLength = [currentString length];
+                            int rowsRequired =  stringLength / 70;
+                            additionalRows = additionalRows + rowsRequired;
+                        }
+                        
+                        int spaces = [arr count]-1;
+                        currentRowHeight = 11 * (additionalRows + spaces);
+                    }
+                    else
+                    {
+                        NSString *currentString = estItem.itemDescription;
+                        int stringLength = [currentString length];
+                        int rowsRequired = 1;
+                        
+                        if (stringLength > 80) {
+                            rowsRequired =  stringLength / 70;
+                            rowsRequired = 1 + rowsRequired;
+                        }
+                        currentRowHeight = 11 * rowsRequired;
+                    }
+                    
                     break;
                 case 1:
                     calcColumnWidth = 60;
@@ -878,24 +984,13 @@ NSMutableArray *estimateItemsArray;
                     break;
             }
             
-            currentRowHeight = rowHeight;
-            
-            int newOriginY = lastyOriginPosition;
-            
-            if ([estItem.itemDescription contains:@"\n"]) {
-                NSString *str = estItem.itemDescription;
-                NSArray *arr = [str componentsSeparatedByString:@"\n"];
-                currentRowHeight = 11 * ([arr count]);
-            }
-            
             CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
-            
             [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
-            
             newOriginX = newOriginX + calcColumnWidth;
         }
         
         lastyOriginPosition = lastyOriginPosition + currentRowHeight;
+        NSLog(@"lastyOriginPosition: %i", lastyOriginPosition);
     }
 }
 
@@ -912,12 +1007,30 @@ NSMutableArray *estimateItemsArray;
     
     int lastyOriginPosition = origin.y;
     int currentRowHeight;
-    
+   
+
+    NSLog(@"estimate Items Array Count: %i", [estimateItemsArray count]);
     
     for(int i = 0; i < [estimateItemsArray count]; i++)
     {
         
         EstimateItem *estItem = [estimateItemsArray objectAtIndex:i];
+        NSLog(@"item: %@", estItem.itemDescription);
+    }
+    
+    
+    for(int i = 0; i < [estimateItemsArray count]; i++)
+    {
+         int additionalRows = 0;
+        
+        
+        
+        NSLog(@"item i = %i", i);
+        
+        EstimateItem *estItem = [estimateItemsArray objectAtIndex:i];
+        
+        
+       NSLog(@"estimate item: %@", estItem.itemDescription);
         
         float quantity = [estItem.quantity floatValue];
         float unitPrice = [estItem.unitPrice floatValue];
@@ -941,12 +1054,49 @@ NSMutableArray *estimateItemsArray;
         int calcColumnWidth = 0;
         int newOriginX = origin.x;
         
+        currentRowHeight = rowHeight;
         
+        int newOriginY = lastyOriginPosition;
+       
+        
+       
         for (int j = 0; j < numberOfColumns; j++)
         {
             switch (j) {
                 case 0:
                     calcColumnWidth = 357;
+                    
+                    if ([estItem.itemDescription contains:@"\n"]) {
+                        NSString *str = estItem.itemDescription;
+                        NSArray *arr = [str componentsSeparatedByString:@"\n"];
+                        
+                        for (int k =0; k < [arr count]; k++) {
+                            
+                            NSString *currentString = [arr objectAtIndex:k];
+                            int stringLength = [currentString length];
+                            int rowsRequired =  stringLength / 85;
+                            additionalRows = additionalRows + rowsRequired;
+                            
+                        }
+                        
+                        int spaces = [arr count]-1;
+                        currentRowHeight = 11 * (additionalRows + spaces);
+                    }
+                    else
+                    {
+                        NSString *currentString = estItem.itemDescription;
+                        int stringLength = [currentString length];
+                        int rowsRequired = 1;
+                        
+                        if (stringLength > 80) {
+                            rowsRequired =  stringLength / 80;
+                            rowsRequired = 1 + rowsRequired;
+                        }
+                        
+                        currentRowHeight = 11 * rowsRequired;
+                        
+                    }
+                    
                     break;
                 case 1:
                     calcColumnWidth = 60;
@@ -965,30 +1115,23 @@ NSMutableArray *estimateItemsArray;
                     break;
             }
             
+            
+            
            
-            currentRowHeight = rowHeight;
-            
-            int newOriginY = lastyOriginPosition;
-            
-            if ([estItem.itemDescription contains:@"\n"]) {
-                NSString *str = estItem.itemDescription;
-                NSArray *arr = [str componentsSeparatedByString:@"\n"];
-                currentRowHeight = 11 * ([arr count]);
-            }
-
-            
             CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, calcColumnWidth, currentRowHeight);
             
-            
             [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
-            
             
             newOriginX = newOriginX + calcColumnWidth;
         }
         
         lastyOriginPosition = lastyOriginPosition + currentRowHeight;
+        
+        NSLog(@"lastyOriginPosition: %i", lastyOriginPosition);
+    
     }
 }
+
 
 
 

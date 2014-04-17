@@ -164,33 +164,25 @@
     [super viewDidLoad];
     self.managedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
     self.dateFormatter = [[NSDateFormatter alloc] init];
-   // [self.dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
     [self.dateFormatter setDateFormat:@" HH:mm - E d MMMM yyyy"];
     
     self.selectedSegmentIndex = 2;
     
-    [self loadRecordsFromCoreData];
+
     
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+        [self loadRecordsFromCoreData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-  //  [self checkSyncStatus];
-    
-  /*  [[NSNotificationCenter defaultCenter] addObserverForName:@"SDSyncEngineSyncCompleted" object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self loadRecordsFromCoreData];
-        [self.tableView reloadData];
-    }];
-    [[SDSyncEngine sharedEngine] addObserver:self forKeyPath:@"syncInProgress" options:NSKeyValueObservingOptionNew context:nil]; */
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-   
-    
-   //TODO: [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SDSyncEngineSyncCompleted" object:nil];
-   //TODO: [[SDSyncEngine sharedEngine] removeObserver:self forKeyPath:@"syncInProgress"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -316,7 +308,6 @@
         [addAppointmentTVC setAddAppointmentCompletionBlock:^{
             [self loadRecordsFromCoreData];
             [self.tableView reloadData];
-          //  [[SDSyncEngine sharedEngine] startSync];
         }];
         
     }
@@ -330,36 +321,9 @@
 }
 
 - (IBAction)refreshButtonTouched:(id)sender {
-   //}| [[SDSyncEngine sharedEngine] startSync];
 }
 
-/*
-- (void)checkSyncStatus {
-    if ([[SDSyncEngine sharedEngine] syncInProgress]) {
-        [self replaceRefreshButtonWithActivityIndicator];
-    } else {
-        [self removeActivityIndicatorFromRefreshButon];
-    }
-}
 
-- (void)replaceRefreshButtonWithActivityIndicator {
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-    [activityIndicator setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
-    [activityIndicator startAnimating];
-    UIBarButtonItem *activityItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-    self.navigationItem.leftBarButtonItem = activityItem;
-}
 
-- (void)removeActivityIndicatorFromRefreshButon {
-    self.navigationItem.leftBarButtonItem = self.refreshButton;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"syncInProgress"]) {
-        [self checkSyncStatus];
-    }
-}
- */
 
 @end

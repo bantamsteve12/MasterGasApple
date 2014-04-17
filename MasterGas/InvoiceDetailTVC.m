@@ -318,24 +318,23 @@
 
 
 
-
 -(void)calculateSummaryTotals
 {
-        NSMutableArray * items = [[NSMutableArray alloc] init];
+    NSMutableArray * items = [[NSMutableArray alloc] init];
     
-        NSError *error = nil;
-        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"InvoiceItem"];
-        
-        NSLog(@"entity: %@", self.entityName);
-        
-        [request setSortDescriptors:[NSArray arrayWithObject:
-                                     [NSSortDescriptor sortDescriptorWithKey:@"itemDescription" ascending:YES]]];
-        [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (invoiceUniqueNo == %@)", SDObjectDeleted, self.uniqueInvoiceNoLabel.text]];
-        
+    NSError *error = nil;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"InvoiceItem"];
+    
+    NSLog(@"entity: %@", self.entityName);
+    
+    [request setSortDescriptors:[NSArray arrayWithObject:
+                                 [NSSortDescriptor sortDescriptorWithKey:@"itemDescription" ascending:YES]]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (invoiceUniqueNo == %@)", SDObjectDeleted, self.uniqueInvoiceNoLabel.text]];
+    
     items = [NSMutableArray arrayWithArray:[self.managedObjectContext executeFetchRequest:request error:&error]];
     
     if ([items count] > 0) {
-    
+        
         NSLog(@"invoiceItems count: %i", [self.invoiceItems count]);
         
         NSMutableArray * totalArray = [[NSMutableArray alloc] init];
@@ -345,83 +344,108 @@
         
         for (int i = 0; i < [items count]; ++i) {
             InvoiceItem *invItem = [items objectAtIndex:i];
-           
+            
             NSLog(@"invoice Item %@", invItem);
             
             [totalArray addObject:[NSNumber numberWithFloat:[invItem.total floatValue]]];
-
+            
             NSLog(@"float item total: %.2f", [invItem.total floatValue]);
-        
+            
             [vatArray addObject:[NSNumber numberWithFloat:[invItem.vatAmount floatValue]]];
             
-        float itemVat = [invItem.vatAmount floatValue];
+            float itemVat = [invItem.vatAmount floatValue];
             vat = vat + itemVat;
         }
         
         NSLog(@"invoice total array count = %i", [totalArray count]);
         
-        double totalSum = 0;
+      /*  double totalSum = 0;
         for (NSNumber * n in totalArray) {
             totalSum += [n doubleValue];
         }
+        */
         
+        float totalSum = 0;
+        for (NSNumber * n in totalArray) {
+            totalSum += [n floatValue];
+        }
         
+       /*
         float totalFloat = 0.0;
         for (NSNumber * n in totalArray) {
             totalFloat += [n doubleValue];
-        }
+        } */
+        
+        float totalFloat = 0.0;
+        for (NSNumber * n in totalArray) {
+            totalFloat += [n floatValue];
+        
         
         NSLog(@"totalFloat: %.2f", totalFloat);
-        
+       
+        /*
         double totalVatSum = 0;
         for (NSNumber * n in vatArray) {
             
             NSLog(@"vat %@", n);
             
             totalVatSum += [n doubleValue];
+        } */
+            
+        float totalVatSum = 0;
+        for (NSNumber * n in vatArray) {
+            NSLog(@"vat %@", n);
+            totalVatSum += [n floatValue];
         }
-       
-        double subTotalSum = 0;
+            
+        
+     /*   double subTotalSum = 0; */
+        float subTotalSum = 0;
+            
         subTotalSum = totalSum - totalVatSum;
         
         
         self.totalLabel.text = [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency] ,totalSum]];
-       
         
-         [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",totalSum]] forKey:@"total"];
-       
+        
+        [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",totalSum]] forKey:@"total"];
+        
         
         self.vatLabel.text = [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f", [LACHelperMethods getDefaultCurrency], totalVatSum]];
         
-           [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",totalVatSum]] forKey:@"vat"];
+        [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",totalVatSum]] forKey:@"vat"];
         
-
+        
         self.subtotalLabel.text = [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], subTotalSum]];
-       
         
-           [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",subTotalSum]] forKey:@"subtotal"];
+        
+        [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",subTotalSum]] forKey:@"subtotal"];
         //[self.managedObject setValue:self.subtotalLabel.text forKey:@"subtotal"];
-             
+        
         
         NSString *paidString = [self.managedObject valueForKey:@"paid"];
         float paid = [paidString doubleValue];
         self.paidLabel.text = [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], paid]];
-       
-         [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",paid]] forKey:@"paid"];
+        
+        [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",paid]] forKey:@"paid"];
         
         double balanceDue = totalSum - paid;
         self.balanceDueLabel.text = [NSString checkForNilString:[NSString stringWithFormat:@"%@%.2f",[LACHelperMethods getDefaultCurrency], balanceDue]];
-       
+        
         
         [self.managedObject setValue:[NSString checkForNilString:[NSString stringWithFormat:@"%.2f",balanceDue]] forKey:@"balanceDue"];
-       
+        
         self.numberOfInvoiceItemsLabel.text = [NSString stringWithFormat:@"%i items", [items count]];
         
+    }
+    
+        //
     }
     
     [self SaveTest];
     
 }
+
 
 - (void)loadInvoiceItemsDataFromCoreData {
     [self.managedObjectContext performBlockAndWait:^{
@@ -659,6 +683,12 @@
         self.estimateItems = [NSMutableArray arrayWithArray:[self.managedObjectContext executeFetchRequest:request error:&error]];
     }];
 }
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveTest];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

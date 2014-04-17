@@ -110,25 +110,31 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)SaveAll
+{
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimFlueSegementControl.selectedSegmentIndex] forKey:@"prelimFlue"];
-     
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimVentilationSizeSegementControl.selectedSegmentIndex] forKey:@"prelimVentilationSize"];
     
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimWaterFuelSoundSegementControl.selectedSegmentIndex] forKey:@"prelimWaterFuelSound"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimElectricalFusedSegementControl.selectedSegmentIndex] forKey:@"prelimElectricallyFused"];
-
+    
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimValvingArrangementsSegementControl.selectedSegmentIndex] forKey:@"prelimValvingArrangements"];
     
-
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimIsolationAvailableSegementControl.selectedSegmentIndex] forKey:@"prelimIsolationAvailable"];
-   
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.prelimBoilerRoomClearegementControl.selectedSegmentIndex] forKey:@"prelimBoilerRoomClear"];
     
-  
+    
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceHeatExchangerSegementControl.selectedSegmentIndex] forKey:@"serviceHeatExchanger"];
     
@@ -141,7 +147,7 @@
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceFanSegementControl.selectedSegmentIndex] forKey:@"serviceFan"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceSafetyDeviceSegementControl.selectedSegmentIndex] forKey:@"serviceSafetyDevice"];
- 
+    
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceControlBoxSegementControl.selectedSegmentIndex] forKey:@"serviceControlBox"];
     
@@ -152,19 +158,19 @@
     
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsBurnerFanAndAirwaysCleanedSegementControl.selectedSegmentIndex] forKey:@"serviceBurnerFanAirwaysCleaned"];
- 
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsBurnerCleanedSegementControl.selectedSegmentIndex] forKey:@"serviceBurnerWashedCleaned"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsFuelAndElecConnectedSoundSegementControl.selectedSegmentIndex] forKey:@"serviceFuelElectricalSupplySound"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsHeatExchangerFlueWaysCleanedSegementControl.selectedSegmentIndex] forKey:@"serviceHeatExchangerFluewaysClean"];
-
+    
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsIgnitionCleanedSegementControl.selectedSegmentIndex] forKey:@"serviceIgnitionSystemCleaned"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsInterlocksSegementControl.selectedSegmentIndex] forKey:@"serviceInterlocksInPlace"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceOpsPilotCleanedSegementControl.selectedSegmentIndex] forKey:@"servicePilotAssembley"];
-        
+    
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObjectContext save:&error];
@@ -174,11 +180,14 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
+
 }
 
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

@@ -33,6 +33,8 @@
 @synthesize gasTightnessTestCarriedOutSegment;
 @synthesize tightnessTestResult;
 
+@synthesize operatingPressureTextField;
+@synthesize heatInputTextField;
 
 @synthesize combustion1stCOReadingTextField;
 @synthesize combustion1stCO2ReadingTextField;
@@ -92,6 +94,10 @@
 
     self.tightnessTestResult.selectedSegmentIndex = [LACHelperMethods PassFailNASegementControlSelectedIndexForValue:[self.managedObject valueForKey:@"gasTightnessResult"]];
     
+    self.operatingPressureTextField.text = [self.managedObject valueForKey:@"operatingPressure"];
+    self.heatInputTextField.text = [self.managedObject valueForKey:@"heatInput"];
+    
+    
 }
 
 - (void)dismissKeyboard {
@@ -113,6 +119,13 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     
     // TODO: Add in name values
     [self.managedObject setValue:[NSString checkForNilString:self.locationTextField.text] forKey:@"applianceLocation"];
@@ -133,11 +146,14 @@
     [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdCOReadingTextField.text] forKey:@"combustion3rdCOReading"];
     [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdRatioReadingTextField.text] forKey:@"combustion3rdRatioReading"];
     
+    [self.managedObject setValue:[NSString checkForNilString:self.operatingPressureTextField.text] forKey:@"operatingPressure"];
+    
+    [self.managedObject setValue:[NSString checkForNilString:self.heatInputTextField.text] forKey:@"heatInput"];
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.gasTightnessTestCarriedOutSegment.selectedSegmentIndex] forKey:@"gasTightnessCarriedOut"];
     
     [self.managedObject setValue:[LACHelperMethods PassFailNASegementControlValue:self.tightnessTestResult.selectedSegmentIndex] forKey:@"gasTightnessResult"];
-
+    
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObjectContext save:&error];
@@ -148,10 +164,7 @@
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
     
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
-    
+
 }
 
 #pragma Delegate methods
@@ -205,6 +218,10 @@
     
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

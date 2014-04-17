@@ -114,12 +114,19 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
-            
+      [self SaveAll];
+      [self.navigationController popViewControllerAnimated:YES];
+    //  addDateCompletionBlock();
+}
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[NSString checkForNilString:self.customerSignOffNameTextField.text] forKey:@"customerSignoffName"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerPositionTextField.text] forKey:@"customerPosition"];
-  
-   // TODO set date
-   // TODO set signature
+    
+    // TODO set date
+    // TODO set signature
     
     NSString *objectId = [self.managedObject valueForKey:@"objectId"];
     
@@ -141,8 +148,7 @@
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
     
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
+
 }
 
 
@@ -188,6 +194,10 @@
     }
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

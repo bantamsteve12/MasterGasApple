@@ -19,6 +19,8 @@
 @property (strong, nonatomic) IBOutlet UITextView *detailsOfFaultsTextView;
 @property (strong, nonatomic) IBOutlet UITextView *remedialWorkTakenTextView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *warningNoticeIssuedSegmentControl;
+
+
 @property (strong, nonatomic) IBOutlet UITextField *warningNoticeNumberTextField;
 
 @property (strong, nonatomic) NSString *entityName;

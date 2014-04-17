@@ -122,7 +122,15 @@
 }
 
 - (IBAction)saveButtonTouched:(id)sender {
-    
+    [self SaveAll];
+    [self.delegate theSaveButtonPressedOnTheInvoiceAddressDetails:self];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[NSString checkForNilString:self.customerAddressName.text] forKey:@"customerName"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerAddressLine1.text] forKey:@"customerAddressLine1"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerAddressLine2.text] forKey:@"customerAddressLine2"];
@@ -131,9 +139,6 @@
     [self.managedObject setValue:[NSString checkForNilString:self.customerTelNumber.text] forKey:@"customerTelephone"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerMobileNumber.text] forKey:@"customerMobile"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerEmailAddress.text] forKey:@"customerEmail"];
-    
-  
- //   [self.managedObject setValue:[NSNumber numberWithInt:SDObjectEdited] forKey:@"syncStatus"];
     
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
@@ -145,10 +150,12 @@
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
 
-    [self.delegate theSaveButtonPressedOnTheInvoiceAddressDetails:self];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

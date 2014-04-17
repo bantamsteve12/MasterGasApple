@@ -162,6 +162,13 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+     [self SaveAll];
+     [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     // ecv
     if (self.ecvSegmentControl.selectedSegmentIndex == 1) {
         [self.managedObject setValue:@"Yes" forKey:@"finalCheckECV"];
@@ -177,7 +184,7 @@
     
     // Gas tightness test
     if (self.gasTightnessSegementControl.selectedSegmentIndex == 1) {
-          [self.managedObject setValue:@"Yes" forKey:@"finalCheckGasTightness"];
+        [self.managedObject setValue:@"Yes" forKey:@"finalCheckGasTightness"];
     }
     else if (self.gasTightnessSegementControl.selectedSegmentIndex == 2)
     {
@@ -195,7 +202,7 @@
     }
     else if (self.gasInstallationPipeworkControl.selectedSegmentIndex == 2)
     {
-        [self.managedObject setValue:@"No" forKey:@"finalCheckGasInstallationPipework"]; 
+        [self.managedObject setValue:@"No" forKey:@"finalCheckGasInstallationPipework"];
     }
     else
     {
@@ -206,16 +213,16 @@
     if (self.equipotentialBondingControl.selectedSegmentIndex == 1) {
         [self.managedObject setValue:@"Yes" forKey:@"finalCheckEquipotentialBonding"];
     }
-    else if (self.equipotentialBondingControl.selectedSegmentIndex == 2) 
+    else if (self.equipotentialBondingControl.selectedSegmentIndex == 2)
     {
         [self.managedObject setValue:@"No" forKey:@"finalCheckEquipotentialBonding"];
     }
     else
     {
-         [self.managedObject setValue:@"" forKey:@"finalCheckEquipotentialBonding"];
+        [self.managedObject setValue:@"" forKey:@"finalCheckEquipotentialBonding"];
     }
-        
- 
+    
+    
     if (self.coAlarmFittedSegmentControl.selectedSegmentIndex == 1) {
         [self.managedObject setValue:@"Yes" forKey:@"finalCheckCOAlarmFitted"];
     }
@@ -254,7 +261,7 @@
     
     [self.managedObject setValue:[NSString checkForNilString:self.gasTightnessInitialValueTextField.text] forKey:@"finalCheckGasTightnessInitialValue"];
     [self.managedObject setValue:[NSString checkForNilString:self.gasTightnessFinalValueTextField.text] forKey:@"finalCheckGasTightnessFinalValue"];
-   
+    
     // LPG
     if (self.cylinderFinalConnectionControl.selectedSegmentIndex == 1) {
         [self.managedObject setValue:@"Yes" forKey:@"cylinderFinalConnection"];
@@ -272,21 +279,15 @@
     
     [self.managedObject setValue:[NSString checkForNilString:self.lpgRegulatorLockupPressureTextField.text] forKey:@"lpgRegulatorLockupPressure"];
     
-      
-     [self.managedObjectContext performBlockAndWait:^{
-     NSError *error = nil;
-     BOOL saved = [self.managedObjectContext save:&error];
-     if (!saved) {
-     // do some real error handling
-     NSLog(@"Could not save Date due to %@", error);
-     }
-     [[SDCoreDataController sharedInstance] saveMasterContext];
-     }];
-     
-     [self.navigationController popViewControllerAnimated:YES];
-     //  addDateCompletionBlock();
-     
-     
+    [self.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        BOOL saved = [self.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
 }
 
 
@@ -295,6 +296,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
 }
 
 @end

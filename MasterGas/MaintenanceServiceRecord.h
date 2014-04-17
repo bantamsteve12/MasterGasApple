@@ -2,8 +2,8 @@
 //  MaintenanceServiceRecord.h
 //  MasterGas
 //
-//  Created by Stephen Lalor on 02/11/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Stephen Lalor on 04/02/2014.
+//  Copyright (c) 2014 Stephen Lalor. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -21,6 +21,15 @@
 @property (nonatomic, retain) NSString * applianceModel;
 @property (nonatomic, retain) NSString * applianceSerialNumber;
 @property (nonatomic, retain) NSString * applianceType;
+@property (nonatomic, retain) NSString * combustion1stCO2Reading;
+@property (nonatomic, retain) NSString * combustion1stCOReading;
+@property (nonatomic, retain) NSString * combustion1stRatioReading;
+@property (nonatomic, retain) NSString * combustion2ndCO2Reading;
+@property (nonatomic, retain) NSString * combustion2ndCOReading;
+@property (nonatomic, retain) NSString * combustion2ndRatioReading;
+@property (nonatomic, retain) NSString * combustion3rdCO2Reading;
+@property (nonatomic, retain) NSString * combustion3rdCOReading;
+@property (nonatomic, retain) NSString * combustion3rdRatioReading;
 @property (nonatomic, retain) NSString * companyId;
 @property (nonatomic, retain) NSDate * createdAt;
 @property (nonatomic, retain) NSString * customerAddressLine1;
@@ -92,14 +101,7 @@
 @property (nonatomic, retain) NSDate * updatedAt;
 @property (nonatomic, retain) NSString * warningAdviceNumber;
 @property (nonatomic, retain) NSString * warningLabelIssued;
-@property (nonatomic, retain) NSString * combustion1stCO2Reading;
-@property (nonatomic, retain) NSString * combustion2ndCO2Reading;
-@property (nonatomic, retain) NSString * combustion3rdCO2Reading;
-@property (nonatomic, retain) NSString * combustion1stCOReading;
-@property (nonatomic, retain) NSString * combustion2ndCOReading;
-@property (nonatomic, retain) NSString * combustion3rdCOReading;
-@property (nonatomic, retain) NSString * combustion1stRatioReading;
-@property (nonatomic, retain) NSString * combustion2ndRatioReading;
-@property (nonatomic, retain) NSString * combustion3rdRatioReading;
+@property (nonatomic, retain) NSString * operatingPressure;
+@property (nonatomic, retain) NSString * heatInput;
 
 @end

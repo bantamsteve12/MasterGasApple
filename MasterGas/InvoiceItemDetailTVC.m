@@ -201,6 +201,15 @@ static float vatAmountFloat = 0;
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+    updateCompletionBlock();
+    
+}
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
     
@@ -211,11 +220,11 @@ static float vatAmountFloat = 0;
     [self.managedObject setValue:self.totalAmountTextField.text forKey:@"total"];
     [self.managedObject setValue:self.vatAmountTextField.text forKey:@"vat"];
     [self.managedObject setValue:self.invoiceUniqueNo forKey:@"invoiceUniqueNo"];
-  
+    
     NSLog(@"vatAmount string: %@",[NSString stringWithFormat:@"@%.2f", vatAmountFloat] );
     
     [self.managedObject setValue:[NSString stringWithFormat:@"%.2f", vatAmountFloat]forKey:@"vatAmount"];
-   
+    
     [self.managedObject.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObject.managedObjectContext save:&error];
@@ -225,11 +234,6 @@ static float vatAmountFloat = 0;
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    updateCompletionBlock();
-    
 }
 
 
@@ -244,6 +248,12 @@ static float vatAmountFloat = 0;
 - (IBAction)updateTotal:(id)sender
 {
       [self calculateValues];
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
 }
 
 

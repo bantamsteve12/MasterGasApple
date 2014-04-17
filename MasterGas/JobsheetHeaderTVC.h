@@ -14,6 +14,7 @@
 #import "LACUsersHandler.h"
 #import "JobstatusLookupTVC.h"
 
+
 @interface JobsheetHeaderTVC : UITableViewController <DatePickerTVCDelegate, MBProgressHUDDelegate, JobstatusLookupTVCDelegate> {
 	MBProgressHUD *HUD;
 }
@@ -30,6 +31,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *departureTimeLabel;
 @property (strong, nonatomic) IBOutlet UITextField *hoursOnSiteTextField;
 @property (strong, nonatomic) IBOutlet UILabel *jobStatusLabel;
+
+@property (strong, nonatomic) IBOutlet UITextField *travelTimeTextField;
+
 
 @property (strong, nonatomic) IBOutlet UILabel *addressCompletionLabel;
 @property (strong, nonatomic) IBOutlet UILabel *detailsCompletionLabel;

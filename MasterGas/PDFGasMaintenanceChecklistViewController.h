@@ -14,7 +14,7 @@
 #import "LACUsersHandler.h"
 
 
-@interface PDFGasMaintenanceChecklistViewController : UIViewController<MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface PDFGasMaintenanceChecklistViewController : UIViewController<MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -28,6 +28,7 @@
 
 @property (strong, nonatomic) NSString *mode;
 @property (retain, nonatomic) MaintenanceServiceCheck *aMaintenanceServiceCheck;
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

@@ -48,6 +48,7 @@
 @synthesize departureTimeLabel;
 @synthesize hoursOnSiteTextField;
 @synthesize jobStatusLabel;
+@synthesize travelTimeTextField;
 
 @synthesize updateCompletionBlock;
 
@@ -68,7 +69,6 @@
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     [tgr setCancelsTouchesInView:NO];
     [self.tableView addGestureRecognizer:tgr];
-    
     
     self.managedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
   
@@ -120,6 +120,7 @@
     
     self.hoursOnSiteTextField.text = [self.managedObject valueForKey:@"hours"];
     self.jobStatusLabel.text = [self.managedObject valueForKey:@"jobStatus"];
+    self.travelTimeTextField.text = [self.managedObject valueForKey:@"travelTime"];
     
 }
 
@@ -296,6 +297,9 @@
         [self.managedObject setValue:self.hoursOnSiteTextField.text forKey:@"hours"];
         [self.managedObject setValue:self.jobStatusLabel.text forKey:@"jobStatus"];
         
+        [self.managedObject setValue:self.travelTimeTextField.text forKey:@"travelTime"];
+        
+        
         [self.managedObjectContext performBlockAndWait:^{
             NSError *error = nil;
             BOOL saved = [self.managedObjectContext save:&error];
@@ -365,6 +369,12 @@
         [cannotSaveAlert show];
     }
      
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
 }
 
 

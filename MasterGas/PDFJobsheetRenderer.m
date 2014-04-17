@@ -472,6 +472,26 @@ Jobsheet *cert;
                     break;}
                  
                     
+                case 33:
+                {
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.date];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+
+                    
+                    
                 case 295:
                 {
                     NSString *str = cert.customerMobileNumber;
@@ -575,6 +595,18 @@ Jobsheet *cert;
                     }
                     break;}
                     
+                case 205:
+                {
+                    NSString *str = cert.travelTime;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
                 case 301:
                 {
                     NSString *str = cert.notes;
@@ -625,7 +657,7 @@ Jobsheet *cert;
                     
                 case 401:
                 {
-                    NSString *str = cert.customerPosition;
+                    NSString *str = cert.customerSignoffName;
                     
                     if (str.length > 0) {
                         label.text = str;
@@ -636,6 +668,19 @@ Jobsheet *cert;
                     break;}
                     
                 case 402:
+                {
+                    NSString *str = cert.customerPosition;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+   
+                    
+                case 403:
                 {
                     
                     NSString *str;
@@ -654,19 +699,21 @@ Jobsheet *cert;
                     }
                     break;}
 
-                case 403:
-                    {
-                        NSString *str = cert.engineerSignoffEngineerName;
-                        
-                        if (str.length > 0) {
-                            label.text = str;
-                        }
-                        else {
-                            label.text = @"";
-                        }
-                        break;}
-                    
                 case 404:
+                {
+                    NSString *str = cert.engineerSignoffEngineerName;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+
+                    
+                case 405:
                 {
                     NSString *str = cert.engineerSignoffEngineerIDCardRegNumber;
                     
@@ -677,6 +724,85 @@ Jobsheet *cert;
                         label.text = @"";
                     }
                     break;}
+                    
+                    
+                case 406:
+                {
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.engineerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                
+                case 501:
+                {
+                    NSString *str = cert.applianceLocation;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 502:
+                {
+                    NSString *str = cert.applianceType;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                
+                case 503:
+                {
+                    NSString *str = cert.applianceMake;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+
+                case 504:
+                {
+                    NSString *str = cert.applianceModel;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 505:
+                {
+                    NSString *str = cert.applianceSerial;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}                    
                     
                 default:
                     break;

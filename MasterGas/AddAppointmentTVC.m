@@ -127,6 +127,10 @@
         CallTypeTVC *callTypeLookupTVC = segue.destinationViewController;
         callTypeLookupTVC.delegate = self;
     }
+    else if ([segue.identifier isEqualToString:@"OnMyWaySegue"]) {
+        OnMYWayLookupTVC *onMyWayLookupTVC = segue.destinationViewController;
+        onMyWayLookupTVC.delegate = self;
+    }
     else if ([segue.identifier isEqualToString:@"ShowSitesLookupSegue"]) {
         SiteLookupTVC *siteLookupTVC = segue.destinationViewController;
         siteLookupTVC.customerNo = self.customerIdLabel.text;
@@ -144,37 +148,7 @@
     
     
     if (![self.nameTextField.text isEqualToString:@""]) {
-        
-        [self.appointment setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
-        [self.appointment setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
-    
-
-        [self.appointment setValue:[NSString checkForNilString:self.nameTextField.text] forKey:@"name"];
-        [self.appointment setValue:[NSString checkForNilString:self.commentsTextView.text] forKey:@"notes"];
-        [self.appointment setValue:[NSString checkForNilString:self.addressLine1TextField.text] forKey:@"addressLine1"];
-        [self.appointment setValue:[NSString checkForNilString:self.addressLine2TextField.text] forKey:@"addressLine2"];
-        [self.appointment setValue:[NSString checkForNilString:self.addressLine3TextField.text] forKey:@"addressLine3"];
-        [self.appointment setValue:[NSString checkForNilString:self.postcodeTextField.text] forKey:@"postcode"];
-        [self.appointment setValue:[NSString checkForNilString:self.telTextField.text] forKey:@"tel"];
-        [self.appointment setValue:[NSString checkForNilString:self.mobileNumberTextField.text] forKey:@"mobileNumber"];
-        [self.appointment setValue:[NSString checkForNilString:self.emailTextField.text] forKey:@"email"];
-        [self.appointment setValue:[NSString checkForNilString:self.callTypeLabel.text] forKey:@"callType"];
-        [self.appointment setValue:[NSString checkForNilString:self.customerIdLabel.text] forKey:@"customerId"];
-        
-        [self.appointment setValue:self.date forKey:@"date"];
-        
-        
-        [self.appointment.managedObjectContext performBlockAndWait:^{
-            NSError *error = nil;
-            BOOL saved = [self.appointment.managedObjectContext save:&error];
-            if (!saved) {
-                // do some real error handling
-                NSLog(@"Could not save Date due to %@", error);
-            }
-            [[SDCoreDataController sharedInstance] saveMasterContext];
-        }];
-        
-
+        [self SaveAll];
         [self.navigationController popViewControllerAnimated:YES];
         addAppointmentCompletionBlock();
         
@@ -183,6 +157,100 @@
         [cannotSaveAlert show];
     }
 }
+
+
+-(void)SaveAll
+{
+    
+    [self.appointment setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
+    [self.appointment setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
+    
+    [self.appointment setValue:[NSString checkForNilString:self.nameTextField.text] forKey:@"name"];
+    [self.appointment setValue:[NSString checkForNilString:self.commentsTextView.text] forKey:@"notes"];
+    [self.appointment setValue:[NSString checkForNilString:self.addressLine1TextField.text] forKey:@"addressLine1"];
+    [self.appointment setValue:[NSString checkForNilString:self.addressLine2TextField.text] forKey:@"addressLine2"];
+    [self.appointment setValue:[NSString checkForNilString:self.addressLine3TextField.text] forKey:@"addressLine3"];
+    [self.appointment setValue:[NSString checkForNilString:self.postcodeTextField.text] forKey:@"postcode"];
+    [self.appointment setValue:[NSString checkForNilString:self.telTextField.text] forKey:@"tel"];
+    [self.appointment setValue:[NSString checkForNilString:self.mobileNumberTextField.text] forKey:@"mobileNumber"];
+    [self.appointment setValue:[NSString checkForNilString:self.emailTextField.text] forKey:@"email"];
+    [self.appointment setValue:[NSString checkForNilString:self.callTypeLabel.text] forKey:@"callType"];
+    [self.appointment setValue:[NSString checkForNilString:self.customerIdLabel.text] forKey:@"customerId"];
+    
+    [self.appointment setValue:self.date forKey:@"date"];
+    
+    
+    [self.appointment.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        BOOL saved = [self.appointment.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
+    
+
+}
+
+
+
+#pragma Send SMS Methods
+-(void)sendSMS:(NSString *)message
+{
+    UIDevice *device = [UIDevice currentDevice];
+    if ([[device model] isEqualToString:@"iPhone"] ) {
+        
+        MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+        if([MFMessageComposeViewController canSendText])
+        {
+            controller.body = message;
+            
+            if (self.mobileNumberTextField.text.length > 0) {
+                
+                NSString *telNo = self.mobileNumberTextField.text;
+                
+                // strip out any non numbers.
+                NSMutableString *strippedStringTel = [NSMutableString
+                                                      stringWithCapacity:telNo.length];
+                
+                NSScanner *scanner = [NSScanner scannerWithString:telNo];
+                NSCharacterSet *numbers = [NSCharacterSet
+                                           characterSetWithCharactersInString:@"0123456789"];
+                
+                while ([scanner isAtEnd] == NO) {
+                    NSString *buffer;
+                    if ([scanner scanCharactersFromSet:numbers intoString:&buffer]) {
+                        [strippedStringTel appendString:buffer];
+                    } else {
+                        [scanner setScanLocation:([scanner scanLocation] + 1)];
+                    }
+                }
+                
+                controller.recipients = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%@",self.mobileNumberTextField.text], nil];
+                controller.messageComposeDelegate = self;
+                [self presentModalViewController:controller animated:YES];
+            }
+            else
+            {
+                UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:@"Alert" message:@"A valid number is not entered in the mobile number field" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [Notpermitted show];
+            }
+            
+        }
+    }
+    else
+    {
+        UIAlertView *Notpermitted=[[UIAlertView alloc] initWithTitle:@"Alert" message:@"Your device doesn't support this feature." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [Notpermitted show];
+    }
+}
+
+-(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
 
 - (void) theDoneButtonWasPressedOnTheDatePicker:(DateTimePickerTVC *)controller
 {
@@ -228,6 +296,35 @@
     self.callTypeLabel.text = controller.selectedCallType.name;
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+-(void)theOnMyWayLookupWasSelectedFromTheList:(OnMYWayLookupTVC *)controller
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    NSString *name =  controller.selectedOnMyWayItem.name;
+    
+    if (name.length > 0) {
+        [self sendSMS:name];
+    }
+    else
+    {
+        [self sendSMS:@""];
+    }
+    
+  
+    
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    
+    if (![self.nameTextField.text isEqualToString:@""]) {
+        [self SaveAll];
+    }
+    
+}
+
 
 - (void)didReceiveMemoryWarning
 {

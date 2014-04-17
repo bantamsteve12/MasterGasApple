@@ -207,11 +207,19 @@ static float vatAmountFloat = 0;
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+    updateCompletionBlock();
+    
+}
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
     
-  //  [self.managedObject setValue:self.itemDescriptionTextField.text forKey:@"itemDescription"];
-  
+    //  [self.managedObject setValue:self.itemDescriptionTextField.text forKey:@"itemDescription"];
+    
     [self.managedObject setValue:self.itemDescriptionTextViewField.text forKey:@"itemDescription"];
     
     
@@ -236,11 +244,9 @@ static float vatAmountFloat = 0;
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
     
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    updateCompletionBlock();
-    
+
 }
+
 
 
 - (IBAction)quantityValueChanged:(UIStepper *)sender {
@@ -256,6 +262,11 @@ static float vatAmountFloat = 0;
     [self calculateValues];
 }
 
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

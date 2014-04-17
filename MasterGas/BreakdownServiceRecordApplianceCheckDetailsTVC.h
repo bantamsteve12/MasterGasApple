@@ -28,6 +28,9 @@
 @property (strong, nonatomic) IBOutlet UITextField *applianceBurnerMakeField;
 @property (strong, nonatomic) IBOutlet UITextField *applianceBurnerModelField;
 
+@property (strong, nonatomic) IBOutlet UITextField *operatingPressureTextField;
+@property (strong, nonatomic) IBOutlet UITextField *heatInputTextField;
+
 @property (strong, nonatomic) IBOutlet UITextField *combustion1stCOReadingTextField;
 @property (strong, nonatomic) IBOutlet UITextField *combustion1stCO2ReadingTextField;
 @property (strong, nonatomic) IBOutlet UITextField *combustion1stRatioReadingTextField;

@@ -2,8 +2,8 @@
 //  Jobsheet.h
 //  MasterGas
 //
-//  Created by Stephen Lalor on 11/07/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Stephen Lalor on 14/04/2014.
+//  Copyright (c) 2014 Stephen Lalor. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -12,6 +12,10 @@
 
 @interface Jobsheet : NSManagedObject
 
+@property (nonatomic, retain) NSString * applianceLocation;
+@property (nonatomic, retain) NSString * applianceMake;
+@property (nonatomic, retain) NSString * applianceModel;
+@property (nonatomic, retain) NSString * applianceSerial;
 @property (nonatomic, retain) NSString * companyId;
 @property (nonatomic, retain) NSDate * createdAt;
 @property (nonatomic, retain) NSString * customerAddressLine1;
@@ -19,6 +23,7 @@
 @property (nonatomic, retain) NSString * customerAddressLine3;
 @property (nonatomic, retain) NSString * customerAddressName;
 @property (nonatomic, retain) NSString * customerEmail;
+@property (nonatomic, retain) NSString * customerId;
 @property (nonatomic, retain) NSString * customerMobileNumber;
 @property (nonatomic, retain) NSString * customerPosition;
 @property (nonatomic, retain) NSString * customerPostcode;
@@ -59,7 +64,8 @@
 @property (nonatomic, retain) NSNumber * syncStatus;
 @property (nonatomic, retain) NSDate * timeOfArrival;
 @property (nonatomic, retain) NSDate * timeOfDeparture;
+@property (nonatomic, retain) NSString * travelTime;
 @property (nonatomic, retain) NSDate * updatedAt;
-@property (nonatomic, retain) NSString * customerId;
+@property (nonatomic, retain) NSString * applianceType;
 
 @end

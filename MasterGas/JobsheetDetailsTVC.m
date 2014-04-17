@@ -8,8 +8,6 @@
 
 #import "JobsheetDetailsTVC.h"
 #import "SDCoreDataController.h"
-//#import "SDSyncEngine.h"
-
 
 @interface JobsheetDetailsTVC ()
 @property CGPoint originalCenter;
@@ -20,6 +18,11 @@
 
 @synthesize entityName;
 
+@synthesize applianceType;
+@synthesize applianceMake;
+@synthesize applianceModel;
+@synthesize applianceSerial;
+@synthesize applianceLocation;
 @synthesize jobNotesTextView;
 @synthesize sparesRequiredTextView;
 @synthesize sparesUsedTextView;
@@ -49,6 +52,13 @@
     self.managedObjectContext = [[SDCoreDataController sharedInstance] newManagedObjectContext];
     
     // load values if present
+    
+    self.applianceLocation.text = [self.managedObject valueForKey:@"applianceLocation"];
+    self.applianceMake.text = [self.managedObject valueForKey:@"applianceMake"];
+    self.applianceModel.text = [self.managedObject valueForKey:@"applianceModel"];
+    self.applianceSerial.text = [self.managedObject valueForKey:@"applianceSerial"];
+    self.applianceType.text = [self.managedObject valueForKey:@"applianceType"];
+    
     self.jobNotesTextView.text = [self.managedObject valueForKey:@"notes"];
     self.sparesRequiredTextView.text = [self.managedObject valueForKey:@"sparesRequired"];
     self.sparesUsedTextView.text = [self.managedObject valueForKey:@"sparesUsed"];
@@ -76,11 +86,23 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
        
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)SaveAll
+{
+    
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceLocation.text] forKey:@"applianceLocation"];
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceMake.text] forKey:@"applianceMake"];
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceModel.text] forKey:@"applianceModel"];
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceType.text] forKey:@"applianceType"];
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceSerial.text] forKey:@"applianceSerial"];
     [self.managedObject setValue:[NSString checkForNilString:self.jobNotesTextView.text] forKey:@"notes"];
     [self.managedObject setValue:[NSString checkForNilString:self.sparesRequiredTextView.text] forKey:@"sparesRequired"];
     
-     [self.managedObject setValue:[NSString checkForNilString:self.sparesUsedTextView.text] forKey:@"sparesUsed"];
-     [self.managedObject setValue:[NSString checkForNilString:self.self.materialsPurcasedTextView.text] forKey:@"materialsPurchased"];
+    [self.managedObject setValue:[NSString checkForNilString:self.sparesUsedTextView.text] forKey:@"sparesUsed"];
+    [self.managedObject setValue:[NSString checkForNilString:self.self.materialsPurcasedTextView.text] forKey:@"materialsPurchased"];
     
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
@@ -91,10 +113,55 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
+
+}
+
+#pragma Segue
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
+    if ([segue.identifier isEqualToString:@"SelectLocationLookupSegue"]) {
+        LocationLookupTVC *locationLookupTVC = segue.destinationViewController;
+        locationLookupTVC.delegate = self;
+    }
+    else if ([segue.identifier isEqualToString:@"SelectApplianceTypeLookupSegue"]) {
+        ApplianceTypeLookupTVC *applianceTypeLookupTVC = segue.destinationViewController;
+        applianceTypeLookupTVC.delegate = self;
+    }
+    else if ([segue.identifier isEqualToString:@"SelectApplianceMakeLookupSegue"]) {
+        ApplianceMakeLookupTVC *applianceMakeLookupTVC = segue.destinationViewController;
+        applianceMakeLookupTVC.delegate = self;
+    }
+   
+}
+
+
+#pragma Delegate methods
+
+-(void)theLocationWasSelectedFromTheList:(LocationLookupTVC *)controller
+{
+    self.applianceLocation.text = controller.selectedLocation.name;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)theApplianceTypeWasSelectedFromTheList:(ApplianceTypeLookupTVC *)controller
+{
+    self.applianceType.text = controller.selectedApplianceType.name;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)theApplianceMakeWasSelectedFromTheList:(ApplianceMakeLookupTVC *)controller
+{
+    self.applianceMake.text = controller.selectedApplianceMake.name;
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

@@ -318,16 +318,14 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
-    if (![self.uniqueReferenceLabel.text isEqualToString:@""]) {
         [self SaveAll];
         [self.navigationController popViewControllerAnimated:YES];
         updateCompletionBlock();
-        
-    } else {
-        UIAlertView *cannotSaveAlert = [[UIAlertView alloc] initWithTitle:@"Name required." message:@"You must at least set a name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [cannotSaveAlert show];
-    }
-    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
 }
 
 - (void)didReceiveMemoryWarning

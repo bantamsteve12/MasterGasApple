@@ -627,6 +627,7 @@ NSMutableArray *expenseItemsArray;
         
         NSString *dateString = [dateFormatter stringFromDate:expsItem.date];
         
+        NSLog(@"Expense Date: = %@", dateString);
         
         NSArray* infoToDraw = [NSArray arrayWithObjects:
                                @"",

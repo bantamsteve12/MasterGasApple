@@ -523,6 +523,27 @@ MaintenanceServiceCheck *cert;
                         label.text = @"";
                     }
                     break;}
+                    
+                    
+                case 301:
+                {
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    //   [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.date];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+
             
                     
                 case 401:
@@ -608,6 +629,32 @@ MaintenanceServiceCheck *cert;
                 {
                     
                     NSString *str = cert.applianceModel;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                
+                case 408:
+                {
+                    
+                    NSString *str = cert.operatingPressure;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 409:
+                {
+                    
+                    NSString *str = cert.heatInput;
                     
                     if (str.length > 0) {
                         label.text = str;
@@ -1472,8 +1519,26 @@ MaintenanceServiceCheck *cert;
                         label.text = @"";
                     }
                     break;}
-                    
                 
+                    
+                case 805:
+                {
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    //   [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.engineerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
         
                     
                     

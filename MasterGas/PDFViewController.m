@@ -25,7 +25,7 @@
 @synthesize mode;
 
 @synthesize aCertificate;
-
+@synthesize documentInteractionController;
 
 - (void)loadRecordsFromCoreData {
     
@@ -130,11 +130,6 @@
 -(void)generateCertificate
 {
     aCertificate = currentCertificate;
-    
-   // applianceInspections = [[NSMutableArray alloc] init];
-    
-    //[self loadRecordsFromCoreData];
-    
   
     NSString* fileName = [self getPDFFileName];
     
@@ -198,7 +193,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox"
+                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox", @"Open in..."
                                   ,nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showFromToolbar:self.tabBarController.tabBar];
@@ -237,8 +232,43 @@
             [self uploadToDropbox];
         }
     }
+    
+    if (buttonIndex == 3) {
+        
+        NSURL *URL = [NSURL fileURLWithPath:[self getPDFFileName]];
+        
+        if (URL) {
+            // Initialize Document Interaction Controller
+            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+            
+            // Configure Document Interaction Controller
+            [self.documentInteractionController setDelegate:self];
+            
+            // Present Open In Menu
+            [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        }
+    }
 
 }
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+	return self;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+	return self.view;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller
+{
+	return self.view.frame;
+}
+
+
 
 -(void)print:(NSString *)filePath
 {
@@ -267,6 +297,8 @@
 
 -(void)emailToCustomer
 {
+    if ([MFMailComposeViewController canSendMail]) {
+        
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
@@ -307,6 +339,20 @@
     }
     
     [self presentModalViewController:picker animated:YES];
+    }
+    else
+    {
+        
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Email not setup"
+                              message:@"You haven't setup emails on your device. Please setup you emails in the mail app for your device and try again."
+                              delegate: nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        
+        [alert show];
+        
+    }
 }
 
 

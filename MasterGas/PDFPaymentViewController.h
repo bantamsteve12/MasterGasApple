@@ -14,7 +14,7 @@
 #import "LACUsersHandler.h"
 #import "Invoice.h"
 
-@interface PDFPaymentViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface PDFPaymentViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -28,6 +28,7 @@
 @property (strong, nonatomic) Invoice *invoice;
 
 @property (nonatomic, strong) NSArray *companyRecords;
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

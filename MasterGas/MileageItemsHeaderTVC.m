@@ -91,20 +91,12 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-  //  [self checkSyncStatus];
-    
-   // [[NSNotificationCenter defaultCenter] addObserverForName:@"SDSyncEngineSyncCompleted" object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self loadRecordsFromCoreData];
-        [self.tableView reloadData];
-   // }];
-  //  [[SDSyncEngine sharedEngine] addObserver:self forKeyPath:@"syncInProgress" options:NSKeyValueObservingOptionNew context:nil];
+    [self loadRecordsFromCoreData];
+    [self.tableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-   // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SDSyncEngineSyncCompleted" object:nil];
-   // [[SDSyncEngine sharedEngine] removeObserver:self forKeyPath:@"syncInProgress"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -240,36 +232,5 @@ NSIndexPath *_tmpIndexPath;
     [super viewDidUnload];
 }
 
-/*
-- (IBAction)refreshButtonTouched:(id)sender {
-    [[SDSyncEngine sharedEngine] startSync];
-}
 
-- (void)checkSyncStatus {
-    if ([[SDSyncEngine sharedEngine] syncInProgress]) {
-        [self replaceRefreshButtonWithActivityIndicator];
-    } else {
-        [self removeActivityIndicatorFromRefreshButon];
-    }
-}
-
-- (void)replaceRefreshButtonWithActivityIndicator {
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-    [activityIndicator setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
-    [activityIndicator startAnimating];
-    UIBarButtonItem *activityItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-    self.navigationItem.leftBarButtonItem = activityItem;
-}
-
-- (void)removeActivityIndicatorFromRefreshButon {
-    self.navigationItem.leftBarButtonItem = self.refreshButton;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"syncInProgress"]) {
-        [self checkSyncStatus];
-    }
-}
-*/
 @end

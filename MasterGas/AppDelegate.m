@@ -80,6 +80,17 @@
     [Parse setApplicationId:@"SXkkKl2uJPIvy7yAo86fJjkVsXaOf8ClEykLR1FY"
                   clientKey:@"tm4MNkHROLpfTfVTTeqikecooYvlruCLJ3i14oIT"];
     
+    
+    NSURL *ubiq = [[NSFileManager defaultManager]
+                   URLForUbiquityContainerIdentifier:nil];
+    if (ubiq) {
+        NSLog(@"iCloud access at %@", ubiq);
+        // TODO: Load document...
+    } else {
+        NSLog(@"No iCloud access");
+    }
+    
+    
       return YES;
 }
 

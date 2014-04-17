@@ -1,15 +1,14 @@
 //
 //  DropboxTVC.h
-//  MasterGas
+//  Grocery Dude
 //
-//  Created by Stephen Lalor on 30/11/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Tim Roadley on 23/09/13.
+//  Copyright (c) 2013 Tim Roadley. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "SDCoreDataController.h"
-//#import "CoreDataHelper.h"
 #import "DropboxHelper.h"
 
 @interface DropboxTVC : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate>
@@ -17,5 +16,6 @@
 @property (assign, nonatomic) BOOL loading;
 @property (strong, nonatomic) UIActionSheet *options;
 @property (strong, nonatomic) UIAlertView *confirmRestore;
+@property (strong, nonatomic) UIAlertView *confirmClose;
 @property (strong, nonatomic) NSString *selectedZipFileName;
 @end

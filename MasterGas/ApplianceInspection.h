@@ -2,8 +2,8 @@
 //  ApplianceInspection.h
 //  MasterGas
 //
-//  Created by Stephen Lalor on 15/02/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Stephen Lalor on 07/04/2014.
+//  Copyright (c) 2014 Stephen Lalor. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -47,5 +47,6 @@
 @property (nonatomic, retain) NSString * visualConditionOfFlueSatisfactory;
 @property (nonatomic, retain) NSString * warningNoticeLabelIssued;
 @property (nonatomic, retain) NSString * warningNoticeNumber;
+@property (nonatomic, retain) NSString * fluePerformanceSpillageTest;
 
 @end

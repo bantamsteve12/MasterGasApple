@@ -8,8 +8,8 @@
 
 #import "SettingsTVC.h"
 //#import "SDSyncEngine.h"
-#import "LoginViewController.h"
-#import "SignupViewController.h"
+//#import "LoginViewController.h"
+//#import "SignupViewController.h"
 #import "LACUsersHandler.h"
 
 @interface SettingsTVC ()
@@ -24,15 +24,9 @@
     
     if ([segue.identifier isEqualToString:@"CompanyDetailsSegue"]) {
         CompanyTVC *companyTVC = segue.destinationViewController;
-     /*   [companyTVC setUpdateCompletionBlock:^{
-            [[SDSyncEngine sharedEngine] startSync];
-        }]; */
    }
    else if ([segue.identifier isEqualToString:@"EmailSetupSegue"]) {
         CompanyTVC *companyTVC = segue.destinationViewController;
-   /*     [companyTVC setUpdateCompletionBlock:^{
-            [[SDSyncEngine sharedEngine] startSync];
-        }]; */
     }
    else if ([segue.identifier isEqualToString:@"ApplianceManufacturersSegue"]) {
        LookupSettingsTVC *lookupSettingsTVC = segue.destinationViewController;
@@ -88,6 +82,12 @@
        lookupSettingsTVC.entityName = @"JobStatus";
        lookupSettingsTVC.titleName = @"Job Statuses";
        lookupSettingsTVC.footerDescription = @"Job statuses for use with jobsheets";
+   }
+   else if ([segue.identifier isEqualToString:@"OnMyWaySegue"]) {
+       LookupSettingsTVC *lookupSettingsTVC = segue.destinationViewController;
+       lookupSettingsTVC.entityName = @"OnMyWay";
+       lookupSettingsTVC.titleName = @"On My Way Messages";
+       lookupSettingsTVC.footerDescription = @"On my way messages";
    }
    else if ([segue.identifier isEqualToString:@"PaymentTypesSegue"]) {
        LookupSettingsTVC *lookupSettingsTVC = segue.destinationViewController;

@@ -14,7 +14,7 @@
 #import "LACUsersHandler.h"
 
 
-@interface PDFWarningNoticeViewController : UIViewController<MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface PDFWarningNoticeViewController : UIViewController<MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -27,6 +27,8 @@
 
 @property (strong, nonatomic) NSString *mode;
 @property (retain, nonatomic) WarningNotice *aWarningNotice;
+
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

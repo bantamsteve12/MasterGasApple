@@ -164,6 +164,13 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[NSString checkForNilString:self.customerAddressName.text] forKey:@"customerAddressName"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerAddressLine1.text] forKey:@"customerAddressLine1"];
     [self.managedObject setValue:[NSString checkForNilString:self.customerAddressLine2.text] forKey:@"customerAddressLine2"];
@@ -181,7 +188,7 @@
     [self.managedObject setValue:[NSString checkForNilString:self.siteTelNumber.text] forKey:@"siteTelNumber"];
     [self.managedObject setValue:[NSString checkForNilString:self.siteMobileNumber.text] forKey:@"siteMobileNumber"];
     
-      
+    
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObjectContext save:&error];
@@ -191,10 +198,14 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
+
 }
 
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

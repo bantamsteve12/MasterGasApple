@@ -104,7 +104,14 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
+
+-(void)SaveAll
+{
+    
     [self.managedObject setValue:[NSString checkForNilString:self.safetyDevicesTextField.text] forKey:@"safetyDeviceNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.safetyFlueflowTestTextField.text] forKey:@"safetyFlueFlowTestNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.safetyFlueTerminationTextField.text] forKey:@"safetyFlueTerminationNotes"];
@@ -120,7 +127,7 @@
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.safetyOtherSegmentControl.selectedSegmentIndex] forKey:@"safetyOther"];
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.safetySpilageTestSegmentControl.selectedSegmentIndex] forKey:@"safetySpilageTest"];
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.safteyVentilationSegmentControl.selectedSegmentIndex] forKey:@"safetyVentilation"];
-  
+    
     
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
@@ -131,13 +138,13 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
-    
+
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

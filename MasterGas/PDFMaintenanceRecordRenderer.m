@@ -560,7 +560,6 @@ MaintenanceServiceRecord *cert;
                         NSString *str;
                         
                         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                     //   [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
                         [dateFormatter setDateFormat:@"d MMMM yyyy"];
                         
                         str = [dateFormatter stringFromDate:cert.date];
@@ -587,8 +586,63 @@ MaintenanceServiceRecord *cert;
                             label.text = @"";
                         }
                         break;}
+
+                case 310:
+                {
+                    NSString *str = cert.customerSignoffName;
                     
                     
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+
+                    
+                    
+                    
+                    
+                case 316:
+                {
+                    
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.engineerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+  
+                case 317:
+                {
+                    
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.customerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
                     
                     
                 case 333:
@@ -901,6 +955,36 @@ MaintenanceServiceRecord *cert;
                     }
                     break;
                 }
+                    
+                case 422:
+                {
+                    
+                    NSString *str = cert.operatingPressure;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                    
+                case 423:
+                {
+                    
+                    NSString *str = cert.heatInput;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;
+                }
+                    
+                    
                     
                 case 501:
                 {
@@ -1341,41 +1425,6 @@ MaintenanceServiceRecord *cert;
     }
 }
 
-/* NOT USED IN THIS INSTANCE
- 
- +(void)drawTableDataAt:(CGPoint)origin
- withRowHeight:(int)rowHeight
- andColumnWidth:(int)columnWidth
- andRowCount:(int)numberOfRows
- andColumnCount:(int)numberOfColumns
- {
- int padding = 10;
- 
- NSArray* headers = [NSArray arrayWithObjects:@"Quantity", @"Description", @"Unit price", @"Total", nil];
- NSArray* invoiceInfo1 = [NSArray arrayWithObjects:@"1", @"Development", @"$1000", @"$1000", nil];
- NSArray* invoiceInfo2 = [NSArray arrayWithObjects:@"1", @"Development", @"$1000", @"$1000", nil];
- NSArray* invoiceInfo3 = [NSArray arrayWithObjects:@"1", @"Development", @"$1000", @"$1000", nil];
- NSArray* invoiceInfo4 = [NSArray arrayWithObjects:@"1", @"Development", @"$1000", @"$1000", nil];
- 
- NSArray* allInfo = [NSArray arrayWithObjects:headers, invoiceInfo1, invoiceInfo2, invoiceInfo3, invoiceInfo4, nil];
- 
- for(int i = 0; i < [allInfo count]; i++)
- {
- NSArray* infoToDraw = [allInfo objectAtIndex:i];
- 
- for (int j = 0; j < numberOfColumns; j++)
- {
- 
- int newOriginX = origin.x + (j*columnWidth);
- int newOriginY = origin.y + ((i+1)*rowHeight);
- 
- CGRect frame = CGRectMake(newOriginX + padding, newOriginY + padding, columnWidth, rowHeight);
- 
- 
- [self drawText:[infoToDraw objectAtIndex:j] inFrame:frame];
- }
- }
- } */
 
 
 @end

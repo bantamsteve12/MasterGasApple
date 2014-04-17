@@ -268,8 +268,6 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
- 
 }
 
 
@@ -280,6 +278,10 @@
 }
 
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

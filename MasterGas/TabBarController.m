@@ -7,8 +7,8 @@
 //
 
 #import "TabBarController.h"
-#import "LoginViewController.h"
-#import "SignupViewController.h"
+//#import "LoginViewController.h"
+//#import "SignupViewController.h"
 #import "LACUsersHandler.h"
 
 #import "RegisterTVC.h"
@@ -32,12 +32,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    //[self performSegueWithIdentifier:@"loginScreen" sender:self];
-	// Do any additional setup after loading the view.
-    
-  
     
 }
 
@@ -65,29 +59,6 @@
         [self performSegueWithIdentifier:@"loginSegue" sender:self];
     }
     
-   
-    /*
-    
-    // Check if user is logged in
-    if (![PFUser currentUser]) {
-        // Customize the Log In View Controller
-        LoginViewController *logInViewController = [[LoginViewController alloc] init];
-        [logInViewController setDelegate:self];
-       // [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", nil]];
-        [logInViewController setFields:PFLogInFieldsUsernameAndPassword | PFLogInFieldsSignUpButton | PFLogInFieldsPasswordForgotten | PFLogInFieldsLogInButton];
-        
-        // Customize the Sign Up View Controller
-        SignupViewController *signUpViewController = [[SignupViewController alloc] init];
-        [signUpViewController setDelegate:self];
-      //  [signUpViewController setFields:PFSignUpFieldsDefault | PFSignUpFieldsAdditional];
-        [signUpViewController setFields:PFSignUpFieldsUsernameAndPassword | PFSignUpFieldsEmail | PFSignUpFieldsAdditional |PFSignUpFieldsSignUpButton | PFSignUpFieldsDismissButton];
-        
-        [logInViewController setSignUpController:signUpViewController];
-        
-        // Present Log In View Controller
-        [self presentViewController:logInViewController animated:YES completion:NULL];
-    } */
-
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

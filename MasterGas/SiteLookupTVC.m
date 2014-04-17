@@ -93,6 +93,10 @@
     // Loop through and create our keys
     for (Sites *site in self.sites)
     {
+        if (site.name.length < 1) {
+            site.name = @"**Missing Name**";
+        }
+        
         NSString *c =  [site.name substringToIndex:1];
         [c uppercaseString];
         found = NO;

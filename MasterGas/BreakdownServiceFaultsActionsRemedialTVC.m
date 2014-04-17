@@ -78,13 +78,21 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     
     // TODO: Add in name values
     [self.managedObject setValue:[NSString checkForNilString:self.detailsOfFaultsTextView.text] forKey:@"faults"];
- 
+    
     [self.managedObject setValue:[NSString checkForNilString:self.remedialWorkTakenTextView.text] forKey:@"actionRemedialWork"];
     
     [self.managedObject setValue:[NSString checkForNilString:self.warningNoticeNumberTextField.text] forKey:@"warningAdviceNumber"];
+    
     
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.warningNoticeIssuedSegmentControl.selectedSegmentIndex] forKey:@"warningLabelIssued"];
     
@@ -98,13 +106,13 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
+
 }
 
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

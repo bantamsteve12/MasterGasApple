@@ -12,7 +12,7 @@
 #import "SDSyncEngine.h"
 #import "MBProgressHUD.h"
 
-@interface PDFViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface PDFViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -27,6 +27,7 @@
 
 @property (retain, nonatomic) Certificate *aCertificate;
 
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

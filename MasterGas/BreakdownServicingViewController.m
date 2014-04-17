@@ -25,26 +25,8 @@
 @synthesize mode;
 @synthesize aMaintenanceServiceRecord;
 
+@synthesize documentInteractionController;
 
-/*
-- (void)loadRecordsFromCoreData {
-    [self.managedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
-        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"ApplianceInspection"];
-        
-        [request setSortDescriptors:[NSArray arrayWithObject:
-                                     [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]]];
-        //   [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (certificateReference == %@) AND (companyId == %@)", SDObjectDeleted, self.currentCertificate.certificateNumber, @"0B372ABD-D8C0-4BE9-A8D5-5679F23FEBZZ"]];
-        
-        [request setPredicate:[NSPredicate predicateWithFormat:@"(syncStatus != %d) AND (certificateReference == %@)", SDObjectDeleted, self.currentCertificate.certificateNumber]];
-        
-        
-        self.applianceInspections = [self.managedObjectContext executeFetchRequest:request error:&error];
-        
-        NSLog(@"1. appliance inspections = %i", self.applianceInspections.count);
-    }];
-}
-*/
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -154,7 +136,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox"
+                                  otherButtonTitles:@"Email", @"Print", @"Send to Dropbox", @"Open in..."
                                   ,nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showFromToolbar:self.tabBarController.tabBar];
@@ -196,7 +178,41 @@
         }
     }
     
+    if (buttonIndex == 3) {
+        
+        NSURL *URL = [NSURL fileURLWithPath:[self getPDFFileName]];
+        
+        if (URL) {
+            // Initialize Document Interaction Controller
+            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+            
+            // Configure Document Interaction Controller
+            [self.documentInteractionController setDelegate:self];
+            
+            // Present Open In Menu
+            [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+        }
+    }
+    
 }
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+	return self;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+	return self.view;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller
+{
+	return self.view.frame;
+}
+
 
 
 -(void)uploadToDropbox
@@ -268,6 +284,8 @@
 
 -(void)emailToCustomer
 {
+    if ([MFMailComposeViewController canSendMail]) {
+        
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
@@ -299,6 +317,21 @@
     [picker setMessageBody:@"Please find attached your Gas Breakdown / Servicing Record." isHTML:NO];
     
     [self presentModalViewController:picker animated:YES];
+    }
+    else
+    {
+        
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Email not setup"
+                              message:@"You haven't setup emails on your device. Please setup you emails in the mail app for your device and try again."
+                              delegate: nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        
+        [alert show];
+        
+    }
+
 }
 
 

@@ -13,7 +13,7 @@
 #import "MBProgressHUD.h"
 #import "LACUsersHandler.h"
 
-@interface MileageViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface MileageViewController : UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -28,6 +28,7 @@
 @property (strong, nonatomic) NSString *mode;
 
 @property (retain, nonatomic) Mileage *aMileage;
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
 
 
 -(void)showPDFFile;

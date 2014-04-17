@@ -1,14 +1,12 @@
 //
 //  DropboxTVC.m
-//  MasterGas
+//  Master Gas
 //
-//  Created by Stephen Lalor on 30/11/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Steve Lalor.
+//  Copyright (c) 2013 Steve Lalor. All rights reserved.
 //
-
 
 #import "DropboxTVC.h"
-
 @implementation DropboxTVC
 
 #pragma mark - DATA
@@ -35,7 +33,7 @@ NSInteger sort(DBFileInfo *a, DBFileInfo *b, void *ctx) {
         // Don't list files that don't end with 'Stores.zip'
         NSMutableArray *notValid = [NSMutableArray new];
         for (DBFileInfo *info in updatedContents) {
-            if (![[[info path] stringValue] hasSuffix:@"MasterGasBak.zip"]) {
+            if (![[[info path] stringValue] hasSuffix:@"MasterGas.zip"]) {
                 NSLog(@"Not listing invalid file: %@", [[info path] stringValue]);
                 [notValid addObject:info];
             }
@@ -89,31 +87,29 @@ NSInteger sort(DBFileInfo *a, DBFileInfo *b, void *ctx) {
 }
 
 #pragma mark - BACKUP
-- (IBAction)backup:(id)sender {
+- (void)backup {
     [DropboxHelper linkToDropboxWithUI:self];
     DBAccount *account = [[DBAccountManager sharedManager] linkedAccount];
     if (account.isLinked) {
-    
-        
-        
-        
-        
         SDCoreDataController *cdh =
         [(AppDelegate *)[[UIApplication sharedApplication] delegate] cdh];
-      //  [cdh.masterManagedObjectContext performBlock:^{
+        [cdh.context performBlock:^{
             // Save all contexts
-       
-            //[cdh.newManagedObjectContext performBlockAndWait:^{[cdh.newManagedObjectContext save:nil];}];
-        //    [cdh.importContext performBlockAndWait:^{[cdh.importContext save:nil];}];
-           // [cdh.backgroundManagedObjectContext performBlockAndWait:^{[cdh.backgroundManagedObjectContext save:nil];}];
-           // [cdh.parentContext performBlockAndWait:^{[cdh.parentContext save:nil];}];
+            [cdh.sourceContext performBlockAndWait:^{[cdh.sourceContext save:nil];}];
+            [cdh.importContext performBlockAndWait:^{[cdh.importContext save:nil];}];
+            [cdh.context performBlockAndWait:^{[cdh.context save:nil];}];
+            
+            [cdh.masterManagedObjectContext performBlock:^{[cdh.masterManagedObjectContext save:nil];}];
             
             NSLog(@"Creating a dated backup of the Stores directory...");
             NSDateFormatter *formatter = [NSDateFormatter new];
             [formatter setDateFormat:@"[yyyy-MMM-dd] hh.mm a"];
             NSString *date = [formatter stringFromDate:[NSDate date]];
             NSString *zipFileName =
-            [NSString stringWithFormat:@"%@ MasterGasBak.zip", date];
+            [NSString stringWithFormat:@"%@ MasterGas.zip", date];
+         
+            NSLog(@"Application Stores Directory = %@", [cdh applicationStoresDirectory]);
+            
             NSURL *zipFile =
             [DropboxHelper zipFolderAtURL:[cdh applicationStoresDirectory]
                           withZipfileName:zipFileName];
@@ -130,7 +126,7 @@ NSInteger sort(DBFileInfo *a, DBFileInfo *b, void *ctx) {
             [DropboxHelper deleteFileAtURL:zipFile];
             [DropboxHelper listFilesAtDropboxPath:[DBPath root]];
             [self alertSuccess:YES];
-      //  }];
+        }];
     } else {
         [self alertSuccess:NO];
     }
@@ -170,7 +166,7 @@ NSInteger sort(DBFileInfo *a, DBFileInfo *b, void *ctx) {
     DBFileInfo *info = [_contents objectAtIndex:[indexPath row]];
     NSString *string = info.path.name;
     cell.textLabel.text =
-    [string stringByReplacingOccurrencesOfString:@" Stores.zip" withString:@""];
+    [string stringByReplacingOccurrencesOfString:@" MasterGas.zip" withString:@""];
     float fileSize = info.size;
     
     NSMutableString *subtitle = [NSMutableString new];
@@ -243,10 +239,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             _selectedZipFileName = info.path.name;
             NSLog(@"Selected '%@' for restore", _selectedZipFileName);
             NSString *restorePoint =
-            [_selectedZipFileName stringByReplacingOccurrencesOfString:@" Stores.zip"
+            [_selectedZipFileName stringByReplacingOccurrencesOfString:@" MasterGas.zip"
                                                             withString:@""];
             
-            NSString *message = [NSString stringWithFormat:@"Are you sure want to restore from %@ backup? Existing data will be lost. The application may pause for the duration of the restore.", restorePoint];
+            NSString *message = [NSString stringWithFormat:@"Are you sure want to restore from %@ backup? Existing data will be lost. The application may pause for the duration of the restore. When the restore is complete the app will close. When you open the app again your restored data will appear.", restorePoint];
             
             _confirmRestore = [[UIAlertView alloc] initWithTitle:nil
                                                          message:message
@@ -266,7 +262,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 - (IBAction)options:(id)sender {
-    NSString *title, *toggleLink, *restore;
+    NSString *title, *toggleLink, *restore, *createBackup;
+   
+    createBackup = @"Create Backup";
+    
     DBAccount *account = [[DBAccountManager sharedManager] linkedAccount];
     if (account.isLinked) {
         restore = [NSString stringWithFormat:@"Restore Selected Backup"];
@@ -285,9 +284,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                            delegate:self
                                   cancelButtonTitle:@"Cancel"
                              destructiveButtonTitle:nil
-                                  otherButtonTitles:toggleLink,restore, nil];
+                                  otherButtonTitles:toggleLink,restore,createBackup, nil];
     [_options showFromTabBar:self.navigationController.tabBarController.tabBar];
 }
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     DBAccount *account = [[DBAccountManager sharedManager] linkedAccount];
     if (actionSheet == _options) {
@@ -304,6 +304,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             case 1:
                 [self restore];
                 break;
+            case 2:
+                [self backup];
+                break;
             default:
                 break;
         }
@@ -313,6 +316,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (alertView == _confirmRestore && buttonIndex == 1) {
         SDCoreDataController *cdh =
         [(AppDelegate *)[[UIApplication sharedApplication] delegate] cdh];
+        
         [DropboxHelper restoreFromDropboxStoresZip:_selectedZipFileName
                                 withCoreDataHelper:cdh];
     }

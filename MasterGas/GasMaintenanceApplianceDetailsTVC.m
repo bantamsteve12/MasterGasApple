@@ -31,6 +31,9 @@
 @synthesize managedObjectContext;
 @synthesize managedObject;
 
+@synthesize operatingPressureTextField;
+@synthesize heatInputTextField;
+
 @synthesize combustion1stCOReadingTextField;
 @synthesize combustion1stCO2ReadingTextField;
 @synthesize combustion1stRatioReadingTextField;
@@ -74,6 +77,9 @@
     self.gasTightnessTestResult.selectedSegmentIndex = [LACHelperMethods PassFailNASegementControlSelectedIndexForValue:[self.managedObject valueForKey:@"gasTightnessTestResult"]];
     
     
+    self.operatingPressureTextField.text = [self.managedObject valueForKey:@"operatingPressure"];
+    self.heatInputTextField.text = [self.managedObject valueForKey:@"heatInput"];
+    
     combustion1stCOReadingTextField.text = [self.managedObject valueForKey:@"combustion1stCOReading"];
     combustion1stCO2ReadingTextField.text = [self.managedObject valueForKey:@"combustion1stCO2Reading"];
     combustion1stRatioReadingTextField.text = [self.managedObject valueForKey:@"combustion1stRatioReading"];
@@ -108,18 +114,23 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     // TODO: Add in name values
     [self.managedObject setValue:[NSString checkForNilString:self.locationTextField.text] forKey:@"applianceLocation"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceTypeTextField.text] forKey:@"applianceType"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceMakeTextField.text] forKey:@"applianceMake"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceModelTextField.text] forKey:@"applianceModel"];
     [self.managedObject setValue:[NSString checkForNilString:self.applianceSerialNumberField.text] forKey:@"applianceSerialNumber"];
- 
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.gasTightnessTestCarriedOut.selectedSegmentIndex] forKey:@"gasTightnessTestCarriedOut"];
-    
-     [self.managedObject setValue:[LACHelperMethods PassFailNASegementControlValue:self.gasTightnessTestResult.selectedSegmentIndex] forKey:@"gasTightnessTestResult"];
-
-   
+    [self.managedObject setValue:[LACHelperMethods PassFailNASegementControlValue:self.gasTightnessTestResult.selectedSegmentIndex] forKey:@"gasTightnessTestResult"];
+    [self.managedObject setValue:[NSString checkForNilString:self.operatingPressureTextField.text] forKey:@"operatingPressure"];
+    [self.managedObject setValue:[NSString checkForNilString:self.heatInputTextField.text] forKey:@"heatInput"];
     [self.managedObject setValue:[NSString checkForNilString:self.combustion1stCOReadingTextField.text] forKey:@"combustion1stCOReading"];
     [self.managedObject setValue:[NSString checkForNilString:self.combustion1stCO2ReadingTextField.text] forKey:@"combustion1stCO2Reading"];
     [self.managedObject setValue:[NSString checkForNilString:self.combustion1stRatioReadingTextField.text] forKey:@"combustion1stRatioReading"];
@@ -139,12 +150,9 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
-    
+
 }
+
 
 #pragma Delegate methods
 
@@ -197,6 +205,10 @@
     
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

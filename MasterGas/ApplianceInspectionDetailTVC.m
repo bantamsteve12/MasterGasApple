@@ -26,7 +26,6 @@
 @synthesize managedObject;
 @synthesize managedObjectId;
 
-
 @synthesize locationTextField;
 
 @synthesize applianceTypeTextField; //
@@ -40,6 +39,7 @@
 @synthesize ventilationProvisionSegmentControl; //
 @synthesize visualConditionOfFlueSatisfactorySegmentControl; //
 @synthesize fluePerformanceTestsSegmentControl; //
+@synthesize fluePerformanceTestSpillageSegmentControl;
 @synthesize applianceServicedSegmentControl; //
 @synthesize applianceSafeToUseSegmentControl; //
 @synthesize faultDetailsTextView;
@@ -217,7 +217,7 @@
         visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex = 0;
     }
     
-    //  flue performance tests
+    //  flue performance tests (Flue flow)
     if ([[self.managedObject valueForKey:@"fluePerformanceTests"] isEqualToString:@"Pass"]) {
         fluePerformanceTestsSegmentControl.selectedSegmentIndex = 1;
     }
@@ -228,8 +228,25 @@
         fluePerformanceTestsSegmentControl.selectedSegmentIndex = 3;
     }
     else {
-        visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex = 0;
+        fluePerformanceTestsSegmentControl.selectedSegmentIndex = 0;
     }
+        
+        
+    //  flue performance tests (Spillage)
+    if ([[self.managedObject valueForKey:@"fluePerformanceSpillageTest"] isEqualToString:@"Pass"]) {
+            fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex = 1;
+    }
+    else if ([[self.managedObject valueForKey:@"fluePerformanceSpillageTest"] isEqualToString:@"Fail"]) {
+            fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex = 2;
+    }
+    else if ([[self.managedObject valueForKey:@"fluePerformanceSpillageTest"] isEqualToString:@"n/a"]) {
+        fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex = 3;
+    }
+    else {
+        fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex = 0;
+    }
+        
+    
 
     //  appliance serviced
     if ([[self.managedObject valueForKey:@"applianceServiced"] isEqualToString:@"Yes"]) {
@@ -253,6 +270,9 @@
     else if ([[self.managedObject valueForKey:@"applianceSafeToUse"] isEqualToString:@"No"]) {
         applianceSafeToUseSegmentControl.selectedSegmentIndex = 2;
     }
+    else if ([[self.managedObject valueForKey:@"applianceSafeToUse"] isEqualToString:@"n/a"]) {
+        applianceSafeToUseSegmentControl.selectedSegmentIndex = 3;
+    }
     else{
         applianceSafeToUseSegmentControl.selectedSegmentIndex = 0;
     }
@@ -265,13 +285,16 @@
         
     //  Warning notice issued
     if ([[self.managedObject valueForKey:@"warningNoticeLabelIssued"] isEqualToString:@"Yes"]) {
-        warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex = 0;
-    }
-    else if ([[self.managedObject valueForKey:@"warningNoticeLabelIssued"] isEqualToString:@"No"]) {
         warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex = 1;
     }
-    else {
+    else if ([[self.managedObject valueForKey:@"warningNoticeLabelIssued"] isEqualToString:@"No"]) {
         warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex = 2;
+    }
+    else if ([[self.managedObject valueForKey:@"warningNoticeLabelIssued"] isEqualToString:@"n/a"]) {
+        warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex = 3;
+    }
+    else {
+        warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex = 0;
     }
         
     // warning notice number
@@ -362,16 +385,23 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
-    
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];  
+    updateCompletionBlock();
+}
 
+
+-(void)SaveAll
+{
+    
     [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
     [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
     
     NSLog(@"saveButtonTouched for ApplianceInspection Detail");
     NSLog(@"certificateNumber: %@", self.certificateNumber);
-
+    
     if (self.applianceInspectedSegmentControl.selectedSegmentIndex == 1) {
-         [self.managedObject setValue:@"Yes" forKey:@"applianceInspected"];
+        [self.managedObject setValue:@"Yes" forKey:@"applianceInspected"];
     }
     else if (self.applianceInspectedSegmentControl.selectedSegmentIndex == 2) {
         [self.managedObject setValue:@"No" forKey:@"applianceInspected"];
@@ -380,37 +410,41 @@
         [self.managedObject setValue:@"n/a" forKey:@"applianceInspected"];
     }
     else {
-         [self.managedObject setValue:@"" forKey:@"applianceInspected"];
+        [self.managedObject setValue:@"" forKey:@"applianceInspected"];
     }
-
-     [self.managedObject setValue:[NSString checkForNilString:self.applianceMakeTextField.text] forKey:@"applianceMake"];
-     [self.managedObject setValue:[NSString checkForNilString:self.applianceModelTextField.text] forKey:@"applianceModel"];
     
-   
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceMakeTextField.text] forKey:@"applianceMake"];
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceModelTextField.text] forKey:@"applianceModel"];
+    
+    
     [self.managedObject setValue:[NSString checkForNilString:self.combustion1stCOReadingTextField.text] forKey:@"combustion1stCOReading"];
     
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion1stCO2ReadingTextField.text] forKey:@"combustion1stCO2Reading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion1stRatioReadingTextField.text] forKey:@"combustion1stRatioReading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion2ndCO2ReadingTextField.text] forKey:@"combustion2ndCO2Reading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion2ndCOReadingTextField.text] forKey:@"combustion2ndCOReading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion2ndRatioReadingTextField.text] forKey:@"combustion2ndRatioReading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdCO2ReadingTextField.text] forKey:@"combustion3rdCO2Reading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdCOReadingTextField.text] forKey:@"combustion3rdCOReading"];
-     [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdRatioReadingTextField.text] forKey:@"combustion3rdRatioReading"];
-
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion1stCO2ReadingTextField.text] forKey:@"combustion1stCO2Reading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion1stRatioReadingTextField.text] forKey:@"combustion1stRatioReading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion2ndCO2ReadingTextField.text] forKey:@"combustion2ndCO2Reading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion2ndCOReadingTextField.text] forKey:@"combustion2ndCOReading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion2ndRatioReadingTextField.text] forKey:@"combustion2ndRatioReading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdCO2ReadingTextField.text] forKey:@"combustion3rdCO2Reading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdCOReadingTextField.text] forKey:@"combustion3rdCOReading"];
+    [self.managedObject setValue:[NSString checkForNilString:self.combustion3rdRatioReadingTextField.text] forKey:@"combustion3rdRatioReading"];
+    
     
     if (self.applianceSafeToUseSegmentControl.selectedSegmentIndex == 1) {
-       [self.managedObject setValue:@"Yes" forKey:@"applianceSafeToUse"];
+        [self.managedObject setValue:@"Yes" forKey:@"applianceSafeToUse"];
     }
     else if (self.applianceSafeToUseSegmentControl.selectedSegmentIndex == 2) {
         [self.managedObject setValue:@"No" forKey:@"applianceSafeToUse"];
     }
+    else if (self.applianceSafeToUseSegmentControl.selectedSegmentIndex == 3) {
+        [self.managedObject setValue:@"n/a" forKey:@"applianceSafeToUse"];
+    }
+    
     else {
         [self.managedObject setValue:@"" forKey:@"applianceSafeToUse"];
     }
     
     if (self.applianceServicedSegmentControl.selectedSegmentIndex == 1) {
-       [self.managedObject setValue:@"Yes" forKey:@"applianceServiced"]; 
+        [self.managedObject setValue:@"Yes" forKey:@"applianceServiced"];
     }
     else if(self.applianceServicedSegmentControl.selectedSegmentIndex == 2)
     {
@@ -426,29 +460,68 @@
     }
     
     
-     [self.managedObject setValue:[NSString checkForNilString:self.applianceTypeTextField.text] forKey:@"applianceType"];
-     [self.managedObject setValue:[NSString checkForNilString:self.certificateNumber] forKey:@"certificateReference"];
+    [self.managedObject setValue:[NSString checkForNilString:self.applianceTypeTextField.text] forKey:@"applianceType"];
+    [self.managedObject setValue:[NSString checkForNilString:self.certificateNumber] forKey:@"certificateReference"];
     
     NSLog(@"certificate Ref: %@", self.certificateNumber);
     
-     [self.managedObject setValue:[NSString checkForNilString:self.faultDetailsTextView.text] forKey:@"faultDetails"];
+    [self.managedObject setValue:[NSString checkForNilString:self.faultDetailsTextView.text] forKey:@"faultDetails"];
+    
+    
+    if (self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 1) {
+        [self.managedObject setValue:@"Yes" forKey:@"visualConditionOfFlueSatisfactory"];
+    }
+    else if(self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 2)
+    {
+        [self.managedObject setValue:@"No" forKey:@"visualConditionOfFlueSatisfactory"];
+    }
+    else if(self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 3)
+    {
+        [self.managedObject setValue:@"n/a" forKey:@"visualConditionOfFlueSatisfactory"];
+    }
+    else
+    {
+        [self.managedObject setValue:@"" forKey:@"visualConditionOfFlueSatisfactory"];
+    }
+    
+    
     
     
     if (self.fluePerformanceTestsSegmentControl.selectedSegmentIndex == 1) {
-           [self.managedObject setValue:@"Pass" forKey:@"fluePerformanceTests"];
+        [self.managedObject setValue:@"Pass" forKey:@"fluePerformanceTests"];
     }
     else if(self.fluePerformanceTestsSegmentControl.selectedSegmentIndex == 2)
     {
-           [self.managedObject setValue:@"Fail" forKey:@"fluePerformanceTests"];
+        [self.managedObject setValue:@"Fail" forKey:@"fluePerformanceTests"];
     }
     else if(self.fluePerformanceTestsSegmentControl.selectedSegmentIndex == 3)
     {
-           [self.managedObject setValue:@"n/a" forKey:@"fluePerformanceTests"];
+        [self.managedObject setValue:@"n/a" forKey:@"fluePerformanceTests"];
     }
     else
     {
         [self.managedObject setValue:@"" forKey:@"fluePerformanceTests"];
     }
+    
+    
+    
+    if (self.fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex == 1) {
+        [self.managedObject setValue:@"Pass" forKey:@"fluePerformanceSpillageTest"];
+    }
+    else if(self.fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex == 2)
+    {
+        [self.managedObject setValue:@"Fail" forKey:@"fluePerformanceSpillageTest"];
+    }
+    else if(self.fluePerformanceTestSpillageSegmentControl.selectedSegmentIndex == 3)
+    {
+        [self.managedObject setValue:@"n/a" forKey:@"fluePerformanceSpillageTest"];
+    }
+    else
+    {
+        [self.managedObject setValue:@"" forKey:@"fluePerformanceSpillageTest"];
+    }
+    
+    
     
     if (self.flueTypeSegmentControl.selectedSegmentIndex == 1) {
         [self.managedObject setValue:@"FL" forKey:@"flueType"];
@@ -469,9 +542,9 @@
     {
         [self.managedObject setValue:@"" forKey:@"flueType"];
     }
- 
-
-     [self.managedObject setValue:[NSString checkForNilString:self.heatInputTextField.text] forKey:@"heatInput"];
+    
+    
+    [self.managedObject setValue:[NSString checkForNilString:self.heatInputTextField.text] forKey:@"heatInput"];
     
     if (self.landlordsApplianceSegmentControl.selectedSegmentIndex == 1) {
         [self.managedObject setValue:@"Yes" forKey:@"landlordsAppliance"];
@@ -486,24 +559,24 @@
     }
     else
     {
-          [self.managedObject setValue:@"" forKey:@"landlordsAppliance"];
+        [self.managedObject setValue:@"" forKey:@"landlordsAppliance"];
     }
     
-     [self.managedObject setValue:[NSString checkForNilString:self.locationTextField.text] forKey:@"location"];
-     [self.managedObject setValue:[NSString checkForNilString:self.operatingPressureTextField.text] forKey:@"operatingPressure"];
-     [self.managedObject setValue:[NSString checkForNilString:self.remedialActionTakenTextView.text] forKey:@"remedialActionTaken"];
+    [self.managedObject setValue:[NSString checkForNilString:self.locationTextField.text] forKey:@"location"];
+    [self.managedObject setValue:[NSString checkForNilString:self.operatingPressureTextField.text] forKey:@"operatingPressure"];
+    [self.managedObject setValue:[NSString checkForNilString:self.remedialActionTakenTextView.text] forKey:@"remedialActionTaken"];
     
     
     if (self.safetyDeviceInCorrectOperationSegmentControl.selectedSegmentIndex == 1) {
-         [self.managedObject setValue:@"Yes" forKey:@"safetyDeviceInCorrectOperation"];
+        [self.managedObject setValue:@"Yes" forKey:@"safetyDeviceInCorrectOperation"];
     }
     else if (self.safetyDeviceInCorrectOperationSegmentControl.selectedSegmentIndex == 2)
     {
-         [self.managedObject setValue:@"No" forKey:@"safetyDeviceInCorrectOperation"];
+        [self.managedObject setValue:@"No" forKey:@"safetyDeviceInCorrectOperation"];
     }
-       else if (self.safetyDeviceInCorrectOperationSegmentControl.selectedSegmentIndex == 3)
+    else if (self.safetyDeviceInCorrectOperationSegmentControl.selectedSegmentIndex == 3)
     {
-         [self.managedObject setValue:@"n/a" forKey:@"safetyDeviceInCorrectOperation"];
+        [self.managedObject setValue:@"n/a" forKey:@"safetyDeviceInCorrectOperation"];
     }
     else
     {
@@ -525,31 +598,36 @@
     
     
     if (self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 1) {
-         [self.managedObject setValue:@"Yes" forKey:@"visualConditionOfFlueSatisfactory"];
+        [self.managedObject setValue:@"Yes" forKey:@"visualConditionOfFlueSatisfactory"];
     }
     else if(self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 2)
     {
-         [self.managedObject setValue:@"No" forKey:@"visualConditionOfFlueSatisfactory"];
+        [self.managedObject setValue:@"No" forKey:@"visualConditionOfFlueSatisfactory"];
     }
-     else if(self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 3)
+    else if(self.visualConditionOfFlueSatisfactorySegmentControl.selectedSegmentIndex == 3)
     {
-         [self.managedObject setValue:@"n/a" forKey:@"visualConditionOfFlueSatisfactory"];
+        [self.managedObject setValue:@"n/a" forKey:@"visualConditionOfFlueSatisfactory"];
     }
     else
     {
         [self.managedObject setValue:@"" forKey:@"visualConditionOfFlueSatisfactory"];
     }
-
+    
+    
     if (self.warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex == 1) {
-         [self.managedObject setValue:@"Yes" forKey:@"warningNoticeLabelIssued"];
+        [self.managedObject setValue:@"Yes" forKey:@"warningNoticeLabelIssued"];
     }
     else  if (self.warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex == 2)
     {
-         [self.managedObject setValue:@"No" forKey:@"warningNoticeLabelIssued"];
+        [self.managedObject setValue:@"No" forKey:@"warningNoticeLabelIssued"];
+    }
+    else  if (self.warningNoticeLabelIssuedSegmentControl.selectedSegmentIndex == 3)
+    {
+        [self.managedObject setValue:@"n/a" forKey:@"warningNoticeLabelIssued"];
     }
     else
     {
-          [self.managedObject setValue:@"" forKey:@"warningNoticeLabelIssued"];
+        [self.managedObject setValue:@"" forKey:@"warningNoticeLabelIssued"];
     }
     
     [self.managedObject setValue:[NSString checkForNilString:self.warningNoticeNumberTextField.text] forKey:@"warningNoticeNumber"];
@@ -564,13 +642,15 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
+    
 
-    
-    [self.navigationController popViewControllerAnimated:YES];  
-   updateCompletionBlock();
-    
 }
 
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning

@@ -1,3 +1,10 @@
+//
+//  DropboxHelper.m
+//  Grocery Dude
+//
+//  Created by Tim Roadley on 23/09/13.
+//  Copyright (c) 2013 Tim Roadley. All rights reserved.
+//
 
 #import "DropboxHelper.h"
 #import "Objective-Zip.h"
@@ -23,47 +30,63 @@
 }
 
 #pragma mark - LOCAL FILE MANAGEMENT
+
+
+
 + (NSURL*)renameLastPathComponentOfURL:(NSURL*)url toName:(NSString*)name {
     
     NSURL *urlPath = [url URLByDeletingLastPathComponent];
-
-    NSURL *newURL;
-    
-    NSError *error;
+    NSURL *newURL = nil;
     
     if (name.length > 0) {
-          newURL = [urlPath URLByAppendingPathComponent:name];
+        newURL = [urlPath URLByAppendingPathComponent:name];
         NSError *error;
         [[NSFileManager defaultManager] moveItemAtPath:url.path
                                                 toPath:newURL.path error:&error];
+        
+        if (error) {
+            NSLog(@"ERROR renaming (i.e. moving) %@ to %@",
+                  url.lastPathComponent, newURL.lastPathComponent);
+        } else {
+            NSLog(@"Renamed %@ to %@", url.lastPathComponent, newURL.lastPathComponent);
+        }
     }
     else
     {
-      //  newURL = urlPath;
-          newURL = [urlPath URLByAppendingPathComponent:@"Documents"];
+        NSURL *source = [url URLByAppendingPathComponent:@"MasterGas.sqlite"];
+        newURL = [urlPath URLByAppendingPathComponent:@"MasterGas.sqlite"];
         
-       // [[NSFileManager defaultManager] copyItemAtPath:url.path toPath:@ error:<#(NSError *__autoreleasing *)#>:url.path
-         //                                       toPath:newURL.path error:&error];
-
+        NSError *error;
+        [[NSFileManager defaultManager] moveItemAtPath:source.path
+                                                toPath:newURL.path error:&error];
         
-       // f ([fm copyItemAtPath:path toPath:move_path error:&error]) {
-
+        NSURL *source2 = [url URLByAppendingPathComponent:@"MasterGas.sqlite-shm"];
+        NSURL *newURL2 = [urlPath URLByAppendingPathComponent:@"MasterGas.sqlite-shm"];
+        
+        [[NSFileManager defaultManager] moveItemAtPath:source2.path
+                                                toPath:newURL2.path error:&error];
+        
+        NSURL *source3 = [url URLByAppendingPathComponent:@"MasterGas.sqlite-wal"];
+        NSURL *newURL3 = [urlPath URLByAppendingPathComponent:@"MasterGas.sqlite-wal"];
+        
+        [[NSFileManager defaultManager] moveItemAtPath:source3.path
+                                                toPath:newURL3.path error:&error];
+        
+        
+        if (error) {
+            NSLog(@"ERROR renaming (i.e. moving) %@ to %@",
+                  url.lastPathComponent, newURL.lastPathComponent);
+        } else {
+            NSLog(@"Renamed %@ to %@", url.lastPathComponent, newURL.lastPathComponent);
+        
     }
-    
-
-  //  NSError *error;
-  //  [[NSFileManager defaultManager] moveItemAtPath:url.path
-  //                                          toPath:newURL.path error:&error];
-    
-    
-    if (error) {
-        NSLog(@"ERROR renaming (i.e. moving) %@ to %@",
-              url.lastPathComponent, newURL.lastPathComponent);
-    } else {
-        NSLog(@"Renamed %@ to %@", url.lastPathComponent, newURL.lastPathComponent);
+  
     }
     return newURL;
 }
+
+
+
 + (BOOL)deleteFileAtURL:(NSURL*)url {
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
@@ -167,8 +190,10 @@
 #pragma mark - BACKUP / RESTORE
 + (NSURL*)zipFolderAtURL:(NSURL*)url withZipfileName:(NSString*)zipFileName {
     
-    NSURL *zipFileURL =
-    [[url URLByDeletingLastPathComponent] URLByAppendingPathComponent:zipFileName];
+   // NSURL *zipFileURL =
+   // [[url URLByDeletingLastPathComponent] URLByAppendingPathComponent:zipFileName];
+    
+    NSURL *zipFileURL = [url URLByAppendingPathComponent:zipFileName];
     
     // Remove existing zip
     [self deleteFileAtURL:zipFileURL];
@@ -200,14 +225,22 @@
                       error);
                 return nil;
             } else {
-                NSDate *fileDate = [attributes objectForKey:NSFileCreationDate];
-                ZipWriteStream *stream =
-                [zipFile writeFileInZipWithName:fileName
-                                       fileDate:fileDate
-                               compressionLevel:ZipCompressionLevelBest];
-                NSData *data = [NSData dataWithContentsOfFile:filePath];
-                [stream writeData:data];
-                [stream finishedWriting];
+               
+                if ([fileName rangeOfString:@".pdf"].location == NSNotFound)
+                {
+                
+                    NSDate *fileDate = [attributes objectForKey:NSFileCreationDate];
+                    ZipWriteStream *stream =
+              
+                    [zipFile writeFileInZipWithName:fileName
+                                           fileDate:fileDate
+                                   compressionLevel:ZipCompressionLevelBest];
+                    NSData *data = [NSData dataWithContentsOfFile:filePath];
+                    
+                
+                    [stream writeData:data];
+                    [stream finishedWriting];
+                }
             }
         }
     }
@@ -240,19 +273,22 @@
 + (void)restoreFromDropboxStoresZip:(NSString*)fileName
                  withCoreDataHelper:(SDCoreDataController*)cdh {
     
-   // [cdh.context performBlock:^{
-     [cdh.masterManagedObjectContext performBlock:^{
-    
-         
+    [cdh.context performBlock:^{
+        
         DBPath *zipFileInDropbox = [[DBPath alloc] initWithString:fileName];
-        NSURL  *zipFileInSandbox =
+        
+       /* NSURL  *zipFileInSandbox =
         [[[cdh applicationStoresDirectory] URLByDeletingLastPathComponent]
+         URLByAppendingPathComponent:fileName]; */
+        
+         NSURL  *zipFileInSandbox = [[cdh applicationStoresDirectory]
          URLByAppendingPathComponent:fileName];
+      
         NSURL  *unzipFolder =
-        [[[cdh applicationStoresDirectory] URLByDeletingLastPathComponent]
+        [[cdh applicationStoresDirectory]
          URLByAppendingPathComponent:@"Stores_New"];
         NSURL *oldBackupURL =
-        [[[cdh applicationStoresDirectory] URLByDeletingLastPathComponent]
+        [[cdh applicationStoresDirectory]
          URLByAppendingPathComponent:@"Stores_Old"];
         
         [DropboxHelper copyFileAtDropboxPath:zipFileInDropbox
@@ -261,25 +297,53 @@
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:unzipFolder.path]) {
             [DropboxHelper deleteFileAtURL:oldBackupURL];
+         
+            [DropboxHelper renameLastPathComponentOfURL:[cdh applicationStoresDirectory]
+                                                 toName:@"Stores_Old"];
            
-            //[DropboxHelper renameLastPathComponentOfURL:[cdh applicationStoresDirectory]
-             //                                    toName:@"Stores_Old"];
-          
-            //[DropboxHelper renameLastPathComponentOfURL:unzipFolder
-             //                                    toName:@"Stores"];
+           
+            
+            NSURL  *file1 = [[cdh applicationStoresDirectory]
+                                        URLByAppendingPathComponent:@"MasterGas.sqlite"];
+            
+            [DropboxHelper deleteFileAtURL:file1];
+            
+            
+            
+            NSURL  *file2 = [[cdh applicationStoresDirectory]
+                              URLByAppendingPathComponent:@"MasterGas.sqlite-shm"];
+            
+            [DropboxHelper deleteFileAtURL:file2];
+            
+            
+            NSURL  *file3 = [[cdh applicationStoresDirectory]
+                              URLByAppendingPathComponent:@"MasterGas.sqlite-wal"];
+            
+            [DropboxHelper deleteFileAtURL:file3];
+            
             
             [DropboxHelper renameLastPathComponentOfURL:unzipFolder
                                                  toName:@""];
-            
             if ([cdh reloadStore]) {
-                [DropboxHelper deleteFileAtURL:oldBackupURL];
-                UIAlertView *failAlert = [[UIAlertView alloc]
-                                          initWithTitle:@"Restore Complete!"
+          
+                
+            [DropboxHelper deleteFileAtURL:oldBackupURL];
+        
+            [DropboxHelper deleteFileAtURL:unzipFolder];
+                
+            
+                UIAlertView *confirmAlert = [[UIAlertView alloc]
+                                          initWithTitle:@"Restore Complete"
                                           message:@"All data has been restored from the selected backup"
-                                          delegate:nil
+                                          delegate:self
                                           cancelButtonTitle:nil
-                                          otherButtonTitles:@"Ok", nil];
-                [failAlert show];
+                                          otherButtonTitles:@"OK", nil];
+                [confirmAlert show];
+               
+                [NSThread sleepForTimeInterval:3];
+                
+                exit(0);
+               
                 
             } else { // Attempt Recovery
                 [DropboxHelper renameLastPathComponentOfURL:[cdh applicationStoresDirectory]
@@ -300,5 +364,14 @@
         }
     }];
 }
+
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([alertView.title isEqualToString:@"Restore Complete"] && buttonIndex == 0) {
+         exit(0);
+    }
+}
+
 
 @end

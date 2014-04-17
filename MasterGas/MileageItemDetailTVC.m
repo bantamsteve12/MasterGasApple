@@ -150,8 +150,15 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+    updateCompletionBlock();
     
-    
+}
+
+
+-(void)SaveAll
+{
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [self.managedObject setValue:[prefs valueForKey:@"companyId"] forKey:@"companyId"];
     [self.managedObject setValue:[prefs valueForKey:@"engineerId"] forKey:@"engineerId"];
@@ -161,17 +168,15 @@
     
     
     [self.managedObject setValue:self.uniqueClaimNo forKey:@"mileageClaimUniqueNo"];
-    
-    
     [self.managedObject setValue:self.journeyDescriptionTextField.text forKey:@"journeyDescription"];
     [self.managedObject setValue:self.startMileageTextField.text forKey:@"startMileage"];
     [self.managedObject setValue:self.finishMilageTextField.text forKey:@"finishMileage"];
     [self.managedObject setValue:self.totalMilesTextField.text forKey:@"totalMileage"];
     [self.managedObject setValue:self.journeyNotesTextField.text forKey:@"journeyNotes"];
     [self.managedObject setValue:self.vehicleRegistrationTextField.text forKey:@"vehicleRegistration"];
-
-
-//    [self.managedObject setValue:[NSNumber numberWithInt:SDObjectEdited] forKey:@"syncStatus"];
+    
+    
+    //    [self.managedObject setValue:[NSNumber numberWithInt:SDObjectEdited] forKey:@"syncStatus"];
     [self.managedObject.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
         BOOL saved = [self.managedObject.managedObjectContext save:&error];
@@ -181,17 +186,13 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    
-
-    
-//    [self.managedObject setValue:[NSNumber numberWithInt:SDObjectEdited] forKey:@"syncStatus"];
-    [self.navigationController popViewControllerAnimated:YES];
-    updateCompletionBlock();
-    
 }
 
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

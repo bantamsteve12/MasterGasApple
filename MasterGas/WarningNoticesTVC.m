@@ -80,20 +80,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-  //  [self checkSyncStatus];
-    
-   // [[NSNotificationCenter defaultCenter] addObserverForName:@"SDSyncEngineSyncCompleted" object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self loadRecordsFromCoreData];
-        [self.tableView reloadData];
-   // }];
-   // [[SDSyncEngine sharedEngine] addObserver:self forKeyPath:@"syncInProgress" options:NSKeyValueObservingOptionNew context:nil];
-}
+    [self loadRecordsFromCoreData];
+    [self.tableView reloadData];
+  }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-   // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SDSyncEngineSyncCompleted" object:nil];
-   // [[SDSyncEngine sharedEngine] removeObserver:self forKeyPath:@"syncInProgress"];
+ 
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -278,14 +271,17 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    
+        
     if ([segue.identifier isEqualToString:@"ShowGasWarningNoticeSegue"]) {
         WarningNoticeHeaderTVC *warningNoticeHeaderTVC = segue.destinationViewController;
         
         UITableViewCell *cell = (UITableViewCell *)sender;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         
-        WarningNotice *warningNotice = [self.records objectAtIndex:indexPath.row];
+        NSDate *dateRepresentingThisDay = [self.sortedDays objectAtIndex:indexPath.section];
+        NSArray *eventsOnThisDay = [self.sections objectForKey:dateRepresentingThisDay];
+        
+        WarningNotice *warningNotice = [eventsOnThisDay objectAtIndex:indexPath.row];
         warningNoticeHeaderTVC.managedObjectId = warningNotice.objectID;
         
         [warningNoticeHeaderTVC setUpdateCompletionBlock:^{
@@ -293,6 +289,7 @@
             [self.tableView reloadData];
      //       [[SDSyncEngine sharedEngine] startSync];
         }];
+        
         
     } else if ([segue.identifier isEqualToString:@"AddGasWarningNoticeSegue"]) {
         

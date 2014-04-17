@@ -33,6 +33,17 @@
 +(void)setCompanyStandardVatRate:(NSString *)standardVat;
 +(NSString *)getCompanyStandardVatRate;
 
++(int)SegementIndexValue:(NSArray *)items withValue:(NSString *)value;
++(NSString *)ValueForIndex:(NSArray *)items withIndex:(int *)indexValue;
+
+/*
++(void)setDocumentHeaderBackgroundColour:(UIColor *)colour;
++(void)setDocumentHeaderTextColour:(UIColor *)colour;
+
++(UIColor *)getDocumentHeaderBackgroundColour;
++(UIColor *)getDocumentHeaderTextColour;
+*/
+
 // generates md5 hash from string
 +(NSString *) returnMD5Hash:(NSString*)concat;
 

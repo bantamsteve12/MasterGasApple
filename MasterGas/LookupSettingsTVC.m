@@ -121,11 +121,8 @@
         if (editingStyle == UITableViewCellEditingStyleDelete) {
             NSManagedObject *date = [self.items objectAtIndex:indexPath.row];
             [self.managedObjectContext performBlockAndWait:^{
-                if ([[date valueForKey:@"objectId"] isEqualToString:@""] || [date valueForKey:@"objectId"] == nil) {
-                    [self.managedObjectContext deleteObject:date];
-                } else {
-                 //   [date setValue:[NSNumber numberWithInt:SDObjectDeleted] forKey:@"syncStatus"];
-                }
+              
+                [self.managedObjectContext deleteObject:date];
                 NSError *error = nil;
                 BOOL saved = [self.managedObjectContext save:&error];
                 if (!saved) {

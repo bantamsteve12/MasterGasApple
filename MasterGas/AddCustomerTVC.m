@@ -337,6 +337,15 @@
 }
 
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    
+    if (![self.nameTextField.text isEqualToString:@""]) {
+        [self SaveAll];
+    }
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

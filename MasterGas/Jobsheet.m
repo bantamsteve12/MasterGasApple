@@ -2,8 +2,8 @@
 //  Jobsheet.m
 //  MasterGas
 //
-//  Created by Stephen Lalor on 11/07/2013.
-//  Copyright (c) 2013 Stephen Lalor. All rights reserved.
+//  Created by Stephen Lalor on 14/04/2014.
+//  Copyright (c) 2014 Stephen Lalor. All rights reserved.
 //
 
 #import "Jobsheet.h"
@@ -11,6 +11,10 @@
 
 @implementation Jobsheet
 
+@dynamic applianceLocation;
+@dynamic applianceMake;
+@dynamic applianceModel;
+@dynamic applianceSerial;
 @dynamic companyId;
 @dynamic createdAt;
 @dynamic customerAddressLine1;
@@ -18,6 +22,7 @@
 @dynamic customerAddressLine3;
 @dynamic customerAddressName;
 @dynamic customerEmail;
+@dynamic customerId;
 @dynamic customerMobileNumber;
 @dynamic customerPosition;
 @dynamic customerPostcode;
@@ -58,7 +63,8 @@
 @dynamic syncStatus;
 @dynamic timeOfArrival;
 @dynamic timeOfDeparture;
+@dynamic travelTime;
 @dynamic updatedAt;
-@dynamic customerId;
+@dynamic applianceType;
 
 @end

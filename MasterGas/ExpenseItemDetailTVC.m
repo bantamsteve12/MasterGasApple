@@ -194,39 +194,46 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
-        [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
-        [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
-    
-        NSLog(@"saveButtonTouched for ApplianceInspection Detail");
-        NSLog(@"uniqueClaimNo: %@", self.uniqueClaimNo);
-    
-        [self.managedObject setValue:[NSString checkForNilString:self.uniqueClaimNo] forKey:@"expenseUniqueReference"];
-
-        [self.managedObject setValue:[NSString checkForNilString:self.descriptionTextField.text] forKey:@"itemDescription"];
-        [self.managedObject setValue:[NSString checkForNilString:self.typeTextField.text] forKey:@"type"];
-        [self.managedObject setValue:[NSString checkForNilString:self.categoryTextField.text] forKey:@"category"];
-        [self.managedObject setValue:[NSString checkForNilString:self.supplierTextField.text] forKey:@"supplier"];
-        [self.managedObject setValue:[NSString checkForNilString:self.subtotalAmountTextField.text] forKey:@"subTotalAmount"];
-        [self.managedObject setValue:[NSString checkForNilString:self.vatAmountTextField.text] forKey:@"vatAmount"];
-        [self.managedObject setValue:[NSString checkForNilString:self.totalAmountTextField.text] forKey:@"totalAmount"];
-        [self.managedObject setValue:[NSString checkForNilString:self.notesTextView.text] forKey:@"notes"];
-        [self.managedObject setValue:[NSString checkForNilString:self.supplierId] forKey:@"supplierId"];
-        
-        [self.managedObject.managedObjectContext performBlockAndWait:^{
-            NSError *error = nil;
-            BOOL saved = [self.managedObject.managedObjectContext save:&error];
-            if (!saved) {
-                // do some real error handling
-                NSLog(@"Could not save Date due to %@", error);
-            }
-                [[SDCoreDataController sharedInstance] saveMasterContext];
-        }];
-    
+        [self SaveAll];
         [self.navigationController popViewControllerAnimated:YES];  
         updateCompletionBlock();
 }
 
+-(void)SaveAll
+{
+    [self.managedObject setValue:[LACUsersHandler getCurrentEngineerId] forKey:@"engineerId"];
+    [self.managedObject setValue:[LACUsersHandler getCurrentCompanyId] forKey:@"companyId"];
+    
+    NSLog(@"saveButtonTouched for ApplianceInspection Detail");
+    NSLog(@"uniqueClaimNo: %@", self.uniqueClaimNo);
+    
+    [self.managedObject setValue:[NSString checkForNilString:self.uniqueClaimNo] forKey:@"expenseUniqueReference"];
+    
+    [self.managedObject setValue:[NSString checkForNilString:self.descriptionTextField.text] forKey:@"itemDescription"];
+    [self.managedObject setValue:[NSString checkForNilString:self.typeTextField.text] forKey:@"type"];
+    [self.managedObject setValue:[NSString checkForNilString:self.categoryTextField.text] forKey:@"category"];
+    [self.managedObject setValue:[NSString checkForNilString:self.supplierTextField.text] forKey:@"supplier"];
+    [self.managedObject setValue:[NSString checkForNilString:self.subtotalAmountTextField.text] forKey:@"subTotalAmount"];
+    [self.managedObject setValue:[NSString checkForNilString:self.vatAmountTextField.text] forKey:@"vatAmount"];
+    [self.managedObject setValue:[NSString checkForNilString:self.totalAmountTextField.text] forKey:@"totalAmount"];
+    [self.managedObject setValue:[NSString checkForNilString:self.notesTextView.text] forKey:@"notes"];
+    [self.managedObject setValue:[NSString checkForNilString:self.supplierId] forKey:@"supplierId"];
+    
+    [self.managedObject.managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        BOOL saved = [self.managedObject.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
+}
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 - (void)didReceiveMemoryWarning
 {

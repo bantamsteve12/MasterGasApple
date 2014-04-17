@@ -8,13 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "NSString+Additions.h"
+#import "LocationLookupTVC.h"
+#import "ApplianceTypeLookupTVC.h"
+#import "ApplianceMakeLookupTVC.h"
 
-
-@interface JobsheetDetailsTVC : UITableViewController
+@interface JobsheetDetailsTVC : UITableViewController <LocationLookupTVCDelegate, ApplianceTypeLookupTVCDelegate, ApplianceMakeLookupTVCDelegate>
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObject *managedObject;
 
+
+@property (strong, nonatomic) IBOutlet UITextField *applianceType;
+@property (strong, nonatomic) IBOutlet UITextField *applianceMake;
+@property (strong, nonatomic) IBOutlet UITextField *applianceModel;
+@property (strong, nonatomic) IBOutlet UITextField *applianceSerial;
+@property (strong, nonatomic) IBOutlet UITextField *applianceLocation;
 
 @property (strong, nonatomic) IBOutlet UITextView *jobNotesTextView;
 @property (strong, nonatomic) IBOutlet UITextView *sparesUsedTextView;

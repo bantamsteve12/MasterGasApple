@@ -176,6 +176,14 @@ WarningNotice *cert;
         theAlignment = kCTCenterTextAlignment;
         
     }
+    else if(label.tag == 501 || label.tag == 601 || label.tag == 706)
+    {
+        textColor = [UIColor redColor];
+        color = textColor.CGColor;
+        font = CTFontCreateWithName((CFStringRef) @"System",8.0, NULL);
+        theAlignment = kCTLeftTextAlignment;
+        
+    }
     else
     {
         textColor = [UIColor blackColor];
@@ -945,9 +953,47 @@ WarningNotice *cert;
                     break;}
                     
                     
+                case 805:
+                {
+                    
+                    NSString *str;
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    //  [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+                    [dateFormatter setDateFormat:@"d MMMM yyyy"];
+                    
+                    str = [dateFormatter stringFromDate:cert.engineerSignoffDate];
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                case 806:
+                {
+                    
+                    NSString *str =  cert.customerSignoffName;
+                    
+                    if (str.length > 0) {
+                        label.text = str;
+                    }
+                    else {
+                        label.text = @"";
+                    }
+                    break;}
+                    
+                    
+                    
+                    
                     default:
                     break;
             }
+            
+            
+     
             
             [self drawText:label.text inFrame:label.frame withUILabel:label];
         }

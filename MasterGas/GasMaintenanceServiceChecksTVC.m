@@ -153,6 +153,13 @@
 
 - (IBAction)saveButtonTouched:(id)sender {
     
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)SaveAll
+{
     [self.managedObject setValue:[NSString checkForNilString:self.serviceBurnerInjectorsTextField.text] forKey:@"serviceBurnerInjectorsNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.serviceHeatExchangerTextField.text] forKey:@"serviceHeatExchangerNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.serviceIgnitionTextField.text] forKey:@"serviceIgnitionNotes"];
@@ -169,7 +176,7 @@
     [self.managedObject setValue:[NSString checkForNilString:self.serviceLocationTextField.text] forKey:@"serviceLocationNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.serviceStabilityTextField.text] forKey:@"serviceStabilityNotes"];
     [self.managedObject setValue:[NSString checkForNilString:self.serviceReturnAirPlenumTextField.text] forKey:@"serviceReturnAirPlenumNotes"];
-
+    
     [self.managedObject setValue:[NSString checkForNilString:self.serviceGasWaterLeakTextField.text] forKey:@"serviceGasWaterLeaksNotes"];
     
     
@@ -189,7 +196,6 @@
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceStabilitySegmentControl.selectedSegmentIndex] forKey:@"serviceStability"];
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceReturnAirPlenumSegmentControl.selectedSegmentIndex] forKey:@"serviceReturnAirPlenum"];
     [self.managedObject setValue:[LACHelperMethods YesNoNASegementControlValue:self.serviceGasWaterLeakSegmentControl.selectedSegmentIndex] forKey:@"serviceGasWaterLeaks"];
-
     
     [self.managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
@@ -200,11 +206,6 @@
         }
         [[SDCoreDataController sharedInstance] saveMasterContext];
     }];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    //  addDateCompletionBlock();
-    
-    
 }
 
 

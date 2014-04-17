@@ -85,9 +85,9 @@
         [self.dateFormatter setDateFormat:@"d MMMM yyyy"];
         
         [self.managedObject setValue:[NSDate date] forKey:@"date"];
-        
-        
         self.certificateDateLabel.text = [self.dateFormatter stringFromDate:[self.managedObject valueForKey:@"date"]];
+        
+        [self SaveTest];
         
     }
     else
@@ -110,6 +110,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [self loadApplianceItemsDataFromCoreData];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveTest];
 }
 
 - (void)dismissKeyboard {
@@ -247,6 +252,7 @@
         applianceInspectionHeaderTVC.certificateNumber = self.certificateUniqueReferenceLabel.text;
         applianceInspectionHeaderTVC.managedObject = managedObject;
         applianceInspectionHeaderTVC.managedObjectContext = managedObjectContext;
+        applianceInspectionHeaderTVC.maxAppliances = [NSNumber numberWithInt:6];
     }
     else if ([segue.identifier isEqualToString:@"ShowDateTimeSelectionSegue"]) {
         
@@ -433,6 +439,7 @@
         self.applianceCountLabel.text = [NSString stringWithFormat:@"%i Appliances", [self.applianceItems count]];
     }
 }
+
 
 
 

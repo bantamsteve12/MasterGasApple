@@ -14,7 +14,7 @@
 #import "LACUsersHandler.h"
 
 
-@interface BreakdownServicingViewController :UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface BreakdownServicingViewController :UIViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate, UIDocumentInteractionControllerDelegate> {
 	MBProgressHUD *HUD;
 }
 
@@ -27,6 +27,9 @@
 
 @property (strong, nonatomic) NSString *mode;
 @property (retain, nonatomic) MaintenanceServiceRecord *aMaintenanceServiceRecord;
+
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractionController;
+
 
 -(void)showPDFFile;
 -(NSString*)getPDFFileName;

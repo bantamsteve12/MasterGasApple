@@ -22,7 +22,6 @@
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObject *managedObject;
 
-
 @property (strong, nonatomic) ApplianceInspection *selectedApplianceInspection;
 @property (strong, nonatomic) NSString *certificateNumber;
 
@@ -42,6 +41,8 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *ventilationProvisionSegmentControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *visualConditionOfFlueSatisfactorySegmentControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *fluePerformanceTestsSegmentControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *fluePerformanceTestSpillageSegmentControl;
+
 @property (strong, nonatomic) IBOutlet UISegmentedControl *applianceServicedSegmentControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *applianceSafeToUseSegmentControl;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *flueTypeSegmentControl;

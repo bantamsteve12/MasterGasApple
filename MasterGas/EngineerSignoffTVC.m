@@ -202,6 +202,16 @@
 
 
 - (IBAction)saveButtonTouched:(id)sender {
+   
+    [self SaveAll];
+    [self.navigationController popViewControllerAnimated:YES];
+     //  addDateCompletionBlock();
+  
+}
+
+
+-(void)SaveAll
+{
     
     [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffTradingTitleTextField.text] forKey:@"engineerSignoffTradingTitle"];
     [self.managedObject setValue:[NSString checkForNilString:self.engineerSignoffAddressLine1TextField.text] forKey:@"engineerSignoffAddressLine1"];
@@ -216,22 +226,22 @@
     
     [self.managedObject setValue:[NSString checkForNilString:[self.managedObject valueForKey:@"engineerSignatureFilename"]] forKey:@"engineerSignatureFilename"];
     
-
+    
     [self.managedObjectContext performBlockAndWait:^{
-     NSError *error = nil;
-     BOOL saved = [self.managedObjectContext save:&error];
-     if (!saved) {
-     // do some real error handling
-     NSLog(@"Could not save Date due to %@", error);
-     }
-     [[SDCoreDataController sharedInstance] saveMasterContext];
-     }];
-     
-     [self.navigationController popViewControllerAnimated:YES];
-     //  addDateCompletionBlock();
-  
+        NSError *error = nil;
+        BOOL saved = [self.managedObjectContext save:&error];
+        if (!saved) {
+            // do some real error handling
+            NSLog(@"Could not save Date due to %@", error);
+        }
+        [[SDCoreDataController sharedInstance] saveMasterContext];
+    }];
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self SaveAll];
+}
 
 
 - (void)didReceiveMemoryWarning
